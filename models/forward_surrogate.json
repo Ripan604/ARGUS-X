@@ -1,0 +1,71 @@
+{
+  "seed": 23,
+  "samples": 3000,
+  "input_size": 24,
+  "output_size": 15,
+  "feature_names": [
+    "rms",
+    "peak_amplitude",
+    "crest_factor",
+    "zero_crossing_rate",
+    "spectral_centroid_hz",
+    "spectral_bandwidth_hz",
+    "spectral_rolloff_hz",
+    "dominant_frequency_hz",
+    "spectral_entropy",
+    "band_energy_low",
+    "band_energy_mid",
+    "band_energy_high",
+    "envelope_peak_time_s",
+    "decay_time_s",
+    "snr_db"
+  ],
+  "defect_types": [
+    "cavity",
+    "loose_region",
+    "delamination",
+    "dense_inclusion"
+  ],
+  "description": "Domain-randomized physics simulator data for the learned forward-response surrogate.",
+  "validation_loss": 0.21076539903879166,
+  "test_loss": 0.22450760379433632,
+  "device": "cpu",
+  "held_out_metrics": {
+    "standardized_mae": 0.5014277100563049,
+    "mean_feature_r2": 0.4091884195804596,
+    "per_feature_mae": {
+      "rms": 0.004467029124498367,
+      "peak_amplitude": 0.029460204765200615,
+      "crest_factor": 1.6086320877075195,
+      "zero_crossing_rate": 0.009144390001893044,
+      "spectral_centroid_hz": 93.39732360839844,
+      "spectral_bandwidth_hz": 54.653648376464844,
+      "spectral_rolloff_hz": 125.1132583618164,
+      "dominant_frequency_hz": 1284.6658935546875,
+      "spectral_entropy": 0.005622806493192911,
+      "band_energy_low": 0.021447530016303062,
+      "band_energy_mid": 0.03162864223122597,
+      "band_energy_high": 0.03318096324801445,
+      "envelope_peak_time_s": 0.0017319988692179322,
+      "decay_time_s": 0.0011542853899300098,
+      "snr_db": 1.0348799228668213
+    },
+    "per_feature_r2": {
+      "rms": 0.860923171043396,
+      "peak_amplitude": 0.8253316879272461,
+      "crest_factor": 0.7581841349601746,
+      "zero_crossing_rate": 0.31478214263916016,
+      "spectral_centroid_hz": 0.3527854084968567,
+      "spectral_bandwidth_hz": 0.2839924097061157,
+      "spectral_rolloff_hz": 0.18055593967437744,
+      "dominant_frequency_hz": -0.019237041473388672,
+      "spectral_entropy": 0.21922725439071655,
+      "band_energy_low": 0.18011975288391113,
+      "band_energy_mid": 0.2551612854003906,
+      "band_energy_high": 0.3785420060157776,
+      "envelope_peak_time_s": 0.01585334539413452,
+      "decay_time_s": 0.6216046810150146,
+      "snr_db": 0.9100005030632019
+    }
+  }
+}

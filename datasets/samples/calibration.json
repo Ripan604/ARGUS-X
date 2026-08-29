@@ -1,0 +1,41 @@
+{
+  "wave_velocity_m_s": 179.253112033195,
+  "noise_std": 0.007,
+  "attenuation": 1.65,
+  "resonance_hz": 3100.0,
+  "reference_experiments": [
+    {
+      "source_x": 0.05,
+      "source_y": 0.08,
+      "receiver_x": 0.95,
+      "receiver_y": 0.08,
+      "frequency_start_hz": 1200,
+      "frequency_end_hz": 3000,
+      "amplitude": 0.42,
+      "duration_s": 0.12,
+      "waveform": "chirp"
+    },
+    {
+      "source_x": 0.05,
+      "source_y": 0.92,
+      "receiver_x": 0.95,
+      "receiver_y": 0.92,
+      "frequency_start_hz": 2200,
+      "frequency_end_hz": 4400,
+      "amplitude": 0.42,
+      "duration_s": 0.12,
+      "waveform": "chirp"
+    },
+    {
+      "source_x": 0.08,
+      "source_y": 0.05,
+      "receiver_x": 0.08,
+      "receiver_y": 0.95,
+      "frequency_start_hz": 3400,
+      "frequency_end_hz": 6200,
+      "amplitude": 0.42,
+      "duration_s": 0.12,
+      "waveform": "chirp"
+    }
+  ]
+}
