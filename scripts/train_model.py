@@ -17,6 +17,46 @@ if str(ROOT) not in sys.path:
 from backend.app.models.surrogate import ForwardSurrogate
 
 
+def split_indices(metadata: dict, sample_count: int, seed: int, mode: str) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict]:
+    rows = metadata.get("rows", [])
+    has_groups = len(rows) == sample_count and all("scenario" in row for row in rows)
+    resolved_mode = "group" if mode == "auto" and has_groups else ("random" if mode == "auto" else mode)
+    rng = np.random.default_rng(seed)
+    if resolved_mode == "group":
+        if not has_groups:
+            raise ValueError("Group split requires metadata.rows with one scenario value per sample")
+        groups = np.asarray([row["scenario"] for row in rows])
+        unique_groups = np.unique(groups)
+        if len(unique_groups) < 3:
+            raise ValueError("Group split requires at least three independent scenarios")
+        shuffled_groups = rng.permutation(unique_groups)
+        train_group_count = max(1, int(0.67 * len(shuffled_groups)))
+        validation_group_count = max(1, int(0.17 * len(shuffled_groups)))
+        validation_end = min(len(shuffled_groups) - 1, train_group_count + validation_group_count)
+        train_groups = shuffled_groups[:train_group_count]
+        validation_groups = shuffled_groups[train_group_count:validation_end]
+        test_groups = shuffled_groups[validation_end:]
+        train_idx = np.flatnonzero(np.isin(groups, train_groups))
+        validation_idx = np.flatnonzero(np.isin(groups, validation_groups))
+        test_idx = np.flatnonzero(np.isin(groups, test_groups))
+        detail = {
+            "mode": "group",
+            "group_field": "scenario",
+            "train_groups": train_groups.tolist(),
+            "validation_groups": validation_groups.tolist(),
+            "test_groups": test_groups.tolist(),
+        }
+    else:
+        order = rng.permutation(sample_count)
+        train_end, validation_end = int(0.70 * len(order)), int(0.85 * len(order))
+        train_idx, validation_idx, test_idx = order[:train_end], order[train_end:validation_end], order[validation_end:]
+        detail = {"mode": "random"}
+    detail["sample_counts"] = {
+        "train": int(len(train_idx)), "validation": int(len(validation_idx)), "test": int(len(test_idx))
+    }
+    return train_idx, validation_idx, test_idx, detail
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train the optional ARGUS forward-response surrogate")
     parser.add_argument("--data", default="datasets/generated/argus_forward.npz")
@@ -25,14 +65,17 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=23)
+    parser.add_argument(
+        "--split-mode", choices=("auto", "random", "group"), default="auto",
+        help="Auto uses scenario-held-out splits for adapted experimental data and random splits for independent synthetic samples",
+    )
     args = parser.parse_args()
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
     payload = np.load(args.data)
     inputs, targets = payload["inputs"], payload["targets"]
     metadata = json.loads(str(payload["metadata"]))
-    order = np.random.default_rng(args.seed).permutation(len(inputs))
-    train_end, validation_end = int(0.70 * len(order)), int(0.85 * len(order))
-    train_idx, validation_idx, test_idx = order[:train_end], order[train_end:validation_end], order[validation_end:]
+    train_idx, validation_idx, test_idx, split = split_indices(metadata, len(inputs), args.seed, args.split_mode)
+    print(f"split={split['mode']} train={len(train_idx)} validation={len(validation_idx)} test={len(test_idx)}")
     x_mean, x_std = inputs[train_idx].mean(0), inputs[train_idx].std(0) + 1e-6
     y_mean, y_std = targets[train_idx].mean(0), targets[train_idx].std(0) + 1e-6
 
@@ -93,15 +136,17 @@ def main() -> None:
         "per_feature_mae": {name: float(value) for name, value in zip(feature_names, feature_mae)},
         "per_feature_r2": {name: float(value) for name, value in zip(feature_names, feature_r2)},
     }
+    checkpoint_metadata = {key: value for key, value in metadata.items() if key != "rows"}
     checkpoint = {
         "model_state": best_state, "input_size": inputs.shape[1], "output_size": targets.shape[1],
         "input_mean": x_mean, "input_std": x_std, "target_mean": y_mean, "target_std": y_std,
         "metadata": {
-            **metadata,
+            **checkpoint_metadata,
             "validation_loss": best_loss,
             "test_loss": float(np.mean(test_losses)),
             "device": str(device),
             "seed": args.seed,
+            "split": split,
             "held_out_metrics": held_out_metrics,
         },
     }

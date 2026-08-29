@@ -25,6 +25,8 @@ The learned model is optional. The application deliberately falls back to physic
 
 The checkpoint metadata records held-out standardized MAE plus physical-unit MAE and R² for every response feature. Inspect `models/forward_surrogate.json`; do not summarize model quality from aggregate loss alone. The saved 3,000-sample seed-23 run has mean per-feature R² 0.409: SNR, RMS, and peak amplitude are predicted well, while dominant frequency and envelope timing expose clear improvement targets.
 
+Experimental data with multiple channels from the same physical defect must use a group split. `train_model.py --split-mode auto` detects the LMSD adapter's scenario metadata and holds out complete damage scenarios; `--split-mode group` enforces it. This prevents source/receiver channels from the same defect leaking into train and test.
+
 ## Calibration and transfer limits
 
 The simulator is not a finite-element solver. Real panels require measured reference responses, sensor coupling control, speed/attenuation calibration, and likely simulation-to-real fine-tuning. The current physical WAV path demonstrates the software contract but has not been validated as a safety-relevant NDT instrument.

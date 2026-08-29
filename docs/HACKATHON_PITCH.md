@@ -32,7 +32,7 @@ These are hypotheses for professional IP analysis, not patentability conclusions
 - a Bayesian posterior that accumulates every measurement;
 - an adaptive planner and random/grid baselines;
 - actual 30-case paired benchmark JSON/CSV with trajectories and bootstrap intervals;
-- 17 backend tests, zero frontend lint errors, a production build, and a live dual-service HTTP smoke test;
+- 19 backend tests, zero frontend lint errors, a production build, and a live dual-service HTTP smoke test;
 - WAV, microphone, serial, calibration, and ESP32 paths;
 - a trained 58 KB PyTorch response surrogate with held-out per-feature metrics;
 - an auditable top-five decision table.

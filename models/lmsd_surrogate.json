@@ -1,0 +1,98 @@
+{
+  "source": "LMSD 2021 Dataset for Damage Identification in Plates",
+  "doi": "10.48804/GDE9TW",
+  "license": "CC BY 4.0",
+  "adapter": "ARGUS FRF-to-impulse-response feature adapter v1",
+  "samples": 294,
+  "input_size": 24,
+  "output_size": 15,
+  "feature_names": [
+    "rms",
+    "peak_amplitude",
+    "crest_factor",
+    "zero_crossing_rate",
+    "spectral_centroid_hz",
+    "spectral_bandwidth_hz",
+    "spectral_rolloff_hz",
+    "dominant_frequency_hz",
+    "spectral_entropy",
+    "band_energy_low",
+    "band_energy_mid",
+    "band_energy_high",
+    "envelope_peak_time_s",
+    "decay_time_s",
+    "snr_db"
+  ],
+  "scenarios": [
+    "1 elongated mass.npz",
+    "1 mass.npz",
+    "3 masses.npz",
+    "4 masses.npz",
+    "5 masses.npz",
+    "6 masses.npz"
+  ],
+  "limitations": "Added-mass scattering data; not literal cavity/delamination labels. Neutral nuisance parameters require calibration.",
+  "validation_loss": 0.3973156213760376,
+  "test_loss": 0.19024516642093658,
+  "device": "cpu",
+  "seed": 23,
+  "split": {
+    "mode": "group",
+    "group_field": "scenario",
+    "train_groups": [
+      "6 masses.npz",
+      "3 masses.npz",
+      "4 masses.npz",
+      "1 elongated mass.npz"
+    ],
+    "validation_groups": [
+      "1 mass.npz"
+    ],
+    "test_groups": [
+      "5 masses.npz"
+    ],
+    "sample_counts": {
+      "train": 196,
+      "validation": 49,
+      "test": 49
+    }
+  },
+  "held_out_metrics": {
+    "standardized_mae": 0.4485403001308441,
+    "mean_feature_r2": 0.0010183175327256322,
+    "per_feature_mae": {
+      "rms": 0.021651258692145348,
+      "peak_amplitude": 0.17357675731182098,
+      "crest_factor": 0.9144971370697021,
+      "zero_crossing_rate": 0.03188084438443184,
+      "spectral_centroid_hz": 58.077491760253906,
+      "spectral_bandwidth_hz": 40.185821533203125,
+      "spectral_rolloff_hz": 93.3545150756836,
+      "dominant_frequency_hz": 82.87164306640625,
+      "spectral_entropy": 0.05968267470598221,
+      "band_energy_low": 0.008297781459987164,
+      "band_energy_mid": 0.009610401466488838,
+      "band_energy_high": 4.283118215653303e-08,
+      "envelope_peak_time_s": 0.0022108512930572033,
+      "decay_time_s": 0.0006469651125371456,
+      "snr_db": 1.6402510404586792
+    },
+    "per_feature_r2": {
+      "rms": -0.12954926490783691,
+      "peak_amplitude": -0.15162622928619385,
+      "crest_factor": -0.0232011079788208,
+      "zero_crossing_rate": 0.08423840999603271,
+      "spectral_centroid_hz": -0.3359649181365967,
+      "spectral_bandwidth_hz": 0.030011296272277832,
+      "spectral_rolloff_hz": 0.10852694511413574,
+      "dominant_frequency_hz": -0.1902449131011963,
+      "spectral_entropy": 0.08754384517669678,
+      "band_energy_low": -0.02851271629333496,
+      "band_energy_mid": -0.2353607416152954,
+      "band_energy_high": 0.874537467956543,
+      "envelope_peak_time_s": -0.02539825439453125,
+      "decay_time_s": -0.027587413787841797,
+      "snr_db": -0.02213764190673828
+    }
+  }
+}

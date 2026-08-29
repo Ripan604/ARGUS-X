@@ -129,6 +129,17 @@ python scripts\train_model.py --epochs 80 --patience 10
 
 The dataset script varies geometry, material, noise, defect properties, and experiment parameters. The trained MLP predicts signal features for candidate physical states/experiments. A 3,000-sample CPU training run in this workspace early-stopped at epoch 27 with standardized Smooth L1 validation loss 0.2108, test loss 0.2245, standardized MAE 0.5014, and mean per-feature R² 0.409. Per-feature metrics—including strong SNR/RMS prediction and weak dominant-frequency/envelope timing prediction—are preserved transparently in `models/forward_surrogate.json`. Physics inference remains the safe default when no checkpoint exists.
 
+## Public experimental training data
+
+ARGUS includes a downloader and adapter for KU Leuven's CC BY 4.0 LMSD CFRP plate dataset. The complete checksum-verified local copy contains a healthy baseline plus six known added-mass damage scenarios. It converts to 294 measured source/receiver examples:
+
+```powershell
+python scripts\download_lmsd_dataset.py --profile all
+python scripts\prepare_lmsd_dataset.py
+```
+
+The raw 171 MB download and derived NPZ remain local and Git-ignored; citation, license, limitations, other public datasets, and an exact laboratory collection protocol are in [Real Training Data](docs/REAL_DATA_GUIDE.md).
+
 ## Calibration
 
 ```powershell
@@ -199,6 +210,7 @@ docs/                 architecture, algorithms, demo, hardware, IP notes
 - [Invention disclosure draft](docs/INVENTION_DISCLOSURE.md)
 - [Pre-counsel patent specification and claim discussion set](docs/PATENT_DRAFT.md)
 - [Verification report and success criteria](docs/VERIFICATION_REPORT.md)
+- [Real training data and collection protocol](docs/REAL_DATA_GUIDE.md)
 
 ## Limitations
 

@@ -11,13 +11,15 @@ This report records commands actually executed in the delivered workspace. It is
 | Check | Command or action | Result |
 |---|---|---|
 | Readiness | `python scripts\doctor.py` | Ready; scientific imports, SQLite, Node/npm, frontend dependencies, benchmark artifact, and one closed-loop experiment passed |
-| Backend | `python -m pytest backend/tests -q` | 17 passed |
+| Backend | `python -m pytest backend/tests -q` | 19 passed |
 | Frontend lint | `cd frontend; npm run lint` | Passed, zero errors |
 | Production compile | `cd frontend; npm run build` | Passed; client, server, RSC, and SSR environments built |
 | Python dependency integrity | `python -m pip check` | No broken requirements |
 | Judge demo | `python scripts\demo_simulation.py --preset easy --seed 17 --experiments 8` | Stopped on confidence after 8 experiments; 10.0 mm error; 59.7% entropy reduction |
 | Paired benchmark | `python scripts\evaluate_model.py --cases 30 --preset medium --experiments 10 --seed 100 --output benchmark_results` | Completed 90 policy runs and wrote JSON/CSV |
 | Learned surrogate | 3,000 generated samples; `python scripts\train_model.py --epochs 80 --patience 10 --seed 23` | Early stopped at epoch 27; checkpoint and held-out metrics saved |
+| Public experimental data | `python scripts\download_lmsd_dataset.py --profile all` | Healthy baseline and six damage NPZ files downloaded; all published MD5 values verified |
+| Experimental adapter | `python scripts\prepare_lmsd_dataset.py` | 294 finite examples from 6 scenarios and all 7×7 source/receiver paths |
 | Unified startup | `python run_argus.py` | Both services started; frontend HTTP 200 and API health `ok` |
 | Live API loop | create session, then run recommended experiment over HTTP | Initial entropy 1.0; one experiment stored; 20×20 normalized posterior and waveform returned |
 | Unified shutdown | `Ctrl+C` | Launcher reported clean shutdown; no listeners remained on ports 5173 or 8000 |
@@ -66,7 +68,7 @@ The checkpoint is optional. Core inference deliberately remains physics-based, s
 | 16 | ARGUS versus random benchmark runs | 30 paired cases plus grid baseline; saved JSON/CSV | Pass |
 | 17 | WAV upload works | real PCM WAV integration test updates the posterior | Pass |
 | 18 | Serial abstraction is functional | pyserial discovery, handshake, commands, parsing, errors; ESP32 firmware included | Pass* |
-| 19 | Tests pass | 17 passing tests | Pass |
+| 19 | Tests pass | 19 passing tests | Pass |
 | 20 | README has exact setup instructions | backend, frontend, unified launcher, demo, training, evaluation, and hardware commands | Pass |
 
 `*` The software/firmware path is implemented and absence is handled, but actual electrical hardware was not available in this workspace. Physical sensing performance therefore remains unvalidated.
