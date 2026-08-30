@@ -1,6 +1,6 @@
 # ARGUS NEO IEEE paper package
 
-This directory is a self-contained, upload-ready IEEE conference manuscript for ARGUS NEO.
+This directory is a self-contained, upload-ready IEEE conference manuscript for ARGUS NEO and its candidate algorithmic contribution, trust-gated counterfactual dual-control interrogation (TG-CDI).
 
 ## Overleaf
 
@@ -39,7 +39,9 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 
 ## Files
 
-- `main.tex` - detailed IEEE manuscript with equations, algorithms, inline diagrams, observed results, limitations, and appendices.
-- `references.bib` - primary scholarly references and the official LMSD dataset record.
-- `main.pdf` - locally compiled and visually verified 11-page manuscript.
+- `main.tex` - detailed IEEE manuscript with TG-CDI equations and pseudocode, competitor positioning, a claim-oriented technical map, diagrams, observed results, limitations, and appendices.
+- `references.bib` - primary scholarly references, reviewed patent documents, official product sources, and the LMSD dataset record.
+- `main.pdf` - locally compiled and visually verified 14-page manuscript.
 - `argus-ieee-overleaf.zip` - upload-ready archive containing the source files and this guide.
+
+The manuscript is technical evidence and research positioning, not a patent application, patentability opinion, freedom-to-operate opinion, certification record, or proof of market superiority.
