@@ -61,7 +61,7 @@ def main() -> None:
     try:
         backend = subprocess.Popen([sys.executable, str(ROOT / "backend" / "run_backend.py")], cwd=ROOT)
         frontend = subprocess.Popen(
-            [npm, "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"],
+            [npm, "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "5173"],
             cwd=ROOT / "frontend",
         )
         print("\nARGUS is starting locally:")

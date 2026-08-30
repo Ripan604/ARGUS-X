@@ -28,5 +28,7 @@ paper/*.aux
 paper/*.bbl
 paper/*.blg
 paper/*.log
+output/*-site-*.tar.gz
+output/site-*-screenshot.png
 .DS_Store
 Thumbs.db

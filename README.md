@@ -74,7 +74,7 @@ In a second terminal:
 ```powershell
 cd frontend
 npm install
-npm run dev -- --host 127.0.0.1 --port 5173
+npm run dev -- --hostname 127.0.0.1 --port 5173
 ```
 
 Frontend: `http://localhost:5173`
