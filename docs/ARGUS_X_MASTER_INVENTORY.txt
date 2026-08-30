@@ -1,0 +1,3014 @@
+============================================================
+ARGUS-X — COMPLETE PROBLEM / FAILURE-MODE INVENTORY
+============================================================
+
+PURPOSE:
+Build a genuinely industry-strong autonomous structural inspection
+system rather than simply reproducing the existing ARGUS paper.
+
+IMPORTANT:
+Not every problem must be solved simultaneously.
+Every problem should be:
+1. acknowledged,
+2. classified,
+3. tested where relevant,
+4. either solved, bounded, or explicitly documented.
+
+============================================================
+A. PROBLEM DEFINITION
+============================================================
+
+A1. Problem is currently too narrowly framed as defect localization.
+    Need to define whether the system must detect, localize, classify,
+    quantify, track and assess structural damage.
+
+A2. No explicit distinction between:
+    - anomaly detection
+    - damage detection
+    - damage localization
+    - damage classification
+    - damage quantification
+    - structural integrity assessment.
+
+A3. No-defect / healthy condition may not be explicitly modeled.
+
+A4. Unknown defect types may not be represented.
+
+A5. Multiple simultaneous defects are not adequately represented.
+
+A6. Defect geometry may be oversimplified to a point/location.
+
+A7. Defects may have arbitrary shapes.
+
+A8. Defect orientation may matter.
+
+A9. Defect depth may matter.
+
+A10. Defect through-thickness position may matter.
+
+A11. Defect size may matter.
+
+A12. Defect severity may matter.
+
+A13. Defect evolution over time is not modeled.
+
+A14. Progressive fatigue damage is not modeled.
+
+A15. Damage initiation is not modeled.
+
+A16. Damage propagation is not modeled.
+
+A17. Repair state is not modeled.
+
+A18. Previously detected damage history may not influence future inference.
+
+A19. Structural load state may not be part of the latent state.
+
+A20. Operating condition may not be part of the problem definition.
+
+A21. Inspection objective may change by application.
+
+A22. Detection objective and localization objective can conflict.
+
+A23. Localization accuracy alone does not necessarily imply engineering usefulness.
+
+A24. There is no explicit decision layer translating prediction into an
+    engineering action.
+
+A25. No explicit definition of what constitutes a "safe" inspection result.
+
+A26. No explicit definition of when human intervention is mandatory.
+
+A27. No explicit definition of acceptable false-negative rate.
+
+A28. No explicit definition of acceptable false-positive rate.
+
+A29. No explicit definition of inspection cost.
+
+A30. No explicit definition of safety risk.
+
+A31. No explicit definition of operational downtime.
+
+A32. No explicit definition of acceptable inference latency.
+
+A33. No explicit definition of inspection coverage.
+
+A34. No explicit definition of minimum detectable damage size.
+
+A35. No explicit definition of probability of detection (POD).
+
+============================================================
+B. PHYSICS MODEL PROBLEMS
+============================================================
+
+B1. Simplified wave propagation model.
+
+B2. Constant wave velocity assumption can be unrealistic.
+
+B3. Composite materials are anisotropic.
+
+B4. Wave velocity can depend on propagation direction.
+
+B5. Wave velocity can depend on material orientation.
+
+B6. Wave velocity can depend on laminate layup.
+
+B7. Wave velocity can depend on frequency.
+
+B8. Dispersion may be insufficiently modeled.
+
+B9. Multiple guided-wave modes may exist.
+
+B10. Mode conversion may occur.
+
+B11. Different modes may overlap in time/frequency.
+
+B12. Group velocity and phase velocity differ.
+
+B13. Boundary reflections may be more complex than modeled.
+
+B14. Edge effects may be significant.
+
+B15. Structural geometry may be more complex than a rectangular plate.
+
+B16. Curvature may affect propagation.
+
+B17. Stiffeners may affect propagation.
+
+B18. Joints may affect propagation.
+
+B19. Fasteners may affect propagation.
+
+B20. Thickness variations may affect propagation.
+
+B21. Ply interfaces can affect wave propagation.
+
+B22. Delaminations can interact with multiple modes.
+
+B23. Crack scattering may be direction-dependent.
+
+B24. Damage scattering may not be isotropic.
+
+B25. Scattering may depend on frequency.
+
+B26. Reflection may depend on damage orientation.
+
+B27. Transmission may depend on damage orientation.
+
+B28. Structural damping may vary.
+
+B29. Attenuation may be path-dependent.
+
+B30. Material attenuation can be frequency-dependent.
+
+B31. Temperature changes wave speed.
+
+B32. Temperature changes attenuation.
+
+B33. Temperature can change sensor behavior.
+
+B34. Humidity may affect measurements.
+
+B35. Environmental conditions can alter baseline signals.
+
+B36. Mechanical loading changes the measured response.
+
+B37. Stress state may affect wave propagation.
+
+B38. Nonlinear damage effects may be absent.
+
+B39. Contact nonlinearities may be absent.
+
+B40. Boundary condition uncertainty may be ignored.
+
+B41. Sensor mounting can alter local mechanics.
+
+B42. Couplant properties can alter measurements.
+
+B43. Sensor orientation can affect measurements.
+
+B44. Exciter coupling can vary.
+
+B45. Receiver coupling can vary.
+
+B46. Hardware transfer functions may be ignored.
+
+B47. Structural heterogeneity may be underestimated.
+
+B48. Composite manufacturing variability may be ignored.
+
+B49. Ply waviness may be ignored.
+
+B50. Fiber volume variability may be ignored.
+
+B51. Manufacturing defects may interact with artificial defects.
+
+B52. Real defects are not guaranteed to match synthetic defect assumptions.
+
+B53. Damage interaction effects may be absent.
+
+B54. Multiple scattering may be absent.
+
+B55. Reverberation/ringing may be oversimplified.
+
+B56. Noise may not match field noise.
+
+B57. Noise may be nonstationary.
+
+B58. Noise may be correlated across sensors.
+
+B59. Sensor noise may be heterogeneous.
+
+B60. Electromagnetic interference may exist.
+
+B61. Mechanical vibration may contaminate the signal.
+
+B62. Ambient acoustic noise may contaminate the signal.
+
+B63. External excitation may contaminate the signal.
+
+B64. Real structures may have operational vibration.
+
+B65. Temperature-dependent physics may not be modeled.
+
+B66. Aging-dependent physics may not be modeled.
+
+B67. Fatigue-dependent physics may not be modeled.
+
+B68. Material degradation may alter baseline physics.
+
+B69. Current simulator may not be a validated digital twin.
+
+B70. Simulator parameter uncertainty may be underestimated.
+
+B71. Simulator structural discrepancy may be underestimated.
+
+B72. Simulator may generate overly easy synthetic examples.
+
+B73. Neural surrogate may simply learn simulator artifacts.
+
+B74. Simulator-to-real mismatch may dominate model performance.
+
+B75. Physics model may not be updated continuously from real measurements.
+
+============================================================
+C. SIGNAL ACQUISITION PROBLEMS
+============================================================
+
+C1. Sensor positions may be uncertain.
+
+C2. Source positions may be uncertain.
+
+C3. Receiver positions may be uncertain.
+
+C4. Sensor orientation may be uncertain.
+
+C5. Sensor timing synchronization may be imperfect.
+
+C6. Sampling-clock drift may occur.
+
+C7. ADC quantization may affect signals.
+
+C8. ADC saturation may occur.
+
+C9. Clipping may occur.
+
+C10. Dynamic range may be insufficient.
+
+C11. Analog front-end noise may occur.
+
+C12. Amplifier gain may vary.
+
+C13. Exciter amplitude may vary.
+
+C14. Exciter frequency response may vary.
+
+C15. Sensor sensitivity may vary.
+
+C16. Sensor-to-sensor manufacturing variation may exist.
+
+C17. Sensor degradation over time may occur.
+
+C18. Sensor detachment may occur.
+
+C19. Sensor partial detachment may occur.
+
+C20. Cable faults may occur.
+
+C21. Connector failures may occur.
+
+C22. Wireless packet loss may occur.
+
+C23. Communication latency may occur.
+
+C24. Sampling data may be incomplete.
+
+C25. Missing samples may occur.
+
+C26. Corrupted samples may occur.
+
+C27. Timestamp errors may occur.
+
+C28. Sensor saturation may go undetected.
+
+C29. Hardware temperature may change characteristics.
+
+C30. Battery voltage may affect acquisition quality.
+
+C31. Embedded processing may introduce quantization.
+
+C32. Embedded hardware may not meet sampling requirements.
+
+C33. Hardware may introduce deterministic artifacts.
+
+C34. Sensor mounting repeatability may be poor.
+
+C35. Probe repositioning may change signal characteristics.
+
+C36. Coupling pressure may vary.
+
+C37. Couplant thickness may vary.
+
+C38. Surface roughness may vary.
+
+C39. Sensor placement may not exactly match planner coordinates.
+
+C40. Physical actuator motion may not equal commanded motion.
+
+============================================================
+D. PREPROCESSING PROBLEMS
+============================================================
+
+D1. Filtering can remove useful damage information.
+
+D2. Filtering can introduce phase distortion.
+
+D3. Filtering parameters may be manually tuned.
+
+D4. Baseline subtraction may be unreliable.
+
+D5. Healthy baseline may be unavailable.
+
+D6. Healthy baseline may change with environment.
+
+D7. Baseline drift may be mistaken for damage.
+
+D8. Damage may be mistaken for baseline variability.
+
+D9. Normalization may leak information across datasets.
+
+D10. Window selection may be arbitrary.
+
+D11. Time alignment may be imperfect.
+
+D12. Sensor synchronization errors may distort features.
+
+D13. FFT resolution may be insufficient.
+
+D14. Time-frequency representation choice may affect model output.
+
+D15. Matched filtering may assume an excitation model that is imperfect.
+
+D16. Correlation peaks may be ambiguous.
+
+D17. Multiple reflections can create false peaks.
+
+D18. Mode arrivals can create false peaks.
+
+D19. Damage echoes can overlap.
+
+D20. SNR estimation may be biased.
+
+D21. Handcrafted feature extraction may discard information.
+
+D22. Feature extraction may fail under distribution shift.
+
+D23. Fixed preprocessing may be inappropriate for different materials.
+
+D24. Fixed frequency bands may not transfer across structures.
+
+D25. Window duration may not transfer across structures.
+
+============================================================
+E. FEATURE ENGINEERING PROBLEMS
+============================================================
+
+E1. Handcrafted features may be insufficient.
+
+E2. Features may be correlated.
+
+E3. Features may be redundant.
+
+E4. Features may not capture waveform morphology.
+
+E5. Features may not capture phase information.
+
+E6. Features may not capture spatial dependencies.
+
+E7. Features may not capture temporal dependencies.
+
+E8. Features may not capture multi-mode interactions.
+
+E9. Features may be sensitive to noise.
+
+E10. Features may be sensitive to temperature.
+
+E11. Features may be sensitive to coupling.
+
+E12. Features may be sensitive to amplitude scaling.
+
+E13. Features may not generalize to different structures.
+
+E14. Feature selection may be manually chosen.
+
+E15. No learned representation benchmark may exist.
+
+E16. No self-supervised representation benchmark may exist.
+
+============================================================
+F. DATASET PROBLEMS
+============================================================
+
+F1. Training data may be too small.
+
+F2. 30 simulation cases is not enough for strong deep-learning claims.
+
+F3. Defect locations may be insufficiently diverse.
+
+F4. Defect types may be insufficiently diverse.
+
+F5. Defect sizes may be insufficiently diverse.
+
+F6. Defect orientations may be insufficiently diverse.
+
+F7. Material properties may be insufficiently diverse.
+
+F8. Layups may be insufficiently diverse.
+
+F9. Panel geometries may be insufficiently diverse.
+
+F10. Boundary conditions may be insufficiently diverse.
+
+F11. Noise conditions may be insufficiently diverse.
+
+F12. Temperature conditions may be insufficiently diverse.
+
+F13. Loading conditions may be insufficiently diverse.
+
+F14. Manufacturing variability may be missing.
+
+F15. Hardware variability may be missing.
+
+F16. Sensor placement variability may be missing.
+
+F17. Defect placement may be unrealistically clean.
+
+F18. Dataset may contain synthetic artifacts.
+
+F19. Train/test leakage may occur through repeated structures.
+
+F20. Train/test leakage may occur through repeated defect geometry.
+
+F21. Train/test leakage may occur through repeated sensors.
+
+F22. Random train/test splitting may overestimate generalization.
+
+F23. Structure-level splitting may be required.
+
+F24. Defect-level splitting may be required.
+
+F25. Environment-level splitting may be required.
+
+F26. Material-level splitting may be required.
+
+F27. Geometry-level splitting may be required.
+
+F28. Frequency-level extrapolation should be tested.
+
+F29. Unseen-location extrapolation should be tested.
+
+F30. Unseen-defect-type generalization should be tested.
+
+F31. Unseen-material generalization should be tested.
+
+F32. Unseen-panel generalization should be tested.
+
+F33. Unseen-temperature generalization should be tested.
+
+F34. Long-term drift data may be missing.
+
+F35. Real-world field data may be insufficient.
+
+F36. Ground-truth labels may be noisy.
+
+F37. Ground-truth defect boundaries may be uncertain.
+
+F38. Real defect shape may not be precisely known.
+
+F39. Class imbalance may occur.
+
+F40. Healthy samples may dominate the dataset.
+
+F41. Rare damage states may be underrepresented.
+
+F42. Severe damage may be easier than subtle damage, causing optimistic metrics.
+
+F43. Public datasets may use different acquisition systems.
+
+F44. Different datasets may use different coordinate systems.
+
+F45. Different datasets may have different sampling rates.
+
+F46. Different datasets may have different sensor layouts.
+
+F47. Different datasets may have different excitation schemes.
+
+F48. Different datasets may have different material layups.
+
+F49. Cross-dataset benchmark may be required.
+
+============================================================
+G. REAL-WORLD DATA PROBLEMS
+============================================================
+
+G1. Sim-to-real gap.
+
+G2. Synthetic and real feature distributions may differ.
+
+G3. Real waveforms may contain unmodeled artifacts.
+
+G4. Real sensor transfer functions may differ.
+
+G5. Real environmental variation may dominate damage signal.
+
+G6. Real damage may differ from modeled damage.
+
+G7. Public dataset performance may not transfer to your hardware.
+
+G8. Your hardware data may not transfer to public datasets.
+
+G9. Domain adaptation may be required.
+
+G10. Domain adaptation itself can erase damage-sensitive information.
+
+G11. Domain adaptation may cause negative transfer.
+
+G12. No-label adaptation is difficult.
+
+G13. Few-shot adaptation may still overfit.
+
+G14. Cross-panel adaptation may fail.
+
+G15. Cross-material adaptation may fail.
+
+G16. Cross-layup adaptation may fail.
+
+G17. Cross-hardware adaptation may fail.
+
+G18. Cross-temperature adaptation may fail.
+
+G19. Cross-frequency adaptation may fail.
+
+G20. Time-varying domain drift may occur.
+
+G21. Lifelong adaptation may be required.
+
+G22. Online adaptation may destabilize the model.
+
+G23. Catastrophic forgetting may occur during adaptation.
+
+G24. Real-time calibration may be difficult.
+
+============================================================
+H. MACHINE LEARNING MODEL PROBLEMS
+============================================================
+
+H1. Model architecture may be too simple.
+
+H2. Model may overfit simulation data.
+
+H3. Model may learn simulator shortcuts.
+
+H4. Model may memorize sensor geometry.
+
+H5. Model may memorize defect positions.
+
+H6. Model may memorize noise patterns.
+
+H7. Model may learn amplitude instead of damage.
+
+H8. Model may rely on environmental artifacts.
+
+H9. Model may not generalize spatially.
+
+H10. Model may not generalize temporally.
+
+H11. Model may not generalize across structures.
+
+H12. Model may not generalize across materials.
+
+H13. Model may not generalize across sensor layouts.
+
+H14. Model may not generalize across acquisition systems.
+
+H15. Model may not generalize to unseen defect types.
+
+H16. Model may not generalize to unseen defect sizes.
+
+H17. Model may not generalize to multiple defects.
+
+H18. Model may not handle missing sensors.
+
+H19. Model may not handle noisy channels.
+
+H20. Model may not handle corrupted channels.
+
+H21. Model may not handle sensor failures.
+
+H22. Model may not handle unknown hardware.
+
+H23. Model may not handle missing metadata.
+
+H24. Model may not handle uncertain coordinates.
+
+H25. Model may not represent spatial structure optimally.
+
+H26. Model may not represent temporal structure optimally.
+
+H27. Model may not represent frequency structure optimally.
+
+H28. Model may not combine spatial, temporal and spectral information.
+
+H29. Model may require too much labeled data.
+
+H30. Model may be too computationally expensive.
+
+H31. Model may be too large for edge deployment.
+
+H32. Model may be too slow for active planning.
+
+H33. Model latency may be underestimated.
+
+H34. Training may be unstable.
+
+H35. Hyperparameter tuning may overfit benchmark data.
+
+H36. Architecture search may implicitly leak validation knowledge.
+
+============================================================
+I. PHYSICS-INFORMED ML PROBLEMS
+============================================================
+
+I1. Physics constraints may be only descriptive, not enforced.
+
+I2. Physics features may be incorrectly specified.
+
+I3. Wrong physical assumptions can bias the model.
+
+I4. Physics loss weighting may be arbitrary.
+
+I5. Physics loss may dominate data loss.
+
+I6. Data loss may dominate physics loss.
+
+I7. Physics model may be inaccurate.
+
+I8. Model may satisfy a simplified physics model but fail reality.
+
+I9. Physics constraints may reduce flexibility.
+
+I10. Physics-informed model may be harder to train.
+
+I11. Physics-informed model may require differentiable physics.
+
+I12. Differentiable simulator may be computationally expensive.
+
+I13. Physics constraints may need to vary by material.
+
+I14. Directional anisotropy may need explicit representation.
+
+I15. Frequency-dependent physics may need explicit representation.
+
+I16. Multiple wave modes may need explicit representation.
+
+I17. Mode conversion may need explicit representation.
+
+I18. Boundary conditions may need to be represented.
+
+I19. Physics consistency should be measured quantitatively, not just claimed.
+
+============================================================
+J. GRAPH / SPATIAL MODEL PROBLEMS
+============================================================
+
+J1. Sensor graph definition may be arbitrary.
+
+J2. Fully connected graph may introduce irrelevant relationships.
+
+J3. Distance-only graph may ignore wave propagation.
+
+J4. Geometry-only graph may ignore anisotropy.
+
+J5. Static graph may be inappropriate for changing frequencies.
+
+J6. Edge weights may not represent physical coupling.
+
+J7. Directionality may be lost.
+
+J8. Sensor topology may change between deployments.
+
+J9. Graph may not handle missing sensors.
+
+J10. Graph may not handle new sensors.
+
+J11. Graph may not handle irregular sensor layouts.
+
+J12. Graph may not handle movable sensors.
+
+J13. Graph may not represent candidate experiment paths.
+
+J14. Graph may not represent defect nodes or latent fields.
+
+J15. Graph model may merely reproduce prior GNN work.
+
+J16. Graph novelty must therefore come from the actual closed-loop
+    decision/inference contribution, not simply "we used a GNN."
+
+Recent literature already contains physics-informed GNN CFRP localization
+and domain-adaptive relational graph approaches. Therefore these components
+cannot safely be claimed as standalone novelty. 
+============================================================
+
+K. MULTIMODAL LEARNING PROBLEMS
+============================================================
+
+K1. Multiple sensors may have incompatible sampling rates.
+
+K2. Multiple modalities may have different timestamps.
+
+K3. Modalities may have different noise properties.
+
+K4. Some modalities may be absent.
+
+K5. Some modalities may be unreliable.
+
+K6. Fusion may be dominated by one modality.
+
+K7. Early fusion may create huge dimensionality.
+
+K8. Late fusion may lose cross-modal interactions.
+
+K9. Cross-modal attention may overfit.
+
+K10. Modality failure needs graceful degradation.
+
+K11. Modality availability may change between structures.
+
+K12. Camera-based damage may only reveal surface evidence.
+
+K13. Acoustic data may reveal subsurface evidence.
+
+K14. Vision and acoustics may disagree.
+
+K15. System must decide how disagreement affects posterior belief.
+
+K16. Adding modalities may increase cost.
+
+K17. Planner must consider the cost of switching modalities.
+
+K18. Multimodal sensing alone is not novel.
+
+============================================================
+L. BASELINE / REFERENCE MODEL PROBLEMS
+============================================================
+
+L1. Random baseline may be too weak.
+
+L2. Uniform-grid baseline may be too weak.
+
+L3. Need uncertainty-driven baseline.
+
+L4. Need greedy information-gain baseline.
+
+L5. Need Bayesian experimental-design baseline.
+
+L6. Need learned acquisition-policy baseline.
+
+L7. Need non-physics neural baseline.
+
+L8. Need physics-informed neural baseline.
+
+L9. Need classical signal-processing baseline.
+
+L10. Need potentially likelihood-free Bayesian baseline.
+
+L11. Need cross-dataset baseline.
+
+L12. Need sensor-failure baseline.
+
+L13. Need fixed-budget benchmark.
+
+L14. Need fixed-time benchmark.
+
+L15. Need fixed-cost benchmark.
+
+L16. Need fixed-number-of-measurements benchmark.
+
+L17. Need fair computational-budget comparison.
+
+L18. Need identical sensor/hardware assumptions across methods.
+
+L19. Need identical train/test splits.
+
+L20. Need statistical significance analysis.
+
+============================================================
+M. BAYESIAN INFERENCE PROBLEMS
+============================================================
+
+M1. Prior distribution may be unrealistic.
+
+M2. Uniform prior may not reflect real structures.
+
+M3. Prior may need application-specific information.
+
+M4. Prior uncertainty may be under-modeled.
+
+M5. Likelihood model may be misspecified.
+
+M6. Likelihood calibration may be poor.
+
+M7. Likelihood may not capture all physical variability.
+
+M8. Measurements may not be conditionally independent.
+
+M9. Sequential updates can compound model error.
+
+M10. Posterior can become overconfident.
+
+M11. Posterior may collapse around the wrong hypothesis.
+
+M12. Model mismatch can produce false certainty.
+
+M13. Single measurement may dominate posterior.
+
+M14. Numerical underflow may affect likelihood calculations.
+
+M15. Posterior resolution may be limited by grid resolution.
+
+M16. Grid discretization creates localization quantization.
+
+M17. Continuous defect coordinates may be needed.
+
+M18. Posterior may need to represent defect extent.
+
+M19. Posterior may need to represent multiple defects.
+
+M20. Posterior should potentially represent defect type and severity jointly.
+
+M21. Exact posterior uncertainty may not be tractable.
+
+M22. Approximate Bayesian methods may be necessary.
+
+M23. Likelihood-free inference could be explored.
+
+M24. Bayesian computation cost may grow with candidate count.
+
+Recent work also explores likelihood-free Bayesian guided-wave damage
+identification, meaning a handcrafted explicit likelihood is not the only
+available direction. 
+============================================================
+N. UNCERTAINTY QUANTIFICATION PROBLEMS
+============================================================
+
+N1. Current confidence is heuristic.
+
+N2. Confidence may not be statistically calibrated.
+
+N3. Confidence may not correspond to empirical correctness.
+
+N4. Model uncertainty may be missing.
+
+N5. Data uncertainty may be missing.
+
+N6. Physics-model uncertainty may be missing.
+
+N7. Sensor uncertainty may be missing.
+
+N8. Domain uncertainty may be missing.
+
+N9. Posterior uncertainty may be incorrectly interpreted as model confidence.
+
+N10. Need confidence calibration.
+
+N11. Need reliability diagrams.
+
+N12. Need expected calibration error.
+
+N13. Need calibration under distribution shift.
+
+N14. Need uncertainty under sensor failure.
+
+N15. Need uncertainty under noise increase.
+
+N16. Need uncertainty under unseen defect types.
+
+N17. Need uncertainty under unseen structures.
+
+N18. Need confidence intervals for localization.
+
+N19. Need prediction regions rather than only point predictions.
+
+N20. Need coverage guarantees where possible.
+
+N21. Need sharpness analysis.
+
+N22. Need calibration after domain adaptation.
+
+============================================================
+O. OUT-OF-DISTRIBUTION / UNKNOWN DAMAGE PROBLEMS
+============================================================
+
+O1. Model may confidently predict a class it has never seen.
+
+O2. Unknown defect types may be forced into known classes.
+
+O3. Unknown materials may be classified incorrectly.
+
+O4. Unknown structures may produce false confidence.
+
+O5. Sensor faults may look like damage.
+
+O6. Environmental changes may look like damage.
+
+O7. System currently needs an explicit abstention strategy.
+
+O8. Need OOD detection.
+
+O9. Need anomaly scoring.
+
+O10. Need reject-option classification.
+
+O11. Need "insufficient evidence" output.
+
+O12. Need "request another measurement" output.
+
+O13. Need "human inspection required" output.
+
+O14. OOD threshold needs calibration.
+
+O15. OOD detector itself may fail under domain shift.
+
+============================================================
+P. ACTIVE SENSING / EXPERIMENT DESIGN PROBLEMS
+============================================================
+
+P1. Candidate experiment space may be enormous.
+
+P2. Candidate evaluation may be computationally expensive.
+
+P3. Current score contains manually selected weights.
+
+P4. Manual weights may not generalize across applications.
+
+P5. Information gain may not equal engineering value.
+
+P6. Entropy reduction may not equal defect-detection value.
+
+P7. An experiment can reduce entropy but fail to improve localization.
+
+P8. Information gain may favor already highly probable hypotheses.
+
+P9. Rare but critical hypotheses may be ignored.
+
+P10. Worst-case risk may matter more than expected information.
+
+P11. Bayesian expected utility may be more appropriate in safety-critical use.
+
+P12. Physical cost may be incompletely modeled.
+
+P13. Travel distance may be incomplete.
+
+P14. Energy cost may be incomplete.
+
+P15. Measurement time may be incomplete.
+
+P16. Sensor switching cost may be incomplete.
+
+P17. Operator interaction cost may be ignored.
+
+P18. Safety risk may be ignored.
+
+P19. Access constraints may be ignored.
+
+P20. Obstructions may be ignored.
+
+P21. Sensor reachability may be ignored.
+
+P22. Physical collision constraints may be ignored.
+
+P23. Candidate experiments may not be feasible physically.
+
+P24. Probe path planning may be separated from experiment planning.
+
+P25. Planner may select geometrically informative but physically impossible actions.
+
+P26. Redundancy penalty may be too simplistic.
+
+P27. Two different experiments may still be statistically redundant.
+
+P28. Sequence dependence may be important.
+
+P29. Greedy one-step planning may be suboptimal.
+
+P30. Multi-step planning may improve performance.
+
+P31. Long-horizon planning can explode combinatorially.
+
+P32. Planner should potentially use receding-horizon optimization.
+
+P33. Planner could model experiment selection as a POMDP.
+
+P34. Planner could use Bayesian optimization.
+
+P35. Planner could use contextual bandits.
+
+P36. Planner could use reinforcement learning.
+
+P37. RL may introduce sample inefficiency.
+
+P38. RL may exploit simulator loopholes.
+
+P39. RL policy may fail under real-world distribution shift.
+
+P40. Learned planners can become opaque.
+
+P41. Planner needs safety constraints.
+
+P42. Planner needs hard feasibility constraints.
+
+P43. Planner needs action uncertainty.
+
+P44. Planner needs sensor reliability information.
+
+P45. Planner should possibly choose sensing modality as an action.
+
+P46. Planner should possibly choose frequency as an action.
+
+P47. Planner should possibly choose waveform as an action.
+
+P48. Planner should possibly choose amplitude as an action.
+
+P49. Planner should possibly choose source/receiver positions jointly.
+
+P50. Planner should account for uncertainty in physical execution.
+
+============================================================
+Q. DECISION-THEORETIC PROBLEMS
+============================================================
+
+Q1. Information gain is not the same as decision value.
+
+Q2. Localization error is not the same as engineering loss.
+
+Q3. False negative and false positive costs are different.
+
+Q4. Missing a critical defect may be much more costly than over-inspection.
+
+Q5. Inspection decisions can depend on structural criticality.
+
+Q6. Damage severity should affect decision thresholds.
+
+Q7. Risk should influence experiment selection.
+
+Q8. Maintenance cost should potentially influence action selection.
+
+Q9. Downtime should influence action selection.
+
+Q10. Safety consequence should influence action selection.
+
+Q11. Need explicit Bayes-risk formulation.
+
+Q12. Need application-dependent cost matrix.
+
+Q13. Need distinction between information-optimal and risk-optimal inspection.
+
+Optimal Bayesian sensor/experiment design for guided-wave SHM has existed
+for years, including Bayes-risk formulations; therefore simply claiming
+"Bayesian active sensor selection" as novel would be unsafe. 
+============================================================
+R. STOPPING-CONDITION PROBLEMS
+============================================================
+
+R1. Fixed confidence threshold may be poorly calibrated.
+
+R2. Fixed entropy threshold may not imply useful localization.
+
+R3. Some defects may require more measurements.
+
+R4. Some defects may never reach threshold.
+
+R5. Planner may stop too early.
+
+R6. Planner may inspect too long.
+
+R7. Confidence may rise due to model bias, not evidence.
+
+R8. Entropy may decline while posterior is wrong.
+
+R9. Stop condition should potentially depend on application risk.
+
+R10. Stop condition should potentially depend on defect severity.
+
+R11. Stop condition should potentially depend on OOD status.
+
+R12. Stop condition should potentially depend on hardware reliability.
+
+R13. Need measurement-budget stopping.
+
+R14. Need time-budget stopping.
+
+R15. Need energy-budget stopping.
+
+R16. Need risk-budget stopping.
+
+============================================================
+S. MULTI-DEFECT PROBLEMS
+============================================================
+
+S1. Single dominant defect assumption is restrictive.
+
+S2. Multiple defects produce overlapping wave responses.
+
+S3. Scattering from defects can interact.
+
+S4. Closely spaced defects may be unresolved.
+
+S5. Posterior can become multimodal.
+
+S6. Single Gaussian-like uncertainty assumptions may fail.
+
+S7. Defect count may be unknown.
+
+S8. Need joint inference of defect count.
+
+S9. Need instance separation.
+
+S10. Need defect association across measurements.
+
+S11. New measurements may reveal additional defects.
+
+S12. Existing defect estimates may need to be revised.
+
+S13. Planner must decide whether to refine known defects or search globally.
+
+S14. Planner must trade exploitation vs exploration.
+
+S15. Multi-defect uncertainty needs structured representation.
+
+============================================================
+T. DEFECT CHARACTERIZATION PROBLEMS
+============================================================
+
+T1. Location alone is insufficient.
+
+T2. Need defect size.
+
+T3. Need defect shape.
+
+T4. Need defect orientation.
+
+T5. Need defect depth.
+
+T6. Need defect type.
+
+T7. Need severity.
+
+T8. Need potentially crack length.
+
+T9. Need delamination area.
+
+T10. Need void volume or equivalent parameter.
+
+T11. Need confidence interval for each quantity.
+
+T12. Different defect types can have similar wave signatures.
+
+T13. Same defect type can produce different signatures.
+
+T14. Severity labels may be subjective.
+
+T15. Defect dimensions may have ground-truth uncertainty.
+
+T16. Characterization may require additional measurement modalities.
+
+============================================================
+U. DOMAIN GENERALIZATION PROBLEMS
+============================================================
+
+U1. New panel geometry.
+
+U2. New material.
+
+U3. New laminate.
+
+U4. New sensor positions.
+
+U5. New sensor count.
+
+U6. New hardware.
+
+U7. New amplifier.
+
+U8. New excitation source.
+
+U9. New sampling frequency.
+
+U10. New environmental conditions.
+
+U11. New structural loading.
+
+U12. New defect type.
+
+U13. New defect size.
+
+U14. New defect orientation.
+
+U15. New surface condition.
+
+U16. New manufacturing process.
+
+U17. New operator.
+
+U18. New mounting procedure.
+
+U19. Cross-domain benchmark is required.
+
+U20. Domain adaptation should be measured, not assumed.
+
+Recent 2025–2026 research continues to identify cross-structure, geometry,
+material, temperature and domain discrepancy as major SHM barriers. 
+============================================================
+V. BASELINE-DEPENDENCE PROBLEMS
+============================================================
+
+V1. Healthy baseline may be required.
+
+V2. Healthy baseline may become stale.
+
+V3. Structural aging changes baseline.
+
+V4. Temperature changes baseline.
+
+V5. Sensor degradation changes baseline.
+
+V6. Installation shifts change baseline.
+
+V7. Removing baseline dependence would improve deployment.
+
+V8. Need baseline-free mode.
+
+V9. Baseline-free mode must not simply become less sensitive.
+
+V10. Baseline-free performance must be separately benchmarked.
+
+Recent guided-wave work is already pursuing baseline-free multimodal damage
+detection, so this feature itself is not sufficient novelty. 
+============================================================
+W. ENVIRONMENTAL ROBUSTNESS PROBLEMS
+============================================================
+
+W1. Temperature.
+
+W2. Humidity.
+
+W3. Rain.
+
+W4. Snow.
+
+W5. Wind.
+
+W6. Ambient vibration.
+
+W7. Operational loading.
+
+W8. Long-term drift.
+
+W9. Day/night effects.
+
+W10. Sensor temperature.
+
+W11. Material temperature.
+
+W12. Thermal gradients.
+
+W13. Moisture ingress.
+
+W14. Environmental changes may resemble damage.
+
+W15. Damage may be masked by environmental variation.
+
+W16. Need environmental conditioning or compensation.
+
+Long-duration public guided-wave SHM data now exists specifically under
+uncontrolled/dynamic conditions, including temperature, rain, snow and
+sensor/installation drift, making this a realistic benchmark rather than
+a theoretical concern. 
+============================================================
+X. SENSOR FAULT / RELIABILITY PROBLEMS
+============================================================
+
+X1. Dead sensor.
+
+X2. Intermittent sensor.
+
+X3. Drifted sensor.
+
+X4. Noisy sensor.
+
+X5. Misaligned sensor.
+
+X6. Detached sensor.
+
+X7. Saturated sensor.
+
+X8. Missing data.
+
+X9. Corrupted data.
+
+X10. False sensor reading.
+
+X11. Sensor reliability must be estimated.
+
+X12. Sensor reliability should affect posterior weighting.
+
+X13. Sensor reliability should affect experiment planning.
+
+X14. Planner should avoid unreliable channels.
+
+X15. Planner should exploit redundant sensors.
+
+X16. Need automatic sensor-fault detection.
+
+X17. Need fault isolation.
+
+X18. Need graceful degradation.
+
+X19. Need sensor-recovery strategy.
+
+X20. Need automatic recalibration strategy.
+
+Current research is explicitly studying sensing digital twins that distinguish
+structural damage from sensing degradation and estimate probabilistic sensor
+reliability, so this is a valuable direction but not a blank research area. 
+============================================================
+Y. COMPUTATIONAL PROBLEMS
+============================================================
+
+Y1. Candidate experiment explosion.
+
+Y2. Neural inference cost.
+
+Y3. Simulator cost.
+
+Y4. High-fidelity FEM cost.
+
+Y5. Bayesian posterior update cost.
+
+Y6. Hyperparameter optimization cost.
+
+Y7. Large waveform memory requirements.
+
+Y8. Real-time spectrogram generation cost.
+
+Y9. Edge-device resource constraints.
+
+Y10. GPU dependency.
+
+Y11. CPU fallback.
+
+Y12. Cold-start latency.
+
+Y13. Communication latency.
+
+Y14. Hardware acquisition latency.
+
+Y15. End-to-end latency should be measured.
+
+Y16. Throughput should be measured.
+
+Y17. Memory use should be measured.
+
+Y18. Power use should be measured.
+
+Y19. Candidate pruning strategy may be required.
+
+Y20. Surrogate model may be required.
+
+Y21. Reduced-order physics may be required.
+
+Y22. Approximate inference may be required.
+
+Y23. Quantization may be required for edge deployment.
+
+Y24. Model compression may be required.
+
+============================================================
+Z. SIMULATOR / DIGITAL-TWIN PROBLEMS
+============================================================
+
+Z1. Simulator may not match real physics.
+
+Z2. Simulator parameters may be inaccurate.
+
+Z3. Simulator parameters may be fixed rather than learned.
+
+Z4. Simulator may not update from measured data.
+
+Z5. Simulator may not represent structural aging.
+
+Z6. Simulator may not represent environmental state.
+
+Z7. Simulator may not represent sensor state.
+
+Z8. Simulator may not represent manufacturing variability.
+
+Z9. Simulator may not represent defect diversity.
+
+Z10. Simulator may be too slow.
+
+Z11. Neural surrogate may introduce surrogate error.
+
+Z12. Surrogate uncertainty may be ignored.
+
+Z13. Surrogate extrapolation may fail.
+
+Z14. Active planner may exploit surrogate artifacts.
+
+Z15. Physics/surrogate disagreement should be monitored.
+
+Z16. Need simulator validation against measured waveforms.
+
+Z17. Need parameter-identification stage.
+
+Z18. Need uncertainty bounds for simulator parameters.
+
+Z19. Need model discrepancy term.
+
+Z20. Need calibration against real measurements.
+
+Z21. Need digital twin updating.
+
+Z22. Need versioned digital twin parameters.
+
+Z23. Need twin health monitoring.
+
+Current literature is already moving toward digital twins that update for
+temperature, noise and changing transducer behavior, so your digital twin
+should be more than a fixed simulator. 
+============================================================
+AA. TRAINING PROTOCOL PROBLEMS
+============================================================
+
+AA1. Random splits can leak structure-specific information.
+
+AA2. Hyperparameters can leak validation information.
+
+AA3. Synthetic data augmentation may be unrealistic.
+
+AA4. Noise augmentation may be simplistic.
+
+AA5. Frequency augmentation may be unrealistic.
+
+AA6. Sensor dropout augmentation may be unrealistic.
+
+AA7. Domain-adaptation training can be unstable.
+
+AA8. Physics-loss training can be unstable.
+
+AA9. Multi-task training may create competing gradients.
+
+AA10. Model selection may be biased toward one benchmark.
+
+AA11. Need repeated runs with multiple random seeds.
+
+AA12. Need confidence intervals.
+
+AA13. Need ablation studies.
+
+AA14. Need statistical tests.
+
+AA15. Need reproducible training configurations.
+
+AA16. Need fixed benchmark protocol.
+
+AA17. Need checkpoint/version tracking.
+
+AA18. Need experiment tracking.
+
+AA19. Need data versioning.
+
+AA20. Need leakage testing.
+
+============================================================
+AB. SELF-SUPERVISED LEARNING PROBLEMS
+============================================================
+
+AB1. Need large unlabeled signal corpus.
+
+AB2. Pretext task must preserve damage-relevant information.
+
+AB3. Reconstruction may learn irrelevant signal details.
+
+AB4. Contrastive learning augmentations may remove damage information.
+
+AB5. Representation may be insensitive to subtle defects.
+
+AB6. Self-supervised objective may bias toward healthy signals.
+
+AB7. Downstream fine-tuning may remain data-limited.
+
+AB8. Cross-domain self-supervision may still fail.
+
+AB9. Need comparison against supervised training.
+
+AB10. Need ablation of pretraining strategy.
+
+============================================================
+AC. DOMAIN ADAPTATION PROBLEMS
+============================================================
+
+AC1. Source and target distributions differ.
+
+AC2. Feature alignment may align damage and non-damage features incorrectly.
+
+AC3. Adversarial adaptation may destabilize training.
+
+AC4. Negative transfer can occur.
+
+AC5. Target domain may have no labels.
+
+AC6. Target domain may have few labels.
+
+AC7. Target domain may contain unknown classes.
+
+AC8. Target domain may evolve over time.
+
+AC9. Adaptation can cause catastrophic forgetting.
+
+AC10. Need target-domain validation without leakage.
+
+AC11. Need cross-panel test.
+
+AC12. Need cross-material test.
+
+AC13. Need cross-temperature test.
+
+AC14. Need cross-hardware test.
+
+AC15. Need adaptation cost measurement.
+
+AC16. Need adaptation time measurement.
+
+============================================================
+AD. ACTIVE-LEARNING / EXPLORATION PROBLEMS
+============================================================
+
+AD1. Need to distinguish exploration from exploitation.
+
+AD2. Pure exploitation can miss unknown defects.
+
+AD3. Pure exploration wastes measurements.
+
+AD4. Rare defects may require exploration.
+
+AD5. Critical regions may require higher priority.
+
+AD6. Planner may become trapped in local belief maxima.
+
+AD7. Posterior collapse can prevent discovering alternative hypotheses.
+
+AD8. Need diversity in experiments.
+
+AD9. Need uncertainty-aware exploration.
+
+AD10. Need worst-case exploration.
+
+AD11. Need budget-aware exploration.
+
+AD12. Need active labeling if human feedback becomes available.
+
+============================================================
+AE. REINFORCEMENT LEARNING PROBLEMS
+============================================================
+
+AE1. State representation.
+
+AE2. Action representation.
+
+AE3. Reward design.
+
+AE4. Sparse rewards.
+
+AE5. Reward hacking.
+
+AE6. Simulator exploitation.
+
+AE7. Sample inefficiency.
+
+AE8. Training instability.
+
+AE9. Distribution shift.
+
+AE10. Unsafe policies.
+
+AE11. Sim-to-real transfer.
+
+AE12. Need policy constraints.
+
+AE13. Need fallback planner.
+
+AE14. RL may not outperform a strong greedy Bayesian planner.
+
+AE15. RL adds complexity without guaranteed scientific value.
+
+============================================================
+AF. ROBUSTNESS PROBLEMS
+============================================================
+
+AF1. Increased Gaussian noise.
+
+AF2. Colored noise.
+
+AF3. Nonstationary noise.
+
+AF4. Impulsive noise.
+
+AF5. Sensor dropout.
+
+AF6. Sensor permutation.
+
+AF7. Sensor misplacement.
+
+AF8. Timing offset.
+
+AF9. Amplitude scaling.
+
+AF10. Frequency shift.
+
+AF11. Unknown temperature.
+
+AF12. Unknown material property.
+
+AF13. Unknown defect type.
+
+AF14. Missing metadata.
+
+AF15. Wrong metadata.
+
+AF16. Structural geometry change.
+
+AF17. Boundary condition change.
+
+AF18. Hardware change.
+
+AF19. Environmental change.
+
+AF20. Distribution shift.
+
+============================================================
+AG. ADVERSARIAL / SECURITY / INTEGRITY PROBLEMS
+============================================================
+
+AG1. Deliberately corrupted sensor readings.
+
+AG2. Malicious data injection.
+
+AG3. Timestamp tampering.
+
+AG4. Sensor spoofing.
+
+AG5. Communication tampering.
+
+AG6. Model input manipulation.
+
+AG7. False telemetry.
+
+AG8. Compromised edge device.
+
+AG9. Need authenticated communication if deployed remotely.
+
+AG10. Need data-integrity checks.
+
+AG11. Need anomaly detection on telemetry.
+
+============================================================
+AH. INTERPRETABILITY PROBLEMS
+============================================================
+
+AH1. Neural model may be a black box.
+
+AH2. Prediction explanation may not reflect actual model reasoning.
+
+AH3. Saliency may be unreliable.
+
+AH4. Attention maps are not automatically explanations.
+
+AH5. Need physics-grounded explanation.
+
+AH6. Need evidence for each defect hypothesis.
+
+AH7. Need evidence for next-experiment choice.
+
+AH8. Need uncertainty explanation.
+
+AH9. Need reason for abstention.
+
+AH10. Need reason for sensor rejection.
+
+AH11. Need traceability to raw measurements.
+
+AH12. Need inspection-history traceability.
+
+============================================================
+AI. EXPERIMENT-TRACEABILITY PROBLEMS
+============================================================
+
+AI1. Every measurement should have a unique ID.
+
+AI2. Every measurement should store timestamp.
+
+AI3. Store source position.
+
+AI4. Store receiver position.
+
+AI5. Store frequency.
+
+AI6. Store waveform.
+
+AI7. Store amplitude.
+
+AI8. Store duration.
+
+AI9. Store sensor IDs.
+
+AI10. Store environmental conditions.
+
+AI11. Store model version.
+
+AI12. Store digital-twin version.
+
+AI13. Store planner score.
+
+AI14. Store posterior before measurement.
+
+AI15. Store posterior after measurement.
+
+AI16. Store reason for experiment selection.
+
+AI17. Store confidence.
+
+AI18. Store uncertainty.
+
+AI19. Store OOD score.
+
+AI20. Store operator overrides.
+
+AI21. Store hardware faults.
+
+AI22. Store final decision.
+
+============================================================
+AJ. HARDWARE / ROBOTICS PROBLEMS
+============================================================
+
+AJ1. Probe movement accuracy.
+
+AJ2. Probe repeatability.
+
+AJ3. Mechanical positioning error.
+
+AJ4. Collision avoidance.
+
+AJ5. Surface accessibility.
+
+AJ6. Curvature.
+
+AJ7. Obstructions.
+
+AJ8. Probe attachment.
+
+AJ9. Actuator pressure.
+
+AJ10. Travel time.
+
+AJ11. Motion energy.
+
+AJ12. Mechanical vibration during movement.
+
+AJ13. Robot localization.
+
+AJ14. Coordinate registration.
+
+AJ15. Sensor placement error.
+
+AJ16. Emergency stop.
+
+AJ17. Mechanical safety limits.
+
+AJ18. Hardware failure fallback.
+
+============================================================
+AK. REAL-TIME SYSTEM PROBLEMS
+============================================================
+
+AK1. Acquisition latency.
+
+AK2. Preprocessing latency.
+
+AK3. Inference latency.
+
+AK4. Planner latency.
+
+AK5. Hardware-movement latency.
+
+AK6. Communication latency.
+
+AK7. Queue delays.
+
+AK8. Concurrent jobs.
+
+AK9. Real-time visualization overhead.
+
+AK10. Memory leaks.
+
+AK11. Long-run stability.
+
+AK12. Watchdog recovery.
+
+AK13. Logging overhead.
+
+AK14. Edge/cloud synchronization.
+
+AK15. Offline operation.
+
+============================================================
+AL. SOFTWARE ENGINEERING PROBLEMS
+============================================================
+
+AL1. Monolithic architecture.
+
+AL2. Tight coupling between UI and model.
+
+AL3. Lack of API versioning.
+
+AL4. Lack of model versioning.
+
+AL5. Lack of schema versioning.
+
+AL6. Lack of automated tests.
+
+AL7. Lack of integration tests.
+
+AL8. Lack of hardware-in-the-loop tests.
+
+AL9. Lack of simulator-in-the-loop tests.
+
+AL10. No deterministic replay.
+
+AL11. No experiment replay functionality.
+
+AL12. No reproducible inference mode.
+
+AL13. Poor failure handling.
+
+AL14. Poor logging.
+
+AL15. No monitoring.
+
+AL16. No model telemetry.
+
+AL17. No data validation.
+
+AL18. No input sanity checks.
+
+AL19. No output sanity checks.
+
+AL20. No model rollback.
+
+============================================================
+AM. DATABASE / DATA ENGINEERING PROBLEMS
+============================================================
+
+AM1. Raw waveform storage.
+
+AM2. Large waveform volume.
+
+AM3. Efficient indexing.
+
+AM4. Metadata consistency.
+
+AM5. Sensor ID consistency.
+
+AM6. Coordinate consistency.
+
+AM7. Dataset versioning.
+
+AM8. Experiment versioning.
+
+AM9. Model versioning.
+
+AM10. Digital-twin versioning.
+
+AM11. Data lineage.
+
+AM12. Data provenance.
+
+AM13. Annotation provenance.
+
+AM14. Ground-truth provenance.
+
+AM15. Audit trail.
+
+============================================================
+AN. EVALUATION PROBLEMS
+============================================================
+
+AN1. Mean localization error alone is insufficient.
+
+AN2. Median localization error needed.
+
+AN3. Worst-case error needed.
+
+AN4. Percent within 5 mm.
+
+AN5. Percent within 10 mm.
+
+AN6. Percent within 15 mm.
+
+AN7. Percent within 20 mm.
+
+AN8. Defect-type accuracy.
+
+AN9. Defect-size error.
+
+AN10. Severity error.
+
+AN11. Defect-count error.
+
+AN12. False-positive rate.
+
+AN13. False-negative rate.
+
+AN14. Probability of detection.
+
+AN15. Confidence calibration.
+
+AN16. Coverage probability.
+
+AN17. OOD detection accuracy.
+
+AN18. Abstention quality.
+
+AN19. Measurement count.
+
+AN20. Time-to-confidence.
+
+AN21. Cost-to-confidence.
+
+AN22. Energy-to-confidence.
+
+AN23. Probe distance.
+
+AN24. Number of redundant experiments.
+
+AN25. Computational latency.
+
+AN26. Memory use.
+
+AN27. Power consumption.
+
+AN28. Robustness under noise.
+
+AN29. Robustness under missing sensors.
+
+AN30. Robustness under environmental changes.
+
+AN31. Cross-structure generalization.
+
+AN32. Cross-material generalization.
+
+AN33. Cross-hardware generalization.
+
+AN34. Cross-defect generalization.
+
+AN35. Statistical significance.
+
+AN36. Confidence intervals.
+
+AN37. Effect sizes.
+
+AN38. Multiple-seed variance.
+
+AN39. Ablation results.
+
+============================================================
+AO. BENCHMARK DESIGN PROBLEMS
+============================================================
+
+AO1. Need fixed-budget benchmark.
+
+AO2. Need fixed-accuracy benchmark.
+
+AO3. Need fixed-time benchmark.
+
+AO4. Need fixed-cost benchmark.
+
+AO5. Need same hardware across methods.
+
+AO6. Need same initial prior.
+
+AO7. Need same candidate action space.
+
+AO8. Need same preprocessing.
+
+AO9. Need independent test set.
+
+AO10. Need completely blind physical test set.
+
+AO11. Need structure-level split.
+
+AO12. Need defect-level split.
+
+AO13. Need environmental split.
+
+AO14. Need hardware split.
+
+AO15. Need leave-one-structure-out validation.
+
+AO16. Need cross-dataset validation.
+
+AO17. Need external benchmark.
+
+============================================================
+AP. STATISTICS PROBLEMS
+============================================================
+
+AP1. 30 cases is small.
+
+AP2. Mean differences may be unstable.
+
+AP3. Confidence intervals may cross zero.
+
+AP4. Statistical significance may be absent.
+
+AP5. Multiple comparisons may inflate false discoveries.
+
+AP6. Need effect size.
+
+AP7. Need bootstrap confidence intervals.
+
+AP8. Need appropriate paired tests when experiments are paired.
+
+AP9. Need nonparametric tests where assumptions fail.
+
+AP10. Need uncertainty on all major metrics.
+
+AP11. Need sensitivity analysis.
+
+AP12. Need power analysis for physical experiments.
+
+============================================================
+AQ. ABLATION-STUDY PROBLEMS
+============================================================
+
+AQ1. Cannot know whether Bayesian inference actually helps.
+
+AQ2. Cannot know whether physics helps.
+
+AQ3. Cannot know whether learned features help.
+
+AQ4. Cannot know whether GNN helps.
+
+AQ5. Cannot know whether multimodal fusion helps.
+
+AQ6. Cannot know whether uncertainty helps.
+
+AQ7. Cannot know whether OOD helps.
+
+AQ8. Cannot know whether active planning helps.
+
+AQ9. Cannot know whether cost-awareness helps.
+
+AQ10. Cannot know whether redundancy penalty helps.
+
+AQ11. Cannot know which planner terms matter.
+
+AQ12. Need removal/addition studies for every major contribution.
+
+============================================================
+AR. RESEARCH NOVELTY PROBLEMS
+============================================================
+
+AR1. Bayesian active sensing is NOT inherently novel.
+
+AR2. Bayesian sensor placement is established research.
+
+AR3. Cost-aware sensor placement is established research.
+
+AR4. Physics-informed GNNs are already published.
+
+AR5. Domain-adaptive GNNs are already published.
+
+AR6. Digital-twin SHM is already published.
+
+AR7. Multimodal guided-wave damage detection is already being published.
+
+AR8. Baseline-free guided-wave ML is already being published.
+
+AR9. Autonomous guided-wave SHM is already being published.
+
+AR10. Therefore novelty cannot simply be:
+     "We used AI for defect detection."
+
+AR11. Novelty cannot simply be:
+     "We used a GNN."
+
+AR12. Novelty cannot simply be:
+     "We used a Transformer."
+
+AR13. Novelty cannot simply be:
+     "We used a digital twin."
+
+AR14. Novelty cannot simply be:
+     "We used Bayesian inference."
+
+AR15. Novelty should emerge from a specific new combination,
+     algorithmic mechanism, objective, benchmark or experimentally
+     demonstrated capability.
+
+AR16. Need a formal literature novelty matrix.
+
+AR17. Need claim-by-claim prior-art checking before publication.
+
+AR18. Need novelty claims frozen only after literature search.
+
+============================================================
+AS. HUMAN-IN-THE-LOOP PROBLEMS
+============================================================
+
+AS1. Operator may override model.
+
+AS2. Operator may disagree with model.
+
+AS3. Human override may not be logged.
+
+AS4. Model recommendation may not be understandable.
+
+AS5. Human may over-trust confidence scores.
+
+AS6. Human may ignore abstention warnings.
+
+AS7. Human may accept false negatives.
+
+AS8. Human may request manual inspection.
+
+AS9. Human feedback could be incorporated.
+
+AS10. Need clear human/system responsibility boundaries.
+
+AS11. Need interface for uncertainty.
+
+AS12. Need interface for sensor health.
+
+AS13. Need interface for inspection history.
+
+============================================================
+AT. SAFETY PROBLEMS
+============================================================
+
+AT1. False negative may miss critical damage.
+
+AT2. False confidence can be more dangerous than low confidence.
+
+AT3. Sensor fault can be mistaken for healthy structure.
+
+AT4. Unknown damage can be forced into known class.
+
+AT5. Excessive excitation could potentially affect sensitive structures.
+
+AT6. Probe motion could damage surfaces.
+
+AT7. Hardware failure could interrupt inspection.
+
+AT8. Need safety limits on excitation.
+
+AT9. Need action constraints.
+
+AT10. Need emergency shutdown.
+
+AT11. Need human escalation path.
+
+AT12. Need safe fallback mode.
+
+============================================================
+AU. INDUSTRIAL DEPLOYMENT PROBLEMS
+============================================================
+
+AU1. Model trained on one structure may fail on another.
+
+AU2. Model trained in a lab may fail in the field.
+
+AU3. Model trained on one hardware stack may fail on another.
+
+AU4. Model needs calibration after deployment.
+
+AU5. Calibration may require labeled defects.
+
+AU6. Labeled physical defects are expensive.
+
+AU7. Inspection downtime is expensive.
+
+AU8. Equipment cost matters.
+
+AU9. Sensor installation cost matters.
+
+AU10. Maintenance cost matters.
+
+AU11. Operator training cost matters.
+
+AU12. False alarms create operational burden.
+
+AU13. Missed defects create safety risk.
+
+AU14. Need lifecycle cost model.
+
+AU15. Need deployment monitoring.
+
+AU16. Need model drift monitoring.
+
+AU17. Need periodic validation.
+
+AU18. Need rollback capability.
+
+AU19. Need audit logs.
+
+AU20. Need cybersecurity.
+
+============================================================
+AV. EDGE AI PROBLEMS
+============================================================
+
+AV1. CPU-only inference.
+
+AV2. Low-memory deployment.
+
+AV3. Quantization.
+
+AV4. Model compression.
+
+AV5. Streaming inference.
+
+AV6. Limited storage.
+
+AV7. Power consumption.
+
+AV8. Thermal limits.
+
+AV9. Intermittent connectivity.
+
+AV10. Offline operation.
+
+AV11. On-device preprocessing.
+
+AV12. On-device anomaly detection.
+
+AV13. Edge/cloud consistency.
+
+AV14. Version synchronization.
+
+============================================================
+AW. EXPLAINABILITY / SCIENTIFIC TRUST PROBLEMS
+============================================================
+
+AW1. Need evidence from raw waveform.
+
+AW2. Need evidence from residual waveform.
+
+AW3. Need predicted arrival-time evidence.
+
+AW4. Need physical-path explanation.
+
+AW5. Need hypothesis comparison.
+
+AW6. Need planner explanation.
+
+AW7. Need reason for stopping.
+
+AW8. Need reason for abstaining.
+
+AW9. Need reason for rejecting sensor.
+
+AW10. Need confidence decomposition.
+
+AW11. Need distinguish model confidence from physical evidence.
+
+============================================================
+AX. REPRODUCIBILITY PROBLEMS
+============================================================
+
+AX1. Random seeds.
+
+AX2. Exact dataset versions.
+
+AX3. Exact simulator parameters.
+
+AX4. Exact hardware configuration.
+
+AX5. Exact sensor positions.
+
+AX6. Exact preprocessing.
+
+AX7. Exact model weights.
+
+AX8. Exact planner coefficients.
+
+AX9. Exact evaluation split.
+
+AX10. Exact software environment.
+
+AX11. Containerized deployment.
+
+AX12. Reproducible benchmark script.
+
+AX13. Automated experiment runner.
+
+AX14. Public configuration files.
+
+============================================================
+AY. PHYSICAL VALIDATION PROBLEMS
+============================================================
+
+AY1. Too few physical panels.
+
+AY2. Too few defect locations.
+
+AY3. Too few defect types.
+
+AY4. Too few repetitions.
+
+AY5. Ground truth may be uncertain.
+
+AY6. Need independent ground truth.
+
+AY7. Need blind testing.
+
+AY8. Need previously unseen panels.
+
+AY9. Need previously unseen defects.
+
+AY10. Need environmental variation.
+
+AY11. Need sensor repositioning tests.
+
+AY12. Need hardware variation.
+
+AY13. Need sensor-fault experiments.
+
+AY14. Need noise experiments.
+
+AY15. Need long-term tests.
+
+AY16. Need repeatability tests.
+
+AY17. Need reproducibility across operators.
+
+AY18. Need true closed-loop physical experiment.
+
+============================================================
+AZ. DIGITAL-TWIN VALIDATION PROBLEMS
+============================================================
+
+AZ1. Validate direct wave arrival.
+
+AZ2. Validate defect-scattered arrival.
+
+AZ3. Validate amplitude.
+
+AZ4. Validate attenuation.
+
+AZ5. Validate spectrum.
+
+AZ6. Validate phase where relevant.
+
+AZ7. Validate temperature response.
+
+AZ8. Validate sensor response.
+
+AZ9. Validate boundary behavior.
+
+AZ10. Validate defect geometry response.
+
+AZ11. Quantify simulator error.
+
+AZ12. Quantify surrogate error.
+
+AZ13. Propagate simulator uncertainty into posterior.
+
+============================================================
+BA. MODEL FAILURE INTERPRETATION
+============================================================
+
+BA1. Need classify failures into:
+     - physics mismatch
+     - sensor failure
+     - insufficient data
+     - ambiguity
+     - model error
+     - planner error
+     - domain shift.
+
+BA2. Need failure taxonomy.
+
+BA3. Need automatically log failure conditions.
+
+BA4. Need post-mortem analysis.
+
+BA5. Need failure replay.
+
+BA6. Need counterfactual analysis.
+
+============================================================
+BB. COUNTERFACTUAL REASONING PROBLEMS
+============================================================
+
+BB1. Current planner may generate counterfactual responses using simplified physics.
+
+BB2. Counterfactual model can be wrong.
+
+BB3. Hypothesis disagreement can be artificially large.
+
+BB4. Hypothesis disagreement can be artificially small.
+
+BB5. Need validate predicted discrimination experimentally.
+
+BB6. Need compare predicted vs observed information gain.
+
+BB7. Need calibrate expected information gain.
+
+BB8. Need model uncertainty in counterfactual predictions.
+
+============================================================
+BC. EXPERIMENTAL DESIGN PROBLEMS
+============================================================
+
+BC1. Candidate space may be continuous.
+
+BC2. Candidate space may be mixed discrete/continuous.
+
+BC3. Frequency selection may be continuous.
+
+BC4. Geometry selection may be continuous.
+
+BC5. Waveform selection may be categorical.
+
+BC6. Amplitude selection may be continuous.
+
+BC7. Duration selection may be continuous.
+
+BC8. Action feasibility constraints.
+
+BC9. Mechanical constraints.
+
+BC10. Safety constraints.
+
+BC11. Cost constraints.
+
+BC12. Sensor availability constraints.
+
+BC13. Need efficient optimization.
+
+BC14. Need candidate pruning.
+
+BC15. Need uncertainty-aware planning.
+
+============================================================
+BD. MULTI-OBJECTIVE OPTIMIZATION PROBLEMS
+============================================================
+
+BD1. Information gain.
+
+BD2. Localization improvement.
+
+BD3. Detection probability.
+
+BD4. Measurement time.
+
+BD5. Energy.
+
+BD6. Probe movement.
+
+BD7. Safety risk.
+
+BD8. Hardware wear.
+
+BD9. Redundancy.
+
+BD10. Operator burden.
+
+BD11. Need trade-off mechanism.
+
+BD12. Need application-specific weighting.
+
+BD13. Need Pareto analysis.
+
+BD14. Need demonstrate chosen solution is not arbitrary.
+
+============================================================
+BE. COST MODEL PROBLEMS
+============================================================
+
+BE1. Movement cost.
+
+BE2. Excitation cost.
+
+BE3. Acquisition time.
+
+BE4. Probe repositioning time.
+
+BE5. Sensor switching cost.
+
+BE6. Computational cost.
+
+BE7. Energy consumption.
+
+BE8. Maintenance cost.
+
+BE9. Failure cost.
+
+BE10. Inspection downtime.
+
+BE11. Human labor cost.
+
+BE12. Safety cost.
+
+BE13. Need distinguish monetary cost from physical cost.
+
+============================================================
+BF. DATA QUALITY PROBLEMS
+============================================================
+
+BF1. Duplicate samples.
+
+BF2. Near-duplicate samples.
+
+BF3. Corrupted files.
+
+BF4. Missing channels.
+
+BF5. Invalid metadata.
+
+BF6. Invalid timestamps.
+
+BF7. Wrong coordinates.
+
+BF8. Sensor ID mismatch.
+
+BF9. Unit mismatch.
+
+BF10. Sampling frequency mismatch.
+
+BF11. Signal scaling mismatch.
+
+BF12. Different file formats.
+
+BF13. Different experiment conventions.
+
+BF14. Annotation inconsistencies.
+
+BF15. Ground-truth inconsistency.
+
+============================================================
+BG. SOFTWARE-UI PROBLEMS
+============================================================
+
+BG1. Heatmap can visually imply certainty incorrectly.
+
+BG2. Color scale can distort interpretation.
+
+BG3. Confidence may be confused with accuracy.
+
+BG4. Multiple defects may be hard to visualize.
+
+BG5. Uncertainty region needs visualization.
+
+BG6. Sensor health needs visualization.
+
+BG7. Measurement history needs visualization.
+
+BG8. Planner reason needs visualization.
+
+BG9. Raw signal should be traceable.
+
+BG10. Model version should be visible.
+
+BG11. Audit trail should be visible.
+
+BG12. Operator should see why inspection stopped.
+
+============================================================
+BH. MLOPS PROBLEMS
+============================================================
+
+BH1. Data drift monitoring.
+
+BH2. Model drift monitoring.
+
+BH3. Sensor drift monitoring.
+
+BH4. Environment drift monitoring.
+
+BH5. Performance monitoring.
+
+BH6. Confidence monitoring.
+
+BH7. OOD rate monitoring.
+
+BH8. Abstention rate monitoring.
+
+BH9. Planner behavior monitoring.
+
+BH10. Experiment cost monitoring.
+
+BH11. Failed-experiment monitoring.
+
+BH12. Model rollback.
+
+BH13. Model version control.
+
+BH14. Data version control.
+
+============================================================
+BI. LONG-TERM MONITORING PROBLEMS
+============================================================
+
+BI1. Structural aging.
+
+BI2. Sensor aging.
+
+BI3. Adhesive aging.
+
+BI4. Baseline drift.
+
+BI5. Environmental seasonality.
+
+BI6. Changing operating loads.
+
+BI7. Damage evolution.
+
+BI8. Recalibration frequency.
+
+BI9. Model drift.
+
+BI10. Concept drift.
+
+BI11. Lifelong learning.
+
+BI12. Catastrophic forgetting.
+
+============================================================
+BJ. RESEARCH-PAPER QUALITY PROBLEMS
+============================================================
+
+BJ1. Novelty claim must be literature-verified.
+
+BJ2. All baselines must be strong.
+
+BJ3. Metrics must be comprehensive.
+
+BJ4. Results must include uncertainty.
+
+BJ5. Results must include statistical significance.
+
+BJ6. Failure cases must be reported.
+
+BJ7. Negative results should be reported.
+
+BJ8. Simulation and physical results must be separated.
+
+BJ9. Simulation assumptions must be explicit.
+
+BJ10. Real-world limitations must be explicit.
+
+BJ11. Reproducibility materials should be released.
+
+BJ12. Dataset processing should be documented.
+
+BJ13. Hyperparameters should be documented.
+
+BJ14. Hardware should be documented.
+
+BJ15. Evaluation splits should be documented.
+
+BJ16. Avoid inflated claims.
+
+BJ17. Clearly distinguish:
+     implemented,
+     experimentally validated,
+     proposed,
+     future work.
+
+============================================================
+BK. RESUME / INTERVIEW PROBLEMS
+============================================================
+
+BK1. "Built a CNN" is weak.
+
+BK2. "Built a GNN" is insufficient.
+
+BK3. "Built a dashboard" is insufficient.
+
+BK4. "Used Bayesian optimization" is insufficient.
+
+BK5. Need quantitative improvements.
+
+BK6. Need measurable engineering constraints.
+
+BK7. Need real hardware if possible.
+
+BK8. Need reproducible benchmarks.
+
+BK9. Need strong ablation.
+
+BK10. Need system architecture knowledge.
+
+BK11. Need deployment story.
+
+BK12. Need failure-handling story.
+
+BK13. Need explainable decision-making story.
+
+BK14. Need real-world constraints.
+
+============================================================
+BL. PATENT / IP PROBLEMS
+============================================================
+
+BL1. Existing prior art must be searched.
+
+BL2. Bayesian experiment design has prior art.
+
+BL3. Active sensor placement has prior art.
+
+BL4. Digital-twin SHM has prior art.
+
+BL5. Physics-informed GNNs have prior art.
+
+BL6. Autonomous guided-wave SHM has prior art.
+
+BL7. Generic AI defect detection will likely not be patentable.
+
+BL8. Novel claim must involve a specific technical mechanism.
+
+BL9. Need novelty search before claiming patentability.
+
+BL10. Need define the unique system interaction, not just components.
+
+============================================================
+BM. ETHICAL / RESPONSIBLE-DEPLOYMENT PROBLEMS
+============================================================
+
+BM1. False confidence.
+
+BM2. Unsafe automation.
+
+BM3. Inadequate human oversight.
+
+BM4. Data provenance.
+
+BM5. Explainability.
+
+BM6. Traceability.
+
+BM7. Auditability.
+
+BM8. Safety thresholds.
+
+BM9. Model limitations.
+
+BM10. Unseen operating conditions.
+
+============================================================
+BN. FINAL "DO-NOT-CLAIM" CHECKLIST
+============================================================
+
+Do NOT claim:
+
+BN1. "First AI system for guided-wave defect localization."
+
+BN2. "First Bayesian active sensing system."
+
+BN3. "First physics-informed GNN."
+
+BN4. "First digital-twin SHM system."
+
+BN5. "First autonomous guided-wave SHM system."
+
+BN6. "AI guarantees defect localization."
+
+BN7. "Confidence equals probability of correctness."
+
+BN8. "Simulation results prove real-world performance."
+
+BN9. "High accuracy means industrial readiness."
+
+BN10. "More neural-network complexity automatically means better science."
+
+BN11. "Multimodal automatically means novel."
+
+BN12. "GNN automatically means physics-informed."
+
+BN13. "A Transformer automatically provides superior performance."
+
+BN14. "A small benchmark proves generalization."
+
+BN15. "A single public dataset proves robustness."
+
+============================================================
+BO. HIGHEST-PRIORITY PROBLEMS
+============================================================
+
+BO1. Sim-to-real gap.
+
+BO2. Simplified/incorrect physics.
+
+BO3. Weak uncertainty calibration.
+
+BO4. Lack of OOD / abstention.
+
+BO5. Single-defect limitation.
+
+BO6. Location-only output.
+
+BO7. Limited dataset diversity.
+
+BO8. Weak real physical validation.
+
+BO9. Weak statistical power.
+
+BO10. Potential train/test leakage.
+
+BO11. Handcrafted planner objective.
+
+BO12. Incomplete physical cost model.
+
+BO13. Incomplete risk model.
+
+BO14. Sensor-failure robustness.
+
+BO15. Environmental robustness.
+
+BO16. Cross-panel generalization.
+
+BO17. Cross-material generalization.
+
+BO18. Cross-hardware generalization.
+
+BO19. Unknown defect handling.
+
+BO20. Defect severity/size/type estimation.
+
+BO21. Digital-twin calibration.
+
+BO22. Surrogate uncertainty.
+
+BO23. Active sensing exploration/exploitation.
+
+BO24. Multi-step planning.
+
+BO25. True closed-loop hardware demonstration.
+
+BO26. End-to-end latency.
+
+BO27. Reproducibility.
+
+BO28. Strong baseline comparison.
+
+BO29. Ablation study completeness.
+
+BO30. Literature novelty verification.
+
+============================================================
+BP. "KILLER RESEARCH QUESTIONS"
+============================================================
+
+BP1. Can adaptive sensing reach a target defect-localization accuracy with
+    fewer physical measurements than fixed-grid inspection?
+
+BP2. Can physics-informed learning reduce sim-to-real degradation?
+
+BP3. Can the system remain calibrated under environmental shift?
+
+BP4. Can the system reliably abstain on unknown defects?
+
+BP5. Can the system detect and compensate for sensor faults?
+
+BP6. Can the system localize multiple defects?
+
+BP7. Can the system estimate defect size and severity?
+
+BP8. Can the planner optimize information, risk and physical cost jointly?
+
+BP9. Can a learned planner outperform a handcrafted Bayesian planner?
+
+BP10. Can a fast learned surrogate replace expensive forward simulation
+     without changing experiment-selection decisions?
+
+BP11. Can real-world performance improve using few-shot / unlabeled adaptation?
+
+BP12. Can the system preserve reliability under unseen structures?
+
+BP13. Can the entire inspection loop operate autonomously on real hardware?
+
+BP14. Can the system provide calibrated uncertainty rather than heuristic
+     confidence?
+
+BP15. Can the system determine when it should NOT make a prediction?
+
+============================================================
+BQ. THE FINAL SYSTEM REQUIREMENTS WE SHOULD AIM FOR
+============================================================
+
+BQ1. Detect healthy vs damaged.
+
+BQ2. Localize damage.
+
+BQ3. Detect multiple defects.
+
+BQ4. Classify defect type.
+
+BQ5. Estimate defect size.
+
+BQ6. Estimate defect severity.
+
+BQ7. Produce calibrated uncertainty.
+
+BQ8. Detect OOD cases.
+
+BQ9. Abstain when uncertain.
+
+BQ10. Detect sensor faults.
+
+BQ11. Estimate sensor reliability.
+
+BQ12. Adapt to environmental conditions.
+
+BQ13. Adapt from simulation to reality.
+
+BQ14. Adapt between structures.
+
+BQ15. Choose the next experiment.
+
+BQ16. Choose experiment geometry.
+
+BQ17. Choose frequency.
+
+BQ18. Choose waveform.
+
+BQ19. Choose sensing modality where applicable.
+
+BQ20. Account for physical cost.
+
+BQ21. Account for safety risk.
+
+BQ22. Avoid redundant experiments.
+
+BQ23. Stop when evidence is sufficient.
+
+BQ24. Explain why the next measurement was chosen.
+
+BQ25. Explain why the system stopped.
+
+BQ26. Explain why it abstained.
+
+BQ27. Operate under sensor failure.
+
+BQ28. Operate with realistic environmental variation.
+
+BQ29. Work with a real physical prototype.
+
+BQ30. Provide a complete audit trail.
+
+BQ31. Provide real-time inference.
+
+BQ32. Provide reproducible benchmarks.
+
+BQ33. Provide statistical uncertainty in results.
+
+BQ34. Demonstrate cross-domain generalization.
+
+BQ35. Demonstrate blind physical validation.
+
+============================================================
+END OF MASTER INVENTORY
+============================================================

@@ -39,6 +39,9 @@ All probe coordinates are finite normalized values in `[0,1]`. Upload content ty
 | GET | `/api/ood/status` | Method scores, status, confidence cap, recommendation |
 | PUT | `/api/sessions/{id}/no-go-regions` | Replace virtual inaccessible areas |
 | POST | `/api/sessions/{id}/human-decision` | Accept/modify/reject and audit a recommendation |
+| POST | `/api/sessions/{id}/emergency-stop` | Persistently latch all acquisition paths with an operator reason |
+| POST | `/api/sessions/{id}/emergency-stop/release` | Release the latch only with explicit human acknowledgement |
+| GET | `/api/assurance/status` | Integrity state, sensor reliability, drift, failure taxonomy, and safety latch |
 | GET | `/api/ledger/{id}` | Linked evidence records |
 | GET | `/api/ledger/{id}/verify` | Verify canonical hashes and predecessor links |
 | GET | `/api/events/{id}` | Human/import/constraint event history |

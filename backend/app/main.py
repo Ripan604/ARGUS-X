@@ -24,7 +24,8 @@ from backend.app.models.domain import Experiment
 from backend.app.research.jobs import ResearchJobManager
 from backend.app.schemas.api import (
     CreateSessionRequest, DeviceConnectRequest, DeviceExperimentRequest, ExperimentParameters,
-    HumanDecisionRequest, NoGoRegionsRequest, ProbeMeasurementRequest, ProbeRegistrationRequest,
+    EmergencyReleaseRequest, EmergencyStopRequest, HumanDecisionRequest, NoGoRegionsRequest,
+    ProbeMeasurementRequest, ProbeRegistrationRequest,
     ResearchJobRequest, RunExperimentRequest,
 )
 from backend.app.services.session_manager import SessionManager
@@ -113,6 +114,8 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             result = manager.run(session_id, parameters)
         except RuntimeError as exc:
             raise HTTPException(409, str(exc))
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
         logger.info("experiment_completed session=%s index=%s", session_id, result.index)
         return {"experiment": result.index, "state": manager.public_state(manager.get(session_id)), "measurement": result.analysis, "diagnostics": result.diagnostics}
 
@@ -134,6 +137,8 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         payload = await file.read(10 * 1024 * 1024 + 1)
         try:
             result = manager.process_wav(session_id, payload, parameters)
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc))
         except ValueError as exc:
             raise HTTPException(400, str(exc))
         return {"experiment": result.index, "state": manager.public_state(manager.get(session_id)), "measurement": result.analysis, "diagnostics": result.diagnostics}
@@ -257,6 +262,35 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             request.experiment.model_dump() if request.experiment else None,
         )
 
+    @app.post("/api/sessions/{session_id}/emergency-stop")
+    def emergency_stop(session_id: str, request: EmergencyStopRequest) -> dict:
+        runtime_or_404(session_id)
+        return manager.set_emergency_stop(session_id, request.reason)
+
+    @app.post("/api/sessions/{session_id}/emergency-stop/release")
+    def emergency_stop_release(session_id: str, request: EmergencyReleaseRequest) -> dict:
+        runtime_or_404(session_id)
+        try:
+            return manager.release_emergency_stop(session_id, request.reason, request.acknowledgement)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
+
+    @app.get("/api/assurance/status")
+    def assurance_status(session_id: str) -> dict:
+        runtime = runtime_or_404(session_id)
+        status = runtime.engine.status()
+        return {
+            "integrity_assessment": status["integrity_assessment"],
+            "sensor_health": status["sensor_health"],
+            "safety": manager.public_state(runtime)["safety"],
+            "model_version": app.version,
+            "failure_taxonomy": [
+                "physics_mismatch", "sensor_failure", "insufficient_data", "ambiguity",
+                "model_error", "planner_error", "domain_shift", "data_corruption",
+                "physical_execution_error", "timing_error",
+            ],
+        }
+
     @app.get("/api/ledger/{session_id}")
     def ledger_entries(session_id: str) -> dict:
         runtime_or_404(session_id)
@@ -358,12 +392,16 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
                 repository.add_event(request.session_id, "measurement_rejected", {"reason": "timestamp_skew", "skew_seconds": skew_seconds, "node_id": request.node_id})
                 raise HTTPException(400, "Probe timestamp differs from server time by more than five minutes")
         experiment = Experiment(**request.experiment.model_dump()) if request.experiment else runtime.engine.current_recommendation.selected.experiment
+        metadata = dict(request.sensor_metadata)
+        metadata.update({"node_id": request.node_id, "sensor_id": request.node_id})
+        if request.measurement_id:
+            metadata["measurement_id"] = request.measurement_id
         try:
             result = manager.process_samples(
                 request.session_id, np.asarray(request.samples, dtype=np.float32), request.sample_rate,
-                experiment, acquisition_source=f"probe:{request.node_id}", sensor_metadata=request.sensor_metadata,
+                experiment, acquisition_source=f"probe:{request.node_id}", sensor_metadata=metadata,
             )
-        except ValueError as exc:
+        except (RuntimeError, ValueError) as exc:
             raise HTTPException(400, str(exc))
         repository.upsert_probe_node(request.node_id, "browser", request.sensor_metadata, {"status": "streaming", "session_id": request.session_id})
         return {"experiment": result.index, "state": manager.public_state(runtime), "quality": result.quality, "diagnostics": result.diagnostics}

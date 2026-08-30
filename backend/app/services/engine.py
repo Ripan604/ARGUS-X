@@ -7,6 +7,7 @@ from scipy.signal import correlate, correlation_lags
 
 from backend.app.active_learning.planner import CandidateScore, ExperimentPlanner, PlannedExperiment
 from backend.app.active_learning.neo_planner import NeoExperimentPlanner
+from backend.app.assurance.monitor import RuntimeAssuranceMonitor
 from backend.app.control.dual_control import AdaptiveDualControlManager
 from backend.app.core.config import ArgusConfig
 from backend.app.decision.loss import DecisionLossModel
@@ -63,6 +64,7 @@ class ArgusEngine:
         self.neo_planner = NeoExperimentPlanner(self.simulator, self.config, self.discrepancy_model, self.seed + 20_000)
         self.loss_model = DecisionLossModel()
         self.stopping_engine = StoppingEngine()
+        self.assurance = RuntimeAssuranceMonitor()
         self.dual_control = AdaptiveDualControlManager(self.config)
         self.calibration_engine = CalibrationEngine()
         self.acquisition_simulator = (
@@ -168,6 +170,32 @@ class ArgusEngine:
             "motion_proxy": quality_context.get("acceleration_deviation_g"),
             "visual_position_error_proxy": quality_context.get("visual_position_error"),
         })
+        assurance_state = self.assurance.update(
+            quality,
+            diagnostics,
+            quality_context,
+            action_type=recommendation.action_type,
+        )
+        current_sensor = assurance_state.get("sensors", {}).get(assurance_state.get("last_update", {}).get("sensor_id", ""), {})
+        sensor_status = current_sensor.get("status", "NOMINAL")
+        if sensor_status == "UNRELIABLE":
+            self.joint_state.ood_state = {
+                **self.joint_state.ood_state,
+                "score": max(self.config.ood_abstain_threshold, float(self.joint_state.ood_state.get("score", 0.0))),
+                "status": "ABSTAIN",
+                "decision_confidence_cap": 0.10,
+                "recommendation": "The active sensing channel is unreliable; reacquire or repair it before structural interpretation.",
+                "sensor_fault": current_sensor,
+            }
+        elif sensor_status == "DEGRADED" and self.joint_state.ood_state.get("status") == "NOMINAL":
+            self.joint_state.ood_state = {
+                **self.joint_state.ood_state,
+                "score": max(self.config.ood_caution_threshold, float(self.joint_state.ood_state.get("score", 0.0))),
+                "status": "CAUTION",
+                "decision_confidence_cap": min(0.55, float(self.joint_state.ood_state.get("decision_confidence_cap", 1.0))),
+                "recommendation": "Channel reliability is degraded; verify coupling or use a redundant sensor.",
+                "sensor_fault": current_sensor,
+            }
         self.joint_state.last_quality = quality
         self.joint_state.revision += 1
         self.experiments.append(experiment)
@@ -379,6 +407,12 @@ class ArgusEngine:
             ood_status=str(self.joint_state.ood_state.get("status", "NOMINAL")),
             verification_count=verification_count,
         )
+        integrity = self.assurance.structural_assessment(
+            self.belief,
+            ood_state=self.joint_state.ood_state,
+            model_trust=float(self.joint_state.discrepancy_state.get("model_trust", 1.0)),
+            should_stop=stop.should_stop,
+        )
         return {
             **estimate,
             "experiment_count": len(self.experiments),
@@ -396,6 +430,9 @@ class ArgusEngine:
             "decision_confidence": decision_confidence,
             "credible_region_90": self.belief.credible_region(0.90),
             "top_hypotheses": self.belief.top_hypotheses(5),
+            "integrity_assessment": integrity,
+            "sensor_health": self.assurance.to_dict(),
+            "recommended_engineering_action": integrity["engineering_action"],
         }
 
     def localization_error(self) -> float:

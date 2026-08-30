@@ -68,6 +68,13 @@ export const argusApi = {
   humanDecision: (id: string, decision: 'accept' | 'modify' | 'reject', reason?: string) => request<{ state: SessionState }>(`/api/sessions/${id}/human-decision`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ decision, reason }),
   }),
+  emergencyStop: (id: string, reason: string) => request<SessionState>(`/api/sessions/${id}/emergency-stop`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason }),
+  }),
+  releaseEmergencyStop: (id: string, reason: string) => request<SessionState>(`/api/sessions/${id}/emergency-stop/release`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason, acknowledgement: true }),
+  }),
+  assuranceStatus: (id: string) => request<Record<string, unknown>>(`/api/assurance/status?session_id=${encodeURIComponent(id)}`),
   registerProbe: (node_id: string, capabilities: Record<string, unknown>) => request<Record<string, unknown>>('/api/probe/register', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ node_id, node_type: 'phone', capabilities }),
   }),

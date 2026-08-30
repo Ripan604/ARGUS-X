@@ -70,7 +70,13 @@ export function useArgusSession() {
   const setNoGoRegions = (regions: SessionState['no_go_regions']) => session && execute(async () => {
     const state = await argusApi.updateNoGoRegions(session.id, regions); setSession(state); return state;
   });
+  const emergencyStop = (reason: string) => session && execute(async () => {
+    const state = await argusApi.emergencyStop(session.id, reason); setSession(state); return state;
+  });
+  const releaseEmergencyStop = (reason: string) => session && execute(async () => {
+    const state = await argusApi.releaseEmergencyStop(session.id, reason); setSession(state); return state;
+  });
   const reset = () => { setSession(null); setMeasurement(null); setHistory([]); setError(null); };
 
-  return { session, measurement, history, benchmarks, busy, error, apiOnline, lastSessionId, create, resume, run, upload, capture, acquireDevice, reveal, calibrate, loadBenchmarks, setNoGoRegions, reset };
+  return { session, measurement, history, benchmarks, busy, error, apiOnline, lastSessionId, create, resume, run, upload, capture, acquireDevice, reveal, calibrate, loadBenchmarks, setNoGoRegions, emergencyStop, releaseEmergencyStop, reset };
 }

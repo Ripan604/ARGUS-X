@@ -46,6 +46,12 @@ export function HeatmapCanvas({ session, history, onNoGoChange }: Props) {
       context.beginPath(); context.moveTo(px - 18, py); context.lineTo(px + 18, py); context.moveTo(px, py - 18); context.lineTo(px, py + 18); context.stroke();
     };
     const next = session.recommendation.experiment;
+    session.status.integrity_assessment.candidate_regions.slice(0, 3).forEach((candidate, index) => {
+      const px = padding + candidate.x * fieldWidth, py = padding + candidate.y * fieldHeight;
+      context.save(); context.setLineDash([4, 4]); context.strokeStyle = index === 0 ? '#f19554' : '#83a99a'; context.lineWidth = 1.5;
+      context.beginPath(); context.arc(px, py, 19 + index * 3, 0, Math.PI * 2); context.stroke(); context.setLineDash([]);
+      context.fillStyle = index === 0 ? '#f19554' : '#a1b4ac'; context.font = 'bold 10px monospace'; context.fillText(`H${candidate.rank}`, px + 23, py - 8); context.restore();
+    });
     drawMarker(next.source_x, next.source_y, 'NEXT SOURCE', '#b7f55a', 14);
     drawMarker(next.receiver_x, next.receiver_y, 'R', '#e8f3ee', 9);
     const covariance = session.status.covariance;

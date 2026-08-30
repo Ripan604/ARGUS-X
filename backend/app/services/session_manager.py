@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+import hashlib
 import io
 import json
 import secrets
@@ -19,6 +21,7 @@ from backend.app.inference.joint_state import JointInferenceState
 from backend.app.inference.structural_posterior import StructuralPosterior
 from backend.app.models.domain import Defect, Experiment, Material, Panel
 from backend.app.schemas.api import CreateSessionRequest
+from backend.app.safety.constraints import ExperimentConstraintEngine
 from backend.app.services.engine import ArgusEngine
 from backend.app.safety.constraints import NoGoRegion
 
@@ -34,6 +37,11 @@ class SessionRuntime:
     no_go_regions: list[NoGoRegion] = field(default_factory=list)
     unavailable_action_keys: set[str] = field(default_factory=set)
     human_decisions: list[dict] = field(default_factory=list)
+    emergency_stop: dict = field(default_factory=lambda: {
+        "latched": False, "reason": None, "latched_at": None, "released_at": None,
+    })
+    measurement_hashes: set[str] = field(default_factory=set)
+    measurement_ids: set[str] = field(default_factory=set)
 
 
 class SessionManager:
@@ -72,11 +80,14 @@ class SessionManager:
     def run(self, session_id: str, experiment: Experiment | None = None):
         with self._lock:
             runtime = self.get(session_id)
+            self._assert_operable(runtime)
             if runtime.mode == "physical":
                 raise RuntimeError("Physical sessions require an acquired microphone, WAV, or serial signal")
             if runtime.engine.status()["should_stop"] and experiment is None:
                 # Manual custom experiments remain possible after automatic termination.
                 raise RuntimeError("Automatic stop condition reached; submit a custom experiment to continue")
+            if experiment is not None:
+                self._validate_experiment(runtime, experiment)
             result = runtime.engine.run_experiment(experiment) if experiment else runtime.engine.run_recommended()
             self._persist_result(runtime, result, "simulation")
             return result
@@ -106,10 +117,27 @@ class SessionManager:
         sensor_metadata: dict | None = None,
     ):
         runtime = self.get(session_id)
+        self._assert_operable(runtime)
+        if not 1_000 <= int(source_rate) <= 384_000:
+            raise ValueError("Sampling rate is outside the supported 1 kHz to 384 kHz range")
         target_rate = runtime.engine.config.sample_rate
         values = np.asarray(samples, dtype=np.float64).reshape(-1)
         if values.size < 8 or not np.all(np.isfinite(values)):
             raise ValueError("Acquired signal is empty or contains invalid samples")
+        if values.size > 384_000:
+            raise ValueError("Acquired signal exceeds the 384,000-sample limit")
+        sensor_metadata = dict(sensor_metadata or {})
+        units = str(sensor_metadata.get("units", "normalized")).lower()
+        if units not in {"normalized", "pcm", "adc_counts", "pa", "g"}:
+            raise ValueError(f"Unsupported or ambiguous measurement units: {units}")
+        measurement_id = str(sensor_metadata.get("measurement_id", "")).strip()
+        if measurement_id and measurement_id in runtime.measurement_ids:
+            self.repository.add_event(session_id, "measurement_rejected", {"reason": "duplicate_measurement_id", "measurement_id": measurement_id})
+            raise ValueError("Duplicate measurement_id rejected")
+        measurement_hash = hashlib.sha256(values.astype(np.float32).tobytes()).hexdigest()
+        if measurement_hash in runtime.measurement_hashes:
+            self.repository.add_event(session_id, "measurement_rejected", {"reason": "duplicate_sample_payload", "sha256": measurement_hash})
+            raise ValueError("Duplicate measurement payload rejected; label intentional repeats with newly acquired samples")
         if source_rate != target_rate:
             divisor = int(np.gcd(source_rate, target_rate))
             values = resample_poly(values, target_rate // divisor, source_rate // divisor)
@@ -117,10 +145,61 @@ class SessionManager:
         normalized = np.zeros(target_length, dtype=np.float32)
         normalized[: min(target_length, len(values))] = values[:target_length]
         selected = experiment or runtime.engine.current_recommendation.selected.experiment
+        self._validate_experiment(runtime, selected)
+        sensor_metadata.setdefault("sensor_id", acquisition_source)
         with self._lock:
             result = runtime.engine.process_signal(normalized, selected, quality_context=sensor_metadata)
+            runtime.measurement_hashes.add(measurement_hash)
+            if measurement_id:
+                runtime.measurement_ids.add(measurement_id)
             self._persist_result(runtime, result, acquisition_source)
         return result
+
+    @staticmethod
+    def _assert_operable(runtime: SessionRuntime) -> None:
+        if runtime.emergency_stop.get("latched"):
+            raise RuntimeError("Emergency stop is latched; a human must explicitly release it before acquisition")
+
+    @staticmethod
+    def _validate_experiment(runtime: SessionRuntime, experiment: Experiment) -> None:
+        result = ExperimentConstraintEngine(runtime.engine.config).evaluate(
+            experiment,
+            no_go_regions=runtime.no_go_regions,
+            unavailable_actions=runtime.unavailable_action_keys,
+        )
+        if not result.feasible:
+            raise ValueError("Unsafe or infeasible experiment rejected: " + ", ".join(result.reasons))
+
+    def set_emergency_stop(self, session_id: str, reason: str) -> dict:
+        runtime = self.get(session_id)
+        now = datetime.now(timezone.utc).isoformat()
+        runtime.emergency_stop = {
+            "latched": True,
+            "reason": reason,
+            "latched_at": now,
+            "released_at": None,
+        }
+        self.repository.add_event(session_id, "emergency_stop_latched", runtime.emergency_stop)
+        self.repository.update_session(session_id, self._serialize(runtime))
+        return self.public_state(runtime)
+
+    def release_emergency_stop(self, session_id: str, reason: str, acknowledgement: bool) -> dict:
+        if not acknowledgement:
+            raise ValueError("Human acknowledgement is required to release the emergency stop")
+        runtime = self.get(session_id)
+        now = datetime.now(timezone.utc).isoformat()
+        prior = dict(runtime.emergency_stop)
+        runtime.emergency_stop = {
+            "latched": False,
+            "reason": reason,
+            "latched_at": prior.get("latched_at"),
+            "released_at": now,
+        }
+        self.repository.add_event(session_id, "emergency_stop_released", {
+            "reason": reason, "released_at": now, "previous_state": prior,
+        })
+        self.repository.update_session(session_id, self._serialize(runtime))
+        return self.public_state(runtime)
 
     def _persist_result(self, runtime: SessionRuntime, result, acquisition_source: str) -> None:
         self.repository.add_experiment(runtime.id, result)
@@ -154,6 +233,7 @@ class SessionManager:
 
     def calibrate(self, session_id: str) -> dict:
         runtime = self.get(session_id)
+        self._assert_operable(runtime)
         simulator = runtime.engine.acquisition_simulator
         references = [
             Experiment(0.05, 0.08, 0.95, 0.08, 1_200, 3_000, 0.38, 0.12, "chirp"),
@@ -206,6 +286,12 @@ class SessionManager:
             "localization_error_mm": engine.localization_error() * 1_000 if runtime.revealed else None,
             "no_go_regions": [region.to_dict() for region in runtime.no_go_regions],
             "human_decisions": runtime.human_decisions,
+            "safety": {
+                "emergency_stop": runtime.emergency_stop,
+                "automation_scope": "research_screening_only",
+                "human_release_authority": True,
+            },
+            "assurance": engine.assurance.to_dict(),
         }
 
     def reveal(self, session_id: str) -> dict:
@@ -232,6 +318,10 @@ class SessionManager:
             "no_go_regions": [region.to_dict() for region in runtime.no_go_regions],
             "unavailable_action_keys": sorted(runtime.unavailable_action_keys),
             "human_decisions": runtime.human_decisions,
+            "emergency_stop": runtime.emergency_stop,
+            "measurement_hashes": sorted(runtime.measurement_hashes),
+            "measurement_ids": sorted(runtime.measurement_ids),
+            "assurance": engine.assurance.to_dict(),
         }
 
     def _hydrate(self, session_id: str, mode: str, preset: str, state: dict) -> SessionRuntime:
@@ -260,12 +350,19 @@ class SessionManager:
             from backend.app.ood.detection import OODDetector
 
             engine.ood_detector = OODDetector.from_dict(state["ood_detector"])
+        if state.get("assurance"):
+            from backend.app.assurance.monitor import RuntimeAssuranceMonitor
+
+            engine.assurance = RuntimeAssuranceMonitor.from_dict(state["assurance"])
         engine.current_recommendation = engine._recommend()
         runtime = SessionRuntime(
             session_id, mode, preset, engine, state.get("revealed", False), state.get("calibration"),
             [NoGoRegion(**item) for item in state.get("no_go_regions", [])],
             set(state.get("unavailable_action_keys", [])),
             state.get("human_decisions", []),
+            state.get("emergency_stop", {"latched": False, "reason": None, "latched_at": None, "released_at": None}),
+            set(state.get("measurement_hashes", [])),
+            set(state.get("measurement_ids", [])),
         )
         self.refresh_recommendation(runtime)
         return runtime

@@ -201,6 +201,7 @@ The backend suite covers simulation reproducibility, baseline/scatter physics, p
 ```text
 backend/app/
   active_learning/   candidate generation and counterfactual planner
+  assurance/         healthy/unknown screening, channel reliability, drift and failure state
   database/          SQLite persistence
   evaluation/        random/grid/ARGUS benchmark
   hardware/          microphone, upload, serial adapters
@@ -244,11 +245,14 @@ docs/                 architecture, algorithms, demo, hardware, IP notes
 - [Reproducibility](docs/REPRODUCIBILITY.md)
 - [Limitations](docs/LIMITATIONS.md)
 - [Technical disclosure notes](docs/PATENT_TECHNICAL_DISCLOSURE_NOTES.md)
+- [ARGUS-X 1,331-problem disposition](docs/ARGUS_X_DISPOSITION.md)
+- [Complete ARGUS-X coverage register](docs/ARGUS_X_PROBLEM_REGISTER.md)
 
 ## Limitations
 
 - The current simulator is a physically inspired lumped wave model, not validated finite-element acoustics.
-- The belief assumes one dominant localized defect and marginalizes size/type imperfectly.
+- The inference core still optimizes one dominant localized scatterer. ARGUS-X exposes separated candidate modes and defect-count screening, but does not claim a validated joint multi-defect inverse solution.
+- Healthy/damaged/unknown probabilities and type/size/severity values are research-screening outputs; minimum detectable size and POD require a representative physical campaign.
 - Physical inference needs a measured healthy baseline and coupling/calibration discipline; the provided path is not certified NDT.
 - The planner’s expected-information value is an overlap proxy, not exact Monte Carlo mutual information.
 - Text serial transfer is buffered and slower than real time.

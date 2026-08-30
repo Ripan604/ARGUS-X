@@ -87,6 +87,46 @@ export interface SessionStatus {
   expected_value_of_information: number;
   credible_region_90: { mass: number; cell_count: number; area_fraction: number; x_min: number; x_max: number; y_min: number; y_max: number };
   top_hypotheses: Array<{ rank: number; x: number; y: number; probability: number; radius_mean: number; severity_mean: number; dominant_type: string }>;
+  integrity_assessment: IntegrityAssessment;
+  sensor_health: SensorHealth;
+  recommended_engineering_action: string;
+}
+
+export interface IntegrityAssessment {
+  scope: 'research_screening_only';
+  integrity_state: 'HEALTHY_OR_NO_DETECTABLE_DAMAGE' | 'KNOWN_DAMAGE_CANDIDATE' | 'UNKNOWN_OR_UNSUPPORTED';
+  state_probabilities: {
+    healthy_or_no_detectable_damage: number;
+    known_damage_candidate: number;
+    unknown_or_unsupported: number;
+  };
+  defect_count_screening: Record<string, number>;
+  candidate_regions: SessionStatus['top_hypotheses'];
+  engineering_action: string;
+  decision_basis: string;
+  human_authority_required: boolean;
+  minimum_detectable_damage_size: string;
+  characterization_status: string;
+}
+
+export interface SensorHealth {
+  version: number;
+  accepted_measurements: number;
+  rejected_measurements: number;
+  damage_screening_probability: number;
+  sensors: Record<string, {
+    sensor_id: string;
+    reliability_mean: number;
+    status: 'NOMINAL' | 'DEGRADED' | 'UNRELIABLE';
+    measurement_count: number;
+    rejected_count: number;
+    consecutive_rejections: number;
+    last_failure_reasons: string[];
+  }>;
+  environment_baseline: Record<string, number>;
+  environment_latest: Record<string, number>;
+  drift_flags: string[];
+  failure_conditions: Array<Record<string, unknown>>;
 }
 
 export interface SessionState {
@@ -112,6 +152,12 @@ export interface SessionState {
   };
   no_go_regions: Array<{ x_min: number; y_min: number; x_max: number; y_max: number; label: string }>;
   human_decisions: Array<Record<string, unknown>>;
+  assurance: SensorHealth;
+  safety: {
+    emergency_stop: { latched: boolean; reason: string | null; latched_at: string | null; released_at: string | null };
+    automation_scope: string;
+    human_release_authority: boolean;
+  };
 }
 
 export interface ResearchJob {

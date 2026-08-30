@@ -81,6 +81,15 @@ class HumanDecisionRequest(BaseModel):
     experiment: ExperimentParameters | None = None
 
 
+class EmergencyStopRequest(BaseModel):
+    reason: str = Field(min_length=3, max_length=500)
+
+
+class EmergencyReleaseRequest(BaseModel):
+    reason: str = Field(min_length=3, max_length=500)
+    acknowledgement: bool
+
+
 class ResearchJobRequest(BaseModel):
     job_type: Literal["benchmark", "calibration", "ablation", "dataset_generation", "surrogate_training", "demo_scenario"]
     parameters: dict = Field(default_factory=dict)
@@ -100,3 +109,4 @@ class ProbeMeasurementRequest(BaseModel):
     experiment: ExperimentParameters | None = None
     timestamp: str | None = None
     sensor_metadata: dict = Field(default_factory=dict)
+    measurement_id: str | None = Field(default=None, min_length=3, max_length=128)

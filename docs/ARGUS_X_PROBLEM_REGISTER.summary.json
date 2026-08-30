@@ -1,0 +1,11 @@
+{
+  "source": "ARGUS_X_MASTER_INVENTORY.txt",
+  "problem_count": 1331,
+  "status_counts": {
+    "partially_mitigated": 588,
+    "implemented_and_tested": 277,
+    "requires_physical_validation": 244,
+    "acknowledged_and_bounded": 177,
+    "requires_literature_or_legal_review": 45
+  }
+}
