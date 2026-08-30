@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { clamp01, percent, responseDelayMilliseconds, typedValue } from '../utils/neo.ts';
@@ -20,4 +21,9 @@ test('counterfactual response delay is extracted safely', () => {
   assert.equal(responseDelayMilliseconds({ mean: [0.00125, 2] }), 1.25);
   assert.equal(responseDelayMilliseconds({ mean: [] }), null);
   assert.equal(responseDelayMilliseconds({}), null);
+});
+
+test('development runtime disables unsafe pre-socket console forwarding', () => {
+  const config = readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8');
+  assert.match(config, /forwardConsole:\s*false/);
 });
