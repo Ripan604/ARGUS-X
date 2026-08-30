@@ -67,7 +67,10 @@ export function useArgusSession() {
   const reveal = () => session && execute(async () => { const state = await argusApi.reveal(session.id); setSession(state); return state; });
   const calibrate = () => session && execute(async () => { await argusApi.calibrate(session.id); const state = await argusApi.getSession(session.id); setSession(state); return state; });
   const loadBenchmarks = () => execute(async () => { const result = await argusApi.benchmarks(); setBenchmarks(result); return result; });
+  const setNoGoRegions = (regions: SessionState['no_go_regions']) => session && execute(async () => {
+    const state = await argusApi.updateNoGoRegions(session.id, regions); setSession(state); return state;
+  });
   const reset = () => { setSession(null); setMeasurement(null); setHistory([]); setError(null); };
 
-  return { session, measurement, history, benchmarks, busy, error, apiOnline, lastSessionId, create, resume, run, upload, capture, acquireDevice, reveal, calibrate, loadBenchmarks, reset };
+  return { session, measurement, history, benchmarks, busy, error, apiOnline, lastSessionId, create, resume, run, upload, capture, acquireDevice, reveal, calibrate, loadBenchmarks, setNoGoRegions, reset };
 }

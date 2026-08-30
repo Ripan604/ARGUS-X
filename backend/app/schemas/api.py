@@ -13,6 +13,8 @@ class CreateSessionRequest(BaseModel):
     panel_height_mm: float = Field(400, ge=100, le=5_000)
     grid_size: int = Field(20, ge=10, le=40)
     max_experiments: int = Field(12, ge=3, le=30)
+    material_profile: Literal["generic_plate", "aluminum_demo", "cfrp_demo"] = "generic_plate"
+    config_profile: Literal["demo", "research", "phone", "distributed", "benchmark"] = "demo"
 
 
 class ExperimentParameters(BaseModel):
@@ -24,7 +26,14 @@ class ExperimentParameters(BaseModel):
     frequency_end_hz: float = Field(ge=100, le=20_000)
     amplitude: float = Field(gt=0, le=1)
     duration_s: float = Field(ge=0.02, le=2)
-    waveform: Literal["impulse", "sine", "chirp"]
+    waveform: Literal[
+        "impulse", "sine", "chirp", "tone_burst", "ricker", "multisine",
+        "phase_coded", "complementary_coded", "spectrally_notched",
+    ]
+    phase_code: str | None = Field(default=None, max_length=128)
+    code_length: int = Field(default=0, ge=0, le=256)
+    sample_rate_hz: int | None = Field(default=None, ge=1_000, le=384_000)
+    spectral_notches_hz: tuple[tuple[float, float], ...] = ()
 
     @model_validator(mode="after")
     def validate_band(self):
@@ -46,3 +55,48 @@ class DeviceConnectRequest(BaseModel):
 class DeviceExperimentRequest(BaseModel):
     device: Literal["serial_probe", "microphone"]
     experiment: ExperimentParameters | None = None
+
+
+class NoGoRegionRequest(BaseModel):
+    x_min: float = Field(ge=0, le=1)
+    y_min: float = Field(ge=0, le=1)
+    x_max: float = Field(ge=0, le=1)
+    y_max: float = Field(ge=0, le=1)
+    label: str = Field(default="inaccessible", min_length=1, max_length=80)
+
+    @model_validator(mode="after")
+    def validate_bounds(self):
+        if self.x_max <= self.x_min or self.y_max <= self.y_min:
+            raise ValueError("No-go region maxima must exceed minima")
+        return self
+
+
+class NoGoRegionsRequest(BaseModel):
+    regions: list[NoGoRegionRequest] = Field(default_factory=list, max_length=32)
+
+
+class HumanDecisionRequest(BaseModel):
+    decision: Literal["accept", "modify", "reject"]
+    reason: Literal["inaccessible", "poor_contact", "unsafe", "user_preference", "hardware_limitation", "other"] | None = None
+    experiment: ExperimentParameters | None = None
+
+
+class ResearchJobRequest(BaseModel):
+    job_type: Literal["benchmark", "calibration", "ablation", "dataset_generation", "surrogate_training", "demo_scenario"]
+    parameters: dict = Field(default_factory=dict)
+
+
+class ProbeRegistrationRequest(BaseModel):
+    node_id: str = Field(min_length=3, max_length=128)
+    node_type: Literal["phone", "edge_laptop", "browser", "serial_bridge"]
+    capabilities: dict = Field(default_factory=dict)
+
+
+class ProbeMeasurementRequest(BaseModel):
+    session_id: str = Field(min_length=3, max_length=128)
+    node_id: str = Field(min_length=3, max_length=128)
+    sample_rate: int = Field(ge=1_000, le=384_000)
+    samples: list[float] = Field(min_length=8, max_length=384_000)
+    experiment: ExperimentParameters | None = None
+    timestamp: str | None = None
+    sensor_metadata: dict = Field(default_factory=dict)

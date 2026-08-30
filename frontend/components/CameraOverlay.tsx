@@ -37,8 +37,18 @@ export function CameraOverlay({ session }: { session: SessionState }) {
     points.forEach((point, index) => { context.beginPath(); context.arc(point.x, point.y, 7, 0, Math.PI * 2); context.stroke(); context.fillText(['TL', 'TR', 'BR', 'BL'][index], point.x + 10, point.y - 8); });
     if (points.length > 1) { context.beginPath(); context.moveTo(points[0].x, points[0].y); points.slice(1).forEach((point) => context.lineTo(point.x, point.y)); if (points.length === 4) context.closePath(); context.stroke(); }
     const transform = homography(points); if (transform) {
-      const markers = [project(transform, session.recommendation.experiment.source_x, session.recommendation.experiment.source_y), project(transform, session.status.mean_x, session.status.mean_y)];
-      markers.forEach((point, index) => { context.strokeStyle = index ? '#f19554' : '#b7f55a'; context.lineWidth = 3; context.beginPath(); context.arc(point.x, point.y, index ? 15 : 22, 0, Math.PI * 2); context.stroke(); context.fillStyle = context.strokeStyle; context.fillText(index ? 'ESTIMATED DEFECT' : 'NEXT PROBE', point.x + 25, point.y); });
+      const rows = session.posterior.length, columns = session.posterior[0]?.length ?? 0, maximum = Math.max(...session.posterior.flat());
+      session.posterior.forEach((row, y) => row.forEach((value, x) => {
+        const corners = [project(transform, x / columns, y / rows), project(transform, (x + 1) / columns, y / rows), project(transform, (x + 1) / columns, (y + 1) / rows), project(transform, x / columns, (y + 1) / rows)];
+        context.beginPath(); context.moveTo(corners[0].x, corners[0].y); corners.slice(1).forEach((corner) => context.lineTo(corner.x, corner.y)); context.closePath(); context.fillStyle = `rgba(183,245,90,${0.34 * Math.sqrt(value / Math.max(maximum, 1e-12))})`; context.fill();
+      }));
+      const source = project(transform, session.recommendation.experiment.source_x, session.recommendation.experiment.source_y);
+      const receiver = project(transform, session.recommendation.experiment.receiver_x, session.recommendation.experiment.receiver_y);
+      const estimate = project(transform, session.status.mean_x, session.status.mean_y);
+      context.strokeStyle = '#eaf4ef88'; context.lineWidth = 2; context.setLineDash([7, 6]); context.beginPath(); context.moveTo(source.x, source.y); context.lineTo(receiver.x, receiver.y); context.stroke(); context.setLineDash([]);
+      const covariance = session.status.covariance; const scale90 = Math.sqrt(4.605); const xEdge = project(transform, Math.min(1, session.status.mean_x + scale90 * Math.sqrt(Math.max(0, covariance[0]?.[0] ?? 0))), session.status.mean_y); const yEdge = project(transform, session.status.mean_x, Math.min(1, session.status.mean_y + scale90 * Math.sqrt(Math.max(0, covariance[1]?.[1] ?? 0))));
+      context.strokeStyle = '#f19554'; context.lineWidth = 2; context.beginPath(); context.ellipse(estimate.x, estimate.y, Math.max(12, Math.hypot(xEdge.x - estimate.x, xEdge.y - estimate.y)), Math.max(12, Math.hypot(yEdge.x - estimate.x, yEdge.y - estimate.y)), 0, 0, Math.PI * 2); context.stroke();
+      [[source, 'SOURCE', '#b7f55a'], [receiver, 'RECEIVER', '#65c6ff'], [estimate, 'SUSPECTED REGION', '#f19554']].forEach(([rawPoint, label, color]) => { const point = rawPoint as Point; context.strokeStyle = String(color); context.lineWidth = 3; context.beginPath(); context.arc(point.x, point.y, label === 'SUSPECTED REGION' ? 15 : 21, 0, Math.PI * 2); context.stroke(); context.fillStyle = String(color); context.fillText(String(label), point.x + 24, point.y); });
     }
   }, [points, session]);
   const click = (event: React.MouseEvent<HTMLCanvasElement>) => { if (points.length >= 4) return; const rect = event.currentTarget.getBoundingClientRect(); setPoints((current) => [...current, { x: (event.clientX - rect.left) * event.currentTarget.width / rect.width, y: (event.clientY - rect.top) * event.currentTarget.height / rect.height }]); };

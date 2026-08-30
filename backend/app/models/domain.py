@@ -5,7 +5,17 @@ from typing import Literal
 
 import numpy as np
 
-Waveform = Literal["impulse", "sine", "chirp"]
+Waveform = Literal[
+    "impulse",
+    "sine",
+    "chirp",
+    "tone_burst",
+    "ricker",
+    "multisine",
+    "phase_coded",
+    "complementary_coded",
+    "spectrally_notched",
+]
 DefectType = Literal["cavity", "loose_region", "delamination", "dense_inclusion"]
 
 
@@ -65,6 +75,10 @@ class Experiment:
     amplitude: float = 0.45
     duration_s: float = 0.12
     waveform: Waveform = "chirp"
+    phase_code: str | None = None
+    code_length: int = 0
+    sample_rate_hz: int | None = None
+    spectral_notches_hz: tuple[tuple[float, float], ...] = ()
 
     def __post_init__(self) -> None:
         coordinates = (self.source_x, self.source_y, self.receiver_x, self.receiver_y)
@@ -76,10 +90,23 @@ class Experiment:
             raise ValueError("Amplitude must be in (0, 1]")
         if self.duration_s <= 0:
             raise ValueError("Duration must be positive")
+        if self.frequency_end_hz < self.frequency_start_hz:
+            raise ValueError("frequency_end_hz must be at least frequency_start_hz")
+        if self.code_length < 0:
+            raise ValueError("code_length cannot be negative")
+        if self.sample_rate_hz is not None and self.sample_rate_hz < 1_000:
+            raise ValueError("sample_rate_hz must be at least 1000 when supplied")
+        for notch in self.spectral_notches_hz:
+            if len(notch) != 2 or notch[0] < 0 or notch[1] <= notch[0]:
+                raise ValueError("spectral notches must be increasing frequency pairs")
 
     @property
     def center_frequency_hz(self) -> float:
         return (self.frequency_start_hz + self.frequency_end_hz) / 2
+
+    @property
+    def bandwidth_hz(self) -> float:
+        return self.frequency_end_hz - self.frequency_start_hz
 
     def to_dict(self) -> dict:
         return asdict(self)

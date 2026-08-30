@@ -9,7 +9,11 @@ export interface ExperimentParameters {
   frequency_end_hz: number;
   amplitude: number;
   duration_s: number;
-  waveform: 'impulse' | 'sine' | 'chirp';
+  waveform: 'impulse' | 'sine' | 'chirp' | 'tone_burst' | 'ricker' | 'multisine' | 'phase_coded' | 'complementary_coded' | 'spectrally_notched';
+  phase_code?: string | null;
+  code_length?: number;
+  sample_rate_hz?: number | null;
+  spectral_notches_hz?: [number, number][];
 }
 
 export interface CandidateScore {
@@ -20,6 +24,14 @@ export interface CandidateScore {
   experiment_cost: number;
   repetition_penalty: number;
   final_score: number;
+  expected_risk_reduction?: number;
+  calibration_value?: number;
+  model_trust?: number;
+  time_cost?: number;
+  energy_cost?: number;
+  chosen_model_fidelity?: number;
+  reason_for_fidelity?: string;
+  predicted_uncertainty_after?: number | null;
 }
 
 export interface Recommendation {
@@ -32,6 +44,12 @@ export interface Recommendation {
   planner_score: number;
   explanation: string;
   strategy: string;
+  action_type: 'diagnostic' | 'calibration' | 'verification' | 'exploration';
+  objective: string;
+  structured_explanation: Record<string, unknown>;
+  chosen_model_fidelity: number;
+  reason_for_fidelity: string;
+  planning_horizon: number;
   top_candidates: CandidateScore[];
 }
 
@@ -58,6 +76,17 @@ export interface SessionStatus {
   experiment_count: number;
   should_stop: boolean;
   stop_reason: string | null;
+  stop_explanation?: string;
+  structural_uncertainty: number;
+  metrology_uncertainty: number;
+  model_trust: number;
+  ood_score: number;
+  ood_status: 'NOMINAL' | 'CAUTION' | 'OUT_OF_DISTRIBUTION' | 'ABSTAIN';
+  decision_confidence: number;
+  bayes_risk: number;
+  expected_value_of_information: number;
+  credible_region_90: { mass: number; cell_count: number; area_fraction: number; x_min: number; x_max: number; y_min: number; y_max: number };
+  top_hypotheses: Array<{ rank: number; x: number; y: number; probability: number; radius_mean: number; severity_mean: number; dominant_type: string }>;
 }
 
 export interface SessionState {
@@ -74,6 +103,28 @@ export interface SessionState {
   calibration: Record<string, unknown> | null;
   ground_truth: Defect | null;
   localization_error_mm: number | null;
+  joint_inference: Record<string, unknown>;
+  uncertainty: {
+    structural: Record<string, number | string | Record<string, number>>;
+    metrology: Record<string, number | string | Record<string, number>>;
+    model_discrepancy: Record<string, unknown>;
+    ood: Record<string, unknown>;
+  };
+  no_go_regions: Array<{ x_min: number; y_min: number; x_max: number; y_max: number; label: string }>;
+  human_decisions: Array<Record<string, unknown>>;
+}
+
+export interface ResearchJob {
+  id: string;
+  job_type: 'benchmark' | 'calibration' | 'ablation' | 'dataset_generation' | 'surrogate_training' | 'demo_scenario';
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  progress: number;
+  request: Record<string, unknown>;
+  result: Record<string, unknown> | null;
+  error: string | null;
+  created_at: string;
+  updated_at: string;
+  cancellation_requested: boolean;
 }
 
 export interface MeasurementAnalysis {

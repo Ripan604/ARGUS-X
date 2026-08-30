@@ -1,0 +1,647 @@
+{
+  "trace": [
+    {
+      "step": 1,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.325,
+        "source_y": 0.325,
+        "receiver_x": 0.06,
+        "receiver_y": 0.06,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.97, 0.97) and (0.33, 0.33) predict distinguishable responses around 2.10 kHz (separation 0.772) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.9541964284580479,
+      "structural_uncertainty_after": 0.8901518750034066,
+      "metrology_uncertainty_before": 0.42736564935064947,
+      "metrology_uncertainty_after": 0.4246799876733814,
+      "model_trust_after": 0.392828908711716,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.025,
+        0.625
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.075,
+          "y": 0.675,
+          "probability": 0.008153276176311574,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.425,
+          "y": 0.625,
+          "probability": 0.008153276176311574,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 2,
+      "action_type": "calibration",
+      "experiment": {
+        "source_x": 0.05,
+        "source_y": 0.5,
+        "receiver_x": 0.95,
+        "receiver_y": 0.5,
+        "frequency_start_hz": 1200,
+        "frequency_end_hz": 3000,
+        "amplitude": 0.28,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Calibration selected because wave velocity contributes 22% of metrology uncertainty and its expected value exceeds diagnostic value by 0.175.",
+      "structural_uncertainty_before": 0.8901518750034066,
+      "structural_uncertainty_after": 0.8901518750034066,
+      "metrology_uncertainty_before": 0.4246799876733814,
+      "metrology_uncertainty_after": 0.3527727642293951,
+      "model_trust_after": 0.592828908711716,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.025,
+        0.625
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.075,
+          "y": 0.675,
+          "probability": 0.008153276176311574,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.425,
+          "y": 0.625,
+          "probability": 0.008153276176311574,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 3,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.075,
+        "source_y": 0.675,
+        "receiver_x": 0.06,
+        "receiver_y": 0.94,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.42,
+        "duration_s": 0.12,
+        "waveform": "multisine",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.07, 0.68) and (0.42, 0.62) predict distinguishable responses around 3.30 kHz (separation 0.800) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.8901518750034066,
+      "structural_uncertainty_after": 0.8698103447676373,
+      "metrology_uncertainty_before": 0.3527727642293951,
+      "metrology_uncertainty_after": 0.35164326762179876,
+      "model_trust_after": 0.3954657192359991,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.013151890346733898,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.525,
+          "y": 0.475,
+          "probability": 0.01224627812405874,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 4,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.525,
+        "source_y": 0.275,
+        "receiver_x": 0.94,
+        "receiver_y": 0.06,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.54,
+        "duration_s": 0.12,
+        "waveform": "ricker",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.33, 0.68) predict distinguishable responses around 3.30 kHz (separation 0.598) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.8698103447676373,
+      "structural_uncertainty_after": 0.8006637715113439,
+      "metrology_uncertainty_before": 0.35164326762179876,
+      "metrology_uncertainty_after": 0.3507155155775882,
+      "model_trust_after": 0.32742056217876997,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.01925714236515823,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.525,
+          "y": 0.475,
+          "probability": 0.012355927680180349,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 5,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.5,
+        "source_y": 0.04,
+        "receiver_x": 0.94,
+        "receiver_y": 0.06,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.42,
+        "duration_s": 0.12,
+        "waveform": "phase_coded",
+        "phase_code": "1110010",
+        "code_length": 7,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.33, 0.68) predict distinguishable responses around 2.10 kHz (separation 0.587) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.8006637715113439,
+      "structural_uncertainty_after": 0.7404624368331117,
+      "metrology_uncertainty_before": 0.3507155155775882,
+      "metrology_uncertainty_after": 0.3494865632091907,
+      "model_trust_after": 0.32868687570411453,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.03801962334699966,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.022256063392860622,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 6,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.525,
+        "source_y": 0.475,
+        "receiver_x": 0.94,
+        "receiver_y": 0.94,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "tone_burst",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.53, 0.17) predict distinguishable responses around 4.80 kHz (separation 0.373) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.7404624368331117,
+      "structural_uncertainty_after": 0.7142185704306846,
+      "metrology_uncertainty_before": 0.3494865632091907,
+      "metrology_uncertainty_after": 0.34839999798412874,
+      "model_trust_after": 0.33154232667289774,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.0460896011466226,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.02756672019566075,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 7,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.575,
+        "source_y": 0.425,
+        "receiver_x": 0.94,
+        "receiver_y": 0.94,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.42,
+        "duration_s": 0.12,
+        "waveform": "phase_coded",
+        "phase_code": "1110010",
+        "code_length": 7,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.57, 0.47) predict distinguishable responses around 4.80 kHz (separation 0.320) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.7142185704306846,
+      "structural_uncertainty_after": 0.6844321830308726,
+      "metrology_uncertainty_before": 0.34839999798412874,
+      "metrology_uncertainty_after": 0.3474485453137524,
+      "model_trust_after": 0.36354447701071235,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.05593632823960553,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.03343416416625846,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 8,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.525,
+        "source_y": 0.425,
+        "receiver_x": 0.94,
+        "receiver_y": 0.94,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.42,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.57, 0.47) and (0.53, 0.28) predict distinguishable responses around 2.10 kHz (separation 0.168) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.6844321830308726,
+      "structural_uncertainty_after": 0.5733264056518494,
+      "metrology_uncertainty_before": 0.3474485453137524,
+      "metrology_uncertainty_after": 0.3463091108037118,
+      "model_trust_after": 0.38788231408050206,
+      "ood_status_after": "CAUTION",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.0798114032503602,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.050958179684598044,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 9,
+      "action_type": "calibration",
+      "experiment": {
+        "source_x": 0.05,
+        "source_y": 0.92,
+        "receiver_x": 0.95,
+        "receiver_y": 0.92,
+        "frequency_start_hz": 1200,
+        "frequency_end_hz": 3000,
+        "amplitude": 0.28,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Calibration selected because wave velocity contributes 16% of metrology uncertainty and its expected value exceeds diagnostic value by 0.098.",
+      "structural_uncertainty_before": 0.5733264056518494,
+      "structural_uncertainty_after": 0.5733264056518494,
+      "metrology_uncertainty_before": 0.3463091108037118,
+      "metrology_uncertainty_after": 0.3135989264704228,
+      "model_trust_after": 0.5878823140805021,
+      "ood_status_after": "NOMINAL",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.0798114032503602,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.050958179684598044,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 10,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.5,
+        "source_y": 0.96,
+        "receiver_x": 0.5,
+        "receiver_y": 0.5,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.57, 0.47) predict distinguishable responses around 2.10 kHz (separation 0.299) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.5733264056518494,
+      "structural_uncertainty_after": 0.46414416830522964,
+      "metrology_uncertainty_before": 0.3135989264704228,
+      "metrology_uncertainty_after": 0.31265182657344254,
+      "model_trust_after": 0.4068282191632516,
+      "ood_status_after": "CAUTION",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.11951053390004389,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.0772468603461277,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 11,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.475,
+        "source_y": 0.375,
+        "receiver_x": 0.06,
+        "receiver_y": 0.06,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "tone_burst",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.57, 0.47) predict distinguishable responses around 3.30 kHz (separation 0.341) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.46414416830522964,
+      "structural_uncertainty_after": 0.4383585784705893,
+      "metrology_uncertainty_before": 0.31265182657344254,
+      "metrology_uncertainty_after": 0.3118046218076133,
+      "model_trust_after": 0.4271945699079655,
+      "ood_status_after": "CAUTION",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.13164729558515034,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.08184630833272494,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    },
+    {
+      "step": 12,
+      "action_type": "diagnostic",
+      "experiment": {
+        "source_x": 0.525,
+        "source_y": 0.375,
+        "receiver_x": 0.06,
+        "receiver_y": 0.06,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "explanation": "Diagnostic action selected because separating the leading structural hypotheses has the highest current value. Diagnostic action selected because hypotheses near (0.53, 0.38) and (0.57, 0.47) predict distinguishable responses around 4.80 kHz (separation 0.388) after physical cost, repetition and model trust are accounted for.",
+      "structural_uncertainty_before": 0.4383585784705893,
+      "structural_uncertainty_after": 0.3864563522654342,
+      "metrology_uncertainty_before": 0.3118046218076133,
+      "metrology_uncertainty_after": 0.31113285139627217,
+      "model_trust_after": 0.4341166522989476,
+      "ood_status_after": "OUT_OF_DISTRIBUTION",
+      "map_after": [
+        0.525,
+        0.375
+      ],
+      "top_hypotheses_after": [
+        {
+          "rank": 1,
+          "x": 0.525,
+          "y": 0.375,
+          "probability": 0.15681862250447906,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        },
+        {
+          "rank": 2,
+          "x": 0.575,
+          "y": 0.475,
+          "probability": 0.07513248768622403,
+          "radius_mean": 0.085,
+          "severity_mean": 0.65,
+          "dominant_type": "cavity"
+        }
+      ],
+      "measurement_accepted": true
+    }
+  ],
+  "summary": {
+    "measurements": 12,
+    "localization_error_mm": 14.647076263492597,
+    "final_entropy": 0.5016280985042676,
+    "decision_confidence": 0.24930923093379206,
+    "model_trust": 0.4341166522989476,
+    "ood_status": "OUT_OF_DISTRIBUTION",
+    "stop_reason": "STOP_OOD",
+    "action_counts": {
+      "diagnostic": 10,
+      "calibration": 2,
+      "verification": 0,
+      "exploration": 0
+    }
+  },
+  "sealed_truth": {
+    "center_x": 0.5366962279632712,
+    "center_y": 0.4071411159560264,
+    "radius_x": 0.14225373963989507,
+    "radius_y": 0.10804865455845536,
+    "severity": 0.8165401338055006,
+    "defect_type": "loose_region"
+  },
+  "metadata": {
+    "title": "Rival Hypotheses",
+    "purpose": "Demonstrate legitimate counterfactual separation and diagnostic/calibration switching.",
+    "evidence_source": "deterministic simulation",
+    "seed": 17,
+    "truth_policy": "sealed during execution and included only in the completed report",
+    "presentation_note": "The action sequence is simulator-produced, not scripted; inspect trace/action_counts before claiming a calibration switch."
+  }
+}

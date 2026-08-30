@@ -1,40 +1,45 @@
-# ARGUS IEEE paper package
+# ARGUS NEO IEEE paper package
 
-This folder is a self-contained IEEE conference-paper project for Overleaf.
+This directory is a self-contained, upload-ready IEEE conference manuscript for ARGUS NEO.
 
 ## Overleaf
 
 1. Create a **Blank Project** in Overleaf.
-2. Upload `main.tex` and `references.bib` into the project root.
-3. In **Menu → Compiler**, select **pdfLaTeX**.
-4. Click **Recompile**. Overleaf runs BibTeX automatically.
+2. Upload `main.tex`, `references.bib`, and this guide into the project root.
+3. In **Menu > Compiler**, select **pdfLaTeX**.
+4. Click **Recompile**. Overleaf will run BibTeX and the cross-reference passes.
 
-All diagrams and benchmark plots are generated inside LaTeX with TikZ/PGFPlots, so there are no missing image files.
+All architecture diagrams and benchmark plots are generated in LaTeX with TikZ/PGFPlots. There are no external image dependencies.
 
 ## Local compile
 
-From this folder:
+With `latexmk`:
 
 ```powershell
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-Clean auxiliary files while retaining the PDF:
+Or manually:
 
 ```powershell
-latexmk -c
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+bibtex main
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
 ## Before submission
 
-- Replace the author and affiliation block near the top of `main.tex` with the complete author list, institutional affiliation, and email.
-- Check the target conference's page limit, anonymity rule, copyright notice, and required IEEE template version.
-- If the venue is double-blind, replace identifying repository, author, and acknowledgment details before submission.
-- Do not present the synthetic benchmark as physical validation. The paper intentionally states that localization-error confidence intervals cross zero and that the real-data scenario split exposes a sim-to-real gap.
-- Re-run benchmarks after algorithm changes and update every result table and embedded plot together.
+- Replace the author block with the full author list, affiliation, ORCID/email, and funding information.
+- Check the venue's page limit, anonymity rule, copyright notice, and required IEEE template version.
+- For double-blind review, remove author and repository-identifying details.
+- Do not present simulated results as physical validation. The paper explicitly separates the 30-case baseline from the small NEO engineering diagnostics.
+- Re-run all benchmarks after algorithm changes and update tables, plots, sample sizes, seeds, and limitations together.
+- Obtain a professional claim-specific patent search before making patentability assertions or public disclosure decisions.
 
 ## Files
 
-- `main.tex` — complete detailed manuscript, inline figures, equations, algorithm, results, limitations, data-collection plan, and appendices.
-- `references.bib` — BibTeX database using primary scholarly sources and the official LMSD dataset DOI.
-- `argus-ieee-overleaf.zip` — upload-ready archive generated from the two source files and this guide.
+- `main.tex` - detailed IEEE manuscript with equations, algorithms, inline diagrams, observed results, limitations, and appendices.
+- `references.bib` - primary scholarly references and the official LMSD dataset record.
+- `main.pdf` - locally compiled and visually verified 11-page manuscript.
+- `argus-ieee-overleaf.zip` - upload-ready archive containing the source files and this guide.

@@ -19,6 +19,16 @@ class CandidateScore:
     experiment_cost: float
     repetition_penalty: float
     final_score: float
+    expected_risk_reduction: float = 0.0
+    calibration_value: float = 0.0
+    model_trust: float = 1.0
+    time_cost: float = 0.0
+    energy_cost: float = 0.0
+    feasibility: bool = True
+    rejection_reasons: tuple[str, ...] = ()
+    chosen_model_fidelity: int = 1
+    reason_for_fidelity: str = "Existing physics-inspired signature model"
+    predicted_uncertainty_after: float | None = None
 
     def to_dict(self) -> dict:
         return {"experiment": self.experiment.to_dict(), **{k: v for k, v in asdict(self).items() if k != "experiment"}}
@@ -30,6 +40,12 @@ class PlannedExperiment:
     top_candidates: tuple[CandidateScore, ...]
     explanation: str
     strategy: str = "counterfactual_disagreement"
+    action_type: str = "diagnostic"
+    objective: str = "INFORMATION_GAIN"
+    structured_explanation: dict | None = None
+    chosen_model_fidelity: int = 1
+    reason_for_fidelity: str = "Existing physics-inspired signature model"
+    planning_horizon: int = 1
 
     def to_dict(self) -> dict:
         return {
@@ -42,6 +58,23 @@ class PlannedExperiment:
             "planner_score": self.selected.final_score,
             "explanation": self.explanation,
             "strategy": self.strategy,
+            "action_type": self.action_type,
+            "objective": self.objective,
+            "chosen_model_fidelity": self.chosen_model_fidelity,
+            "reason_for_fidelity": self.reason_for_fidelity,
+            "planning_horizon": self.planning_horizon,
+            "structured_explanation": self.structured_explanation or {
+                "action_type": self.action_type,
+                "primary_reason": self.explanation,
+                "expected_information_gain": self.selected.expected_information_gain,
+                "expected_risk_reduction": self.selected.expected_risk_reduction,
+                "hypothesis_separation": self.selected.hypothesis_disagreement,
+                "movement_cost": self.selected.experiment_cost,
+                "energy_cost": self.selected.energy_cost,
+                "model_trust": self.selected.model_trust,
+                "calibration_value": self.selected.calibration_value,
+                "predicted_uncertainty_after": self.selected.predicted_uncertainty_after,
+            },
             "top_candidates": [candidate.to_dict() for candidate in self.top_candidates],
         }
 

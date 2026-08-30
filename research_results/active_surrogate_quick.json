@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "evidence_source": "simulated_physics_oracle",
+    "seed": 431,
+    "ensemble": "3 x sklearn MLPRegressor(48,48)",
+    "selection": "mean ensemble predictive standard deviation",
+    "truth_isolation": "candidate targets remained sealed until after selection"
+  },
+  "sample_counts": {
+    "initial": 72,
+    "queried": 18,
+    "pool": 48,
+    "test": 60
+  },
+  "initial_test_mae": 94.10025787353516,
+  "active_test_mae": 89.00765991210938,
+  "relative_mae_change": 0.05411885234437841,
+  "improved": true,
+  "selected_disagreement": {
+    "mean": 40.51335144042969,
+    "minimum": 30.401273727416992,
+    "pool_mean": 27.262670516967773
+  },
+  "training_dataset_hash": "de4ffee35f04521ed4347f5c1f376d469aab0c1f3b5636365ecfa6c80fd1c66b",
+  "feature_names": [
+    "rms",
+    "peak_amplitude",
+    "crest_factor",
+    "zero_crossing_rate",
+    "spectral_centroid_hz",
+    "spectral_bandwidth_hz",
+    "spectral_rolloff_hz",
+    "dominant_frequency_hz",
+    "spectral_entropy",
+    "band_energy_low",
+    "band_energy_mid",
+    "band_energy_high",
+    "envelope_peak_time_s",
+    "decay_time_s",
+    "snr_db"
+  ]
+}

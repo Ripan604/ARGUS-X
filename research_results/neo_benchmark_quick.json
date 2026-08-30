@@ -1,0 +1,4988 @@
+{
+  "metadata": {
+    "cases": 2,
+    "max_experiments": 5,
+    "seed": 100,
+    "evidence_source": "simulated",
+    "criterion": "confidence>=0.72, 90%-credible-area<=0.08, non-OOD"
+  },
+  "summary": {
+    "random": {
+      "localization_error_mm": {
+        "mean": 30.65435388622337,
+        "median": 30.65435388622337,
+        "std": 20.401990966162238,
+        "bootstrap_95ci": [
+          16.22796772434337,
+          45.08074004810337
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.8604483944581107,
+        "median": 0.8604483944581107,
+        "std": 0.027471774017767084,
+        "bootstrap_95ci": [
+          0.8410229167589233,
+          0.8798738721572983
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.48875,
+        "median": 0.48875,
+        "std": 0.06540737725975566,
+        "bootstrap_95ci": [
+          0.4425,
+          0.535
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 3.3423153455556163,
+        "median": 3.3423153455556163,
+        "std": 0.6139820628141064,
+        "bootstrap_95ci": [
+          2.908164465412857,
+          3.7764662256983756
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.13824,
+        "median": 0.13824,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.13824,
+          0.13824
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 2.6053892073333698,
+        "median": 2.6053892073333698,
+        "std": 0.368389237688464,
+        "bootstrap_95ci": [
+          2.344898679247714,
+          2.8658797354190253
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.08128249999936088,
+        "median": 0.08128249999936088,
+        "std": 0.00010337901142178804,
+        "bootstrap_95ci": [
+          0.08120939999935217,
+          0.08135559999936959
+        ]
+      },
+      "success_rate": 0.5,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "uniform_grid": {
+      "localization_error_mm": {
+        "mean": 15.945021834128289,
+        "median": 15.945021834128289,
+        "std": 0.4001459153598951,
+        "bootstrap_95ci": [
+          15.662075943913209,
+          16.22796772434337
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.9337779689220969,
+        "median": 0.9337779689220969,
+        "std": 0.014754169831845677,
+        "bootstrap_95ci": [
+          0.9233451953832208,
+          0.9442107424609729
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.66125,
+        "median": 0.66125,
+        "std": 0.08662058069535211,
+        "bootstrap_95ci": [
+          0.6,
+          0.7225
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 3.3600000000000003,
+        "median": 3.3600000000000003,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          3.3600000000000003,
+          3.3600000000000003
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.13824,
+        "median": 0.13824,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.13824,
+          0.13824
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 2.616,
+        "median": 2.616,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          2.616,
+          2.616
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.07794379999904777,
+        "median": 0.07794379999904777,
+        "std": 0.0006250823952416113,
+        "bootstrap_95ci": [
+          0.0775017999985721,
+          0.07838579999952344
+        ]
+      },
+      "success_rate": 1.0,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "greedy_heuristic": {
+      "localization_error_mm": {
+        "mean": 30.887342683634664,
+        "median": 30.887342683634664,
+        "std": 20.73148688334229,
+        "bootstrap_95ci": [
+          16.22796772434337,
+          45.54671764292596
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.7022932915440669,
+        "median": 0.7022932915440669,
+        "std": 0.0356478979107045,
+        "bootstrap_95ci": [
+          0.6770864211963621,
+          0.7275001618917719
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.13375,
+        "median": 0.13375,
+        "std": 0.033587572106361006,
+        "bootstrap_95ci": [
+          0.11,
+          0.1575
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 1.6254182651274462,
+        "median": 1.6254182651274462,
+        "std": 0.3411066607536227,
+        "bootstrap_95ci": [
+          1.3842194322006605,
+          1.866617098054232
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.13629599999999997,
+        "median": 0.13629599999999997,
+        "std": 0.005192992201033997,
+        "bootstrap_95ci": [
+          0.132624,
+          0.13996799999999998
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 1.5752509590764676,
+        "median": 1.5752509590764676,
+        "std": 0.20466399645217345,
+        "bootstrap_95ci": [
+          1.4305316593203963,
+          1.719970258832539
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.09604829999989306,
+        "median": 0.09604829999989306,
+        "std": 0.0001766352735426716,
+        "bootstrap_95ci": [
+          0.0959234000001743,
+          0.09617319999961182
+        ]
+      },
+      "success_rate": 0.5,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "existing_argus": {
+      "localization_error_mm": {
+        "mean": 22.098874349449176,
+        "median": 22.098874349449176,
+        "std": 9.10300760337048,
+        "bootstrap_95ci": [
+          15.662075943913209,
+          28.535672754985146
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.8626448023537633,
+        "median": 0.8626448023537633,
+        "std": 0.07792466912686877,
+        "bootstrap_95ci": [
+          0.8075437403924364,
+          0.9177458643150902
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.50375,
+        "median": 0.50375,
+        "std": 0.17854446224960324,
+        "bootstrap_95ci": [
+          0.3775,
+          0.63
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 4.277773622369194,
+        "median": 4.277773622369194,
+        "std": 0.05326330123593063,
+        "bootstrap_95ci": [
+          4.240110780876885,
+          4.315436463861502
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.14601599999999998,
+        "median": 0.14601599999999998,
+        "std": 0.009775044143122854,
+        "bootstrap_95ci": [
+          0.13910399999999998,
+          0.152928
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 3.166664173421516,
+        "median": 3.166664173421516,
+        "std": 0.031957980741558874,
+        "bootstrap_95ci": [
+          3.144066468526131,
+          3.1892618783169016
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.08049799999935203,
+        "median": 0.08049799999935203,
+        "std": 0.0013129558723011226,
+        "bootstrap_95ci": [
+          0.07956959999864921,
+          0.08142640000005485
+        ]
+      },
+      "success_rate": 0.5,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "information_gain": {
+      "localization_error_mm": {
+        "mean": 69.00102574544243,
+        "median": 69.00102574544243,
+        "std": 76.14323356876972,
+        "bootstrap_95ci": [
+          15.159628947494209,
+          122.84242254339067
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.9222951299530349,
+        "median": 0.9222951299530349,
+        "std": 0.06772963979221491,
+        "bootstrap_95ci": [
+          0.8744030423686375,
+          0.9701872175374323
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.7012499999999999,
+        "median": 0.7012499999999999,
+        "std": 0.1042982502250158,
+        "bootstrap_95ci": [
+          0.6275,
+          0.775
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 4.299361540015229,
+        "median": 4.299361540015229,
+        "std": 1.2236216934687023,
+        "bootstrap_95ci": [
+          3.434130342956543,
+          5.1645927370739155
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.118656,
+        "median": 0.118656,
+        "std": 0.022672671831965467,
+        "bootstrap_95ci": [
+          0.10262399999999999,
+          0.134688
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 3.1796169240091374,
+        "median": 3.1796169240091374,
+        "std": 0.7341730160812217,
+        "bootstrap_95ci": [
+          2.6604782057739254,
+          3.6987556422443495
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.10460645000057411,
+        "median": 0.10460645000057411,
+        "std": 0.01941920282461761,
+        "bootstrap_95ci": [
+          0.09087499999805004,
+          0.11833790000309818
+        ]
+      },
+      "success_rate": 0.5,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "bayes_risk": {
+      "localization_error_mm": {
+        "mean": 15.945021834128289,
+        "median": 15.945021834128289,
+        "std": 0.4001459153598951,
+        "bootstrap_95ci": [
+          15.662075943913209,
+          16.22796772434337
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.8949243120141159,
+        "median": 0.8949243120141159,
+        "std": 0.025647130087652858,
+        "bootstrap_95ci": [
+          0.8767890524111631,
+          0.9130595716170689
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.61125,
+        "median": 0.61125,
+        "std": 0.04419417382415922,
+        "bootstrap_95ci": [
+          0.58,
+          0.6425
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 4.900203038262835,
+        "median": 4.900203038262835,
+        "std": 0.6819767946230918,
+        "bootstrap_95ci": [
+          4.417972622172981,
+          5.382433454352689
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.124536,
+        "median": 0.124536,
+        "std": 0.005192992201033997,
+        "bootstrap_95ci": [
+          0.120864,
+          0.128208
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 3.540121822957701,
+        "median": 3.540121822957701,
+        "std": 0.40918607677385527,
+        "bootstrap_95ci": [
+          3.2507835733037886,
+          3.8294600726116133
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.11962465000033262,
+        "median": 0.11962465000033262,
+        "std": 0.0014601047923469127,
+        "bootstrap_95ci": [
+          0.11859220000042114,
+          0.1206571000002441
+        ]
+      },
+      "success_rate": 1.0,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "dual_control": {
+      "localization_error_mm": {
+        "mean": 15.945021834128289,
+        "median": 15.945021834128289,
+        "std": 0.4001459153598951,
+        "bootstrap_95ci": [
+          15.662075943913209,
+          16.22796772434337
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.8949243120141159,
+        "median": 0.8949243120141159,
+        "std": 0.025647130087652858,
+        "bootstrap_95ci": [
+          0.8767890524111631,
+          0.9130595716170689
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.61125,
+        "median": 0.61125,
+        "std": 0.04419417382415922,
+        "bootstrap_95ci": [
+          0.58,
+          0.6425
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 4.900203038262835,
+        "median": 4.900203038262835,
+        "std": 0.6819767946230918,
+        "bootstrap_95ci": [
+          4.417972622172981,
+          5.382433454352689
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.124536,
+        "median": 0.124536,
+        "std": 0.005192992201033997,
+        "bootstrap_95ci": [
+          0.120864,
+          0.128208
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 3.540121822957701,
+        "median": 3.540121822957701,
+        "std": 0.40918607677385527,
+        "bootstrap_95ci": [
+          3.2507835733037886,
+          3.8294600726116133
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.12004315000012866,
+        "median": 0.12004315000012866,
+        "std": 0.0015650394402429249,
+        "bootstrap_95ci": [
+          0.11893649999910849,
+          0.12114980000114883
+        ]
+      },
+      "success_rate": 1.0,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "receding_horizon": {
+      "localization_error_mm": {
+        "mean": 15.945021834128289,
+        "median": 15.945021834128289,
+        "std": 0.4001459153598951,
+        "bootstrap_95ci": [
+          15.662075943913209,
+          16.22796772434337
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.8949243120141159,
+        "median": 0.8949243120141159,
+        "std": 0.025647130087652858,
+        "bootstrap_95ci": [
+          0.8767890524111631,
+          0.9130595716170689
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.61125,
+        "median": 0.61125,
+        "std": 0.04419417382415922,
+        "bootstrap_95ci": [
+          0.58,
+          0.6425
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 4.900203038262835,
+        "median": 4.900203038262835,
+        "std": 0.6819767946230918,
+        "bootstrap_95ci": [
+          4.417972622172981,
+          5.382433454352689
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.124536,
+        "median": 0.124536,
+        "std": 0.005192992201033997,
+        "bootstrap_95ci": [
+          0.120864,
+          0.128208
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 3.540121822957701,
+        "median": 3.540121822957701,
+        "std": 0.40918607677385527,
+        "bootstrap_95ci": [
+          3.2507835733037886,
+          3.8294600726116133
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.11996450000151526,
+        "median": 0.11996450000151526,
+        "std": 0.0028892383085117037,
+        "bootstrap_95ci": [
+          0.11792150000110269,
+          0.12200750000192784
+        ]
+      },
+      "success_rate": 1.0,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    },
+    "full_argus_neo": {
+      "localization_error_mm": {
+        "mean": 21.704300939771336,
+        "median": 21.704300939771336,
+        "std": 7.744704705332494,
+        "bootstrap_95ci": [
+          16.22796772434337,
+          27.180634155199307
+        ]
+      },
+      "normalized_entropy": {
+        "mean": 0.9086964627423855,
+        "median": 0.9086964627423855,
+        "std": 0.006949761345401597,
+        "bootstrap_95ci": [
+          0.9037822393674239,
+          0.9136106861173471
+        ]
+      },
+      "credible_region_area": {
+        "mean": 0.6225,
+        "median": 0.6225,
+        "std": 0.02828427124746185,
+        "bootstrap_95ci": [
+          0.6025,
+          0.6425
+        ]
+      },
+      "measurements": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          5.0,
+          5.0
+        ]
+      },
+      "movement": {
+        "mean": 3.8692599584835046,
+        "median": 3.8692599584835046,
+        "std": 0.4831689497700393,
+        "bootstrap_95ci": [
+          3.5276079176423276,
+          4.210911999324682
+        ]
+      },
+      "energy_proxy": {
+        "mean": 0.131448,
+        "median": 0.131448,
+        "std": 0.004582051942088838,
+        "bootstrap_95ci": [
+          0.128208,
+          0.134688
+        ]
+      },
+      "simulated_acquisition_time": {
+        "mean": 2.9215559750901026,
+        "median": 2.9215559750901026,
+        "std": 0.2899013698620239,
+        "bootstrap_95ci": [
+          2.716564750585396,
+          3.126547199594809
+        ]
+      },
+      "calibration_error": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "bootstrap_95ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "computation_seconds": {
+        "mean": 0.15282364999984566,
+        "median": 0.15282364999984566,
+        "std": 0.004759747876169759,
+        "bootstrap_95ci": [
+          0.14945799999986775,
+          0.15618929999982356
+        ]
+      },
+      "success_rate": 0.5,
+      "false_confidence_rate": 0.0,
+      "abstention_rate": 0.0,
+      "criterion_rate": 0.0,
+      "sample_size": 2,
+      "inspection_compression": 1.0
+    }
+  },
+  "paired_comparisons": {
+    "full_vs_random": {
+      "sample_size": 2,
+      "mean_measurement_advantage": 0.0,
+      "bootstrap_95ci": [
+        0.0,
+        0.0
+      ],
+      "wilcoxon_p": null,
+      "paired_t_p": null
+    },
+    "full_vs_uniform_grid": {
+      "sample_size": 2,
+      "mean_measurement_advantage": 0.0,
+      "bootstrap_95ci": [
+        0.0,
+        0.0
+      ],
+      "wilcoxon_p": null,
+      "paired_t_p": null
+    },
+    "full_vs_existing_argus": {
+      "sample_size": 2,
+      "mean_measurement_advantage": 0.0,
+      "bootstrap_95ci": [
+        0.0,
+        0.0
+      ],
+      "wilcoxon_p": null,
+      "paired_t_p": null
+    }
+  },
+  "failures": [
+    {
+      "seed": 100,
+      "strategy": "random",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.8410229167589233,
+      "credible_region_area": 0.4425,
+      "measurements": 5,
+      "movement": 2.908164465412857,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.344898679247714,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.08135559999936959,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.30658768803171205,
+            "source_y": 0.14142087585190932,
+            "receiver_x": 0.1135839612489899,
+            "receiver_y": 0.2894026762085039,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9547226507624376
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.34172940117021144,
+            "source_y": 0.6373473929935247,
+            "receiver_x": 0.8263901378385637,
+            "receiver_y": 0.14996334931492583,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9469974679020392
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.45193194250771884,
+            "source_y": 0.7340506003590883,
+            "receiver_x": 0.2127277217698809,
+            "receiver_y": 0.5105983512225021,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9118791065553984
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5762523962223074,
+            "source_y": 0.7691101301117426,
+            "receiver_x": 0.11083491410778715,
+            "receiver_y": 0.474115550595761,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8809990385056002
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.2963852404667397,
+            "source_y": 0.8804569738476589,
+            "receiver_x": 0.2559098569993626,
+            "receiver_y": 0.2256993569540431,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8410229167589233
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "uniform_grid",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9442107424609729,
+      "credible_region_area": 0.7225,
+      "measurements": 5,
+      "movement": 3.3600000000000003,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.616,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.0775017999985721,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.08,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9937830603304763
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9869390731893491
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.08,
+            "receiver_x": 0.5,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9790296692989526
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.5,
+            "receiver_x": 0.08,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9604082429928105
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.92,
+            "receiver_x": 0.08,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9442107424609729
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "greedy_heuristic",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.7275001618917719,
+      "credible_region_area": 0.1575,
+      "measurements": 5,
+      "movement": 1.866617098054232,
+      "energy_proxy": 0.132624,
+      "simulated_acquisition_time": 1.719970258832539,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.0959234000001743,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.475,
+            "source_y": 0.325,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9938843621262696
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.925,
+            "source_y": 0.525,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.982500852057577
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8463471690860438
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.225,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7521059018974098
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7275001618917719
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "existing_argus",
+      "localization_error_mm": 28.535672754985146,
+      "normalized_entropy": 0.9177458643150902,
+      "credible_region_area": 0.63,
+      "measurements": 5,
+      "movement": 4.240110780876885,
+      "energy_proxy": 0.13910399999999998,
+      "simulated_acquisition_time": 3.144066468526131,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.08142640000005485,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.325,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9816316712049555
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.525,
+            "source_y": 0.875,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9804331575448935
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.275,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9760937227543405
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.375,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9459443175648327
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9177458643150902
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "information_gain",
+      "localization_error_mm": 15.159628947494209,
+      "normalized_entropy": 0.8744030423686375,
+      "credible_region_area": 0.6275,
+      "measurements": 5,
+      "movement": 3.434130342956543,
+      "energy_proxy": 0.134688,
+      "simulated_acquisition_time": 2.6604782057739254,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11833790000309818,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.225,
+            "source_y": 0.725,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9800146886839821
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9800146886839821
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9033343563812412
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.04,
+            "source_y": 0.5,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8744030423686375
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "bayes_risk",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.1206571000002441,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "dual_control",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11893649999910849,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "receding_horizon",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11792150000110269,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "full_argus_neo",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9136106861173471,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 3.5276079176423276,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 2.716564750585396,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.14945799999986775,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.325,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9568055309575981
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9568055309575981
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.225,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9449515576208998
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9245986245350801
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.425,
+            "source_y": 0.275,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9136106861173471
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "random",
+      "localization_error_mm": 45.08074004810337,
+      "normalized_entropy": 0.8798738721572983,
+      "credible_region_area": 0.535,
+      "measurements": 5,
+      "movement": 3.7764662256983756,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.8658797354190253,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.08120939999935217,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.15768502554742972,
+            "source_y": 0.27420523128066693,
+            "receiver_x": 0.2328702754105738,
+            "receiver_y": 0.21131006661469326,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.984566378857787
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5334754887789692,
+            "source_y": 0.28456517526346026,
+            "receiver_x": 0.20064676021456088,
+            "receiver_y": 0.47420887716586,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9565253273897357
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.1462070758532391,
+            "source_y": 0.5018996458959117,
+            "receiver_x": 0.5211223103854159,
+            "receiver_y": 0.6272328054063728,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9291683123342139
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.17268488520807906,
+            "source_y": 0.15791316752734325,
+            "receiver_x": 0.05591946039200303,
+            "receiver_y": 0.2669575609082209,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9091949373098689
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.26997671352012,
+            "source_y": 0.9206673860456871,
+            "receiver_x": 0.689788741367309,
+            "receiver_y": 0.24944371352725742,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8798738721572983
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "uniform_grid",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.9233451953832208,
+      "credible_region_area": 0.6,
+      "measurements": 5,
+      "movement": 3.3600000000000003,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.616,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.07838579999952344,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.08,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.99347796504125
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9776012249734762
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.08,
+            "receiver_x": 0.5,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.953834596548059
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.5,
+            "receiver_x": 0.08,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9352789199131175
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.92,
+            "receiver_x": 0.08,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9233451953832208
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "greedy_heuristic",
+      "localization_error_mm": 45.54671764292596,
+      "normalized_entropy": 0.6770864211963621,
+      "credible_region_area": 0.11,
+      "measurements": 5,
+      "movement": 1.3842194322006605,
+      "energy_proxy": 0.13996799999999998,
+      "simulated_acquisition_time": 1.4305316593203963,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.09617319999961182,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.475,
+            "source_y": 0.325,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.993675762817103
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.925,
+            "source_y": 0.425,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9655632153414048
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.875,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.863243910572429
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.575,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7351570584160814
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.575,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.6770864211963621
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "existing_argus",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8075437403924364,
+      "credible_region_area": 0.3775,
+      "measurements": 5,
+      "movement": 4.315436463861502,
+      "energy_proxy": 0.152928,
+      "simulated_acquisition_time": 3.1892618783169016,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.07956959999864921,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.325,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9755570616163133
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.04,
+            "source_y": 0.5,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9609144603298658
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383109847845696
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9033987081471379
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.525,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8075437403924364
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "information_gain",
+      "localization_error_mm": 122.84242254339067,
+      "normalized_entropy": 0.9701872175374323,
+      "credible_region_area": 0.775,
+      "measurements": 5,
+      "movement": 5.1645927370739155,
+      "energy_proxy": 0.10262399999999999,
+      "simulated_acquisition_time": 3.6987556422443495,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.09087499999805004,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9737328371959854
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.08,
+            "receiver_x": 0.95,
+            "receiver_y": 0.08,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9737328371959854
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.06,
+            "source_y": 0.94,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9701872175374323
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "bayes_risk",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11859220000042114,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "dual_control",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.12114980000114883,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "receding_horizon",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.12200750000192784,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "full_argus_neo",
+      "localization_error_mm": 27.180634155199307,
+      "normalized_entropy": 0.9037822393674239,
+      "credible_region_area": 0.6025,
+      "measurements": 5,
+      "movement": 4.210911999324682,
+      "energy_proxy": 0.134688,
+      "simulated_acquisition_time": 3.126547199594809,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.15618929999982356,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.325,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9814356951925586
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9814356951925586
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9626048969251966
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.525,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.927700445980207
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.625,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9037822393674239
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    }
+  ],
+  "runs": [
+    {
+      "seed": 100,
+      "strategy": "random",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.8410229167589233,
+      "credible_region_area": 0.4425,
+      "measurements": 5,
+      "movement": 2.908164465412857,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.344898679247714,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.08135559999936959,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.30658768803171205,
+            "source_y": 0.14142087585190932,
+            "receiver_x": 0.1135839612489899,
+            "receiver_y": 0.2894026762085039,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9547226507624376
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.34172940117021144,
+            "source_y": 0.6373473929935247,
+            "receiver_x": 0.8263901378385637,
+            "receiver_y": 0.14996334931492583,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9469974679020392
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.45193194250771884,
+            "source_y": 0.7340506003590883,
+            "receiver_x": 0.2127277217698809,
+            "receiver_y": 0.5105983512225021,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9118791065553984
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5762523962223074,
+            "source_y": 0.7691101301117426,
+            "receiver_x": 0.11083491410778715,
+            "receiver_y": 0.474115550595761,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8809990385056002
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.2963852404667397,
+            "source_y": 0.8804569738476589,
+            "receiver_x": 0.2559098569993626,
+            "receiver_y": 0.2256993569540431,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8410229167589233
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "uniform_grid",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9442107424609729,
+      "credible_region_area": 0.7225,
+      "measurements": 5,
+      "movement": 3.3600000000000003,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.616,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.0775017999985721,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.08,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9937830603304763
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9869390731893491
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.08,
+            "receiver_x": 0.5,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9790296692989526
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.5,
+            "receiver_x": 0.08,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9604082429928105
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.92,
+            "receiver_x": 0.08,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9442107424609729
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "greedy_heuristic",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.7275001618917719,
+      "credible_region_area": 0.1575,
+      "measurements": 5,
+      "movement": 1.866617098054232,
+      "energy_proxy": 0.132624,
+      "simulated_acquisition_time": 1.719970258832539,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.0959234000001743,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.475,
+            "source_y": 0.325,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9938843621262696
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.925,
+            "source_y": 0.525,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.982500852057577
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8463471690860438
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.225,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7521059018974098
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7275001618917719
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "existing_argus",
+      "localization_error_mm": 28.535672754985146,
+      "normalized_entropy": 0.9177458643150902,
+      "credible_region_area": 0.63,
+      "measurements": 5,
+      "movement": 4.240110780876885,
+      "energy_proxy": 0.13910399999999998,
+      "simulated_acquisition_time": 3.144066468526131,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.08142640000005485,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.325,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9816316712049555
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.525,
+            "source_y": 0.875,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9804331575448935
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.275,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "impulse",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9760937227543405
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.375,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9459443175648327
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9177458643150902
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "information_gain",
+      "localization_error_mm": 15.159628947494209,
+      "normalized_entropy": 0.8744030423686375,
+      "credible_region_area": 0.6275,
+      "measurements": 5,
+      "movement": 3.434130342956543,
+      "energy_proxy": 0.134688,
+      "simulated_acquisition_time": 2.6604782057739254,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11833790000309818,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.225,
+            "source_y": 0.725,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9800146886839821
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9800146886839821
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.225,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9033343563812412
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.04,
+            "source_y": 0.5,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8744030423686375
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "bayes_risk",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.1206571000002441,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "dual_control",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11893649999910849,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "receding_horizon",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9130595716170689,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 5.382433454352689,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 3.8294600726116133,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11792150000110269,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9836824430119449
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.275,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.92,
+            "receiver_x": 0.95,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9709886301367677
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9448035099286081
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9130595716170689
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 100,
+      "strategy": "full_argus_neo",
+      "localization_error_mm": 16.22796772434337,
+      "normalized_entropy": 0.9136106861173471,
+      "credible_region_area": 0.6425,
+      "measurements": 5,
+      "movement": 3.5276079176423276,
+      "energy_proxy": 0.128208,
+      "simulated_acquisition_time": 2.716564750585396,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.14945799999986775,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.325,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9568055309575981
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9568055309575981
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.225,
+            "source_y": 0.425,
+            "receiver_x": 0.06,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9449515576208998
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.375,
+            "source_y": 0.175,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9245986245350801
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.425,
+            "source_y": 0.275,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9136106861173471
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "random",
+      "localization_error_mm": 45.08074004810337,
+      "normalized_entropy": 0.8798738721572983,
+      "credible_region_area": 0.535,
+      "measurements": 5,
+      "movement": 3.7764662256983756,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.8658797354190253,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.08120939999935217,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.15768502554742972,
+            "source_y": 0.27420523128066693,
+            "receiver_x": 0.2328702754105738,
+            "receiver_y": 0.21131006661469326,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.984566378857787
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5334754887789692,
+            "source_y": 0.28456517526346026,
+            "receiver_x": 0.20064676021456088,
+            "receiver_y": 0.47420887716586,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9565253273897357
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.1462070758532391,
+            "source_y": 0.5018996458959117,
+            "receiver_x": 0.5211223103854159,
+            "receiver_y": 0.6272328054063728,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9291683123342139
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.17268488520807906,
+            "source_y": 0.15791316752734325,
+            "receiver_x": 0.05591946039200303,
+            "receiver_y": 0.2669575609082209,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 5400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9091949373098689
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.26997671352012,
+            "source_y": 0.9206673860456871,
+            "receiver_x": 0.689788741367309,
+            "receiver_y": 0.24944371352725742,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8798738721572983
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "uniform_grid",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.9233451953832208,
+      "credible_region_area": 0.6,
+      "measurements": 5,
+      "movement": 3.3600000000000003,
+      "energy_proxy": 0.13824,
+      "simulated_acquisition_time": 2.616,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.07838579999952344,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.08,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.99347796504125
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.08,
+            "receiver_x": 0.92,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9776012249734762
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.08,
+            "receiver_x": 0.5,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.953834596548059
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.5,
+            "receiver_x": 0.08,
+            "receiver_y": 0.92,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9352789199131175
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.92,
+            "source_y": 0.92,
+            "receiver_x": 0.08,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9233451953832208
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "greedy_heuristic",
+      "localization_error_mm": 45.54671764292596,
+      "normalized_entropy": 0.6770864211963621,
+      "credible_region_area": 0.11,
+      "measurements": 5,
+      "movement": 1.3842194322006605,
+      "energy_proxy": 0.13996799999999998,
+      "simulated_acquisition_time": 1.4305316593203963,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.09617319999961182,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.475,
+            "source_y": 0.325,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.993675762817103
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.925,
+            "source_y": 0.425,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9655632153414048
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.875,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.863243910572429
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.575,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.7351570584160814
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.575,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.6770864211963621
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "existing_argus",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8075437403924364,
+      "credible_region_area": 0.3775,
+      "measurements": 5,
+      "movement": 4.315436463861502,
+      "energy_proxy": 0.152928,
+      "simulated_acquisition_time": 3.1892618783169016,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.07956959999864921,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.325,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9755570616163133
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.04,
+            "source_y": 0.5,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9609144603298658
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383109847845696
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9033987081471379
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.525,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8075437403924364
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "information_gain",
+      "localization_error_mm": 122.84242254339067,
+      "normalized_entropy": 0.9701872175374323,
+      "credible_region_area": 0.775,
+      "measurements": 5,
+      "movement": 5.1645927370739155,
+      "energy_proxy": 0.10262399999999999,
+      "simulated_acquisition_time": 3.6987556422443495,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.09087499999805004,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.5,
+            "source_y": 0.96,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9737328371959854
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.08,
+            "receiver_x": 0.95,
+            "receiver_y": 0.08,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9737328371959854
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.06,
+            "source_y": 0.94,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9701872175374323
+        }
+      ],
+      "failure_class": "localization_failed"
+    },
+    {
+      "seed": 101,
+      "strategy": "bayes_risk",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.11859220000042114,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "dual_control",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.12114980000114883,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "receding_horizon",
+      "localization_error_mm": 15.662075943913209,
+      "normalized_entropy": 0.8767890524111631,
+      "credible_region_area": 0.58,
+      "measurements": 5,
+      "movement": 4.417972622172981,
+      "energy_proxy": 0.120864,
+      "simulated_acquisition_time": 3.2507835733037886,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": true,
+      "criterion_reached": false,
+      "computation_seconds": 0.12200750000192784,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.96,
+            "source_y": 0.5,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9819896686623099
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.975,
+            "source_y": 0.275,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.42,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9620958682554459
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.475,
+            "receiver_x": 0.5,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "ricker",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9383495704892104
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.425,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.8767890524111631
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    },
+    {
+      "seed": 101,
+      "strategy": "full_argus_neo",
+      "localization_error_mm": 27.180634155199307,
+      "normalized_entropy": 0.9037822393674239,
+      "credible_region_area": 0.6025,
+      "measurements": 5,
+      "movement": 4.210911999324682,
+      "energy_proxy": 0.134688,
+      "simulated_acquisition_time": 3.126547199594809,
+      "calibration_error": 0.0,
+      "false_confidence": false,
+      "abstained": false,
+      "success": false,
+      "criterion_reached": false,
+      "computation_seconds": 0.15618929999982356,
+      "action_trace": [
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.325,
+            "source_y": 0.325,
+            "receiver_x": 0.06,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 1200.0,
+            "frequency_end_hz": 3000.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9814356951925586
+        },
+        {
+          "action_type": "calibration",
+          "experiment": {
+            "source_x": 0.05,
+            "source_y": 0.5,
+            "receiver_x": 0.95,
+            "receiver_y": 0.5,
+            "frequency_start_hz": 1200,
+            "frequency_end_hz": 3000,
+            "amplitude": 0.28,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9814356951925586
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.94,
+            "source_y": 0.94,
+            "receiver_x": 0.94,
+            "receiver_y": 0.06,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.48,
+            "duration_s": 0.12,
+            "waveform": "chirp",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9626048969251966
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.725,
+            "source_y": 0.525,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 2200.0,
+            "frequency_end_hz": 4400.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "phase_coded",
+            "phase_code": "1110010",
+            "code_length": 7,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.927700445980207
+        },
+        {
+          "action_type": "diagnostic",
+          "experiment": {
+            "source_x": 0.675,
+            "source_y": 0.625,
+            "receiver_x": 0.94,
+            "receiver_y": 0.94,
+            "frequency_start_hz": 3400.0,
+            "frequency_end_hz": 6200.0,
+            "amplitude": 0.54,
+            "duration_s": 0.12,
+            "waveform": "multisine",
+            "phase_code": null,
+            "code_length": 0,
+            "sample_rate_hz": null,
+            "spectral_notches_hz": []
+          },
+          "entropy": 0.9037822393674239
+        }
+      ],
+      "failure_class": "excessive_measurements"
+    }
+  ]
+}

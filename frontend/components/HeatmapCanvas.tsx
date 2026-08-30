@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { HistoryItem, SessionState } from '@/types/argus';
 
-interface Props { session: SessionState; history: HistoryItem[]; }
+interface Props { session: SessionState; history: HistoryItem[]; onNoGoChange?: (regions: SessionState['no_go_regions']) => void; }
 
 function probabilityColor(value: number, max: number): string {
   const t = Math.min(1, Math.sqrt(value / Math.max(max, 1e-12)));
@@ -13,8 +13,9 @@ function probabilityColor(value: number, max: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export function HeatmapCanvas({ session, history }: Props) {
+export function HeatmapCanvas({ session, history, onNoGoChange }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const [editing, setEditing] = useState(false), [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return;
     const context = canvas.getContext('2d'); if (!context) return;
@@ -29,6 +30,7 @@ export function HeatmapCanvas({ session, history }: Props) {
       context.fillRect(padding + x * fieldWidth / columns + .5, padding + y * fieldHeight / rows + .5, fieldWidth / columns - 1, fieldHeight / rows - 1);
     }));
     context.globalAlpha = 1; context.strokeStyle = '#40554d'; context.lineWidth = 2; context.strokeRect(padding, padding, fieldWidth, fieldHeight);
+    session.no_go_regions.forEach((region) => { context.fillStyle = '#ff715d22'; context.strokeStyle = '#ff715d'; context.lineWidth = 2; context.fillRect(padding + region.x_min * fieldWidth, padding + region.y_min * fieldHeight, (region.x_max - region.x_min) * fieldWidth, (region.y_max - region.y_min) * fieldHeight); context.strokeRect(padding + region.x_min * fieldWidth, padding + region.y_min * fieldHeight, (region.x_max - region.x_min) * fieldWidth, (region.y_max - region.y_min) * fieldHeight); context.fillStyle = '#ff8c78'; context.font = '10px monospace'; context.fillText(region.label.toUpperCase(), padding + region.x_min * fieldWidth + 5, padding + region.y_min * fieldHeight + 14); });
     history.forEach((item, index) => {
       const e = item.parameters;
       context.strokeStyle = '#62756d'; context.globalAlpha = .5; context.lineWidth = 1;
@@ -64,5 +66,7 @@ export function HeatmapCanvas({ session, history }: Props) {
       context.fillStyle = '#ff765f'; context.font = 'bold 12px monospace'; context.fillText('GROUND TRUTH', 14, -14); context.restore(); context.setLineDash([]);
     }
   }, [session, history]);
-  return <canvas ref={ref} width={900} height={590} className="heatmap-canvas" aria-label="Posterior defect probability with recommended source and receiver positions" />;
+  const coordinate = (event: React.PointerEvent<HTMLCanvasElement>) => { const canvas = event.currentTarget, rectangle = canvas.getBoundingClientRect(); const px = (event.clientX - rectangle.left) * canvas.width / rectangle.width, py = (event.clientY - rectangle.top) * canvas.height / rectangle.height; return { x: Math.max(0, Math.min(1, (px - 24) / (canvas.width - 48))), y: Math.max(0, Math.min(1, (py - 24) / (canvas.height - 48))) }; };
+  const finishRegion = (event: React.PointerEvent<HTMLCanvasElement>) => { if (!editing || !dragStart || !onNoGoChange) return; const end = coordinate(event); setDragStart(null); const xMin = Math.min(dragStart.x, end.x), xMax = Math.max(dragStart.x, end.x), yMin = Math.min(dragStart.y, end.y), yMax = Math.max(dragStart.y, end.y); if (xMax - xMin < 0.02 || yMax - yMin < 0.02) return; onNoGoChange([...session.no_go_regions, { x_min: xMin, y_min: yMin, x_max: xMax, y_max: yMax, label: `no-go ${session.no_go_regions.length + 1}` }]); };
+  return <><canvas ref={ref} width={900} height={590} className={`heatmap-canvas ${editing ? 'drawing-no-go' : ''}`} aria-label="Posterior defect probability with recommended source and receiver positions" onPointerDown={(event) => { if (editing) { event.currentTarget.setPointerCapture(event.pointerId); setDragStart(coordinate(event)); } }} onPointerUp={finishRegion} /><div className="no-go-toolbar"><button className={editing ? 'active' : ''} onClick={() => setEditing((value) => !value)}>{editing ? 'DRAG A RESTRICTED RECTANGLE' : 'DRAW NO-GO REGION'}</button><button onClick={() => onNoGoChange?.([])} disabled={!session.no_go_regions.length}>CLEAR {session.no_go_regions.length || ''}</button></div></>;
 }

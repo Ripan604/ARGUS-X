@@ -74,13 +74,28 @@ class AcousticSimulator:
         burst_duration = min(0.010, experiment.duration_s * 0.22)
         burst_samples = max(16, int(round(burst_duration * self.sample_rate)))
         t = np.arange(burst_samples) / self.sample_rate
-        if experiment.waveform == "impulse":
+        if experiment.waveform in {"impulse", "ricker"}:
             center = burst_duration * 0.28
             width = max(1 / experiment.center_frequency_hz, 0.00022)
             phase = np.pi * (t - center) / width
             wave = (1 - 2 * phase**2) * np.exp(-(phase**2))
-        elif experiment.waveform == "sine":
+        elif experiment.waveform in {"sine", "tone_burst"}:
             wave = np.sin(2 * np.pi * experiment.frequency_start_hz * t)
+        elif experiment.waveform == "multisine":
+            frequencies = np.linspace(experiment.frequency_start_hz, experiment.frequency_end_hz, 5)
+            wave = sum(np.sin(2 * np.pi * frequency * t + index * np.pi / 7) for index, frequency in enumerate(frequencies)) / len(frequencies)
+        elif experiment.waveform in {"phase_coded", "complementary_coded"}:
+            primary = np.asarray([1, 1, 1, -1, -1, 1, -1], dtype=np.float64)
+            secondary = np.asarray([1, 1, 1, -1, 1, -1, 1], dtype=np.float64)
+            code = np.concatenate((primary, secondary)) if experiment.waveform == "complementary_coded" else primary
+            if experiment.phase_code:
+                parsed = [1.0 if token in {"1", "+"} else -1.0 for token in experiment.phase_code if token in {"1", "0", "+", "-"}]
+                if parsed:
+                    code = np.asarray(parsed, dtype=np.float64)
+            chip = max(2, burst_samples // len(code))
+            phases = np.repeat(code, chip)[:burst_samples]
+            phases = np.pad(phases, (0, max(0, burst_samples - len(phases))), mode="edge")
+            wave = phases * np.sin(2 * np.pi * experiment.center_frequency_hz * t)
         else:
             wave = chirp(
                 t,
@@ -89,7 +104,18 @@ class AcousticSimulator:
                 t1=max(t[-1], 1 / self.sample_rate),
                 method="linear",
             )
+            if experiment.waveform == "spectrally_notched":
+                spectrum = np.fft.rfft(wave)
+                frequencies = np.fft.rfftfreq(len(wave), 1 / self.sample_rate)
+                notches = experiment.spectral_notches_hz or ((2_800.0, 3_300.0),)
+                for low, high in notches:
+                    spectrum[(frequencies >= low) & (frequencies <= high)] = 0
+                wave = np.fft.irfft(spectrum, n=len(wave))
         wave *= windows.tukey(burst_samples, alpha=0.45)
+        # FFT notching and coded summation can introduce modest overshoot. The
+        # experiment amplitude is a hard actuator bound, so normalize after all
+        # waveform transforms rather than assuming every family is unit peak.
+        wave /= max(1.0, float(np.max(np.abs(wave))))
         wave *= experiment.amplitude
         result = np.zeros(total_samples, dtype=np.float64)
         result[:burst_samples] = wave

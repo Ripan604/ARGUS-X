@@ -4,14 +4,26 @@ import { useMemo, useRef, useState } from 'react';
 import { BeliefEvolution } from '@/components/BeliefEvolution';
 import { BenchmarkPanel } from '@/components/BenchmarkPanel';
 import { CameraOverlay } from '@/components/CameraOverlay';
+import { ArgusBrain } from '@/components/ArgusBrain';
+import { EvidenceLedger } from '@/components/EvidenceLedger';
 import { HeatmapCanvas } from '@/components/HeatmapCanvas';
+import { ResearchLab } from '@/components/ResearchLab';
 import { SignalPlots } from '@/components/SignalPlots';
 import { useArgusSession } from '@/hooks/useArgusSession';
 import type { Preset } from '@/types/argus';
 
-type Tab = 'interrogate' | 'signal' | 'evolution' | 'benchmark' | 'camera';
+type Tab = 'interrogate' | 'brain' | 'signal' | 'evolution' | 'benchmark' | 'research' | 'evidence' | 'camera';
 
-const tabLabels: Record<Tab, string> = { interrogate: 'INTERROGATE', signal: 'SIGNAL', evolution: 'BELIEF EVOLUTION', benchmark: 'BENCHMARK', camera: 'CAMERA ALIGN' };
+const tabLabels: Record<Tab, string> = {
+  interrogate: 'MISSION CONTROL',
+  brain: 'ARGUS BRAIN',
+  signal: 'SIGNALS',
+  evolution: 'EVOLUTION',
+  benchmark: 'BASELINE',
+  research: 'RESEARCH',
+  evidence: 'EVIDENCE',
+  camera: 'REGISTRATION',
+};
 
 function Landing({ create, resume, resumable, apiOnline, busy, error }: { create: (preset: Preset, mode?: 'simulation' | 'physical', panelWidthMm?: number, panelHeightMm?: number) => void; resume: () => void; resumable: boolean; apiOnline: boolean | null; busy: boolean; error: string | null }) {
   const [preset, setPreset] = useState<Preset>('medium');
@@ -48,6 +60,7 @@ export default function Home() {
       <div className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>ARGUS</strong><small>ADAPTIVE PHYSICAL INTELLIGENCE</small></div></div>
       <nav className="mode-tabs">{(Object.keys(tabLabels) as Tab[]).map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => { setTab(item); if (item === 'benchmark' && !argus.benchmarks) argus.loadBenchmarks(); }}>{tabLabels[item]}</button>)}</nav>
       <div className="system-state"><span className="live-dot" /> {physical ? 'PHYSICAL INPUT' : 'SIMULATOR ONLINE'} <b>{String(status.experiment_count).padStart(2, '0')}/{session.config.max_experiments}</b></div>
+      <a className="probe-link" href="/probe" target="_blank" rel="noreferrer">PHONE PROBE</a>
       <button className="ghost-button" onClick={argus.reset}>NEW SESSION</button>
     </header>
 
@@ -55,17 +68,20 @@ export default function Home() {
     {tab === 'interrogate' && <>
       <section className="hero-strip compact-hero"><div><p className="eyebrow">SESSION {session.id} · {session.preset.toUpperCase()} · {physical ? 'PHYSICAL' : 'DIGITAL TWIN'}</p><h1>{status.should_stop ? 'Localization criterion reached.' : 'Adaptive interrogation in progress.'}</h1></div><div className="phase-readout"><small>CONFIDENCE</small><strong>{(status.confidence * 100).toFixed(1)}<span>%</span></strong></div></section>
       <section className="workspace-grid">
-        <article className="panel-card object-card"><div className="card-header"><div><p className="eyebrow">Recursive posterior</p><h2>Hidden-defect probability field</h2></div><div className="legend"><i /> LOW <i /> HIGH</div></div><div className="panel-canvas-stage"><HeatmapCanvas session={session} history={argus.history} /><span className="vertical-dimension">{Math.round(session.panel.height_m * 1000)} mm</span><span className="horizontal-dimension">{Math.round(session.panel.width_m * 1000)} mm</span></div><div className="object-footer"><div><small>MAP ESTIMATE</small><b>X {status.map_x.toFixed(3)} · Y {status.map_y.toFixed(3)}</b></div><div><small>NORMALIZED ENTROPY</small><b>{status.normalized_entropy.toFixed(3)} H/H₀</b></div><div><small>CONFIDENCE</small><b className="accent">{(status.confidence * 100).toFixed(1)}%</b></div></div></article>
+        <article className="panel-card object-card"><div className="card-header"><div><p className="eyebrow">Recursive posterior</p><h2>Hidden-defect probability field</h2></div><div className="legend"><i /> LOW <i /> HIGH</div></div><div className="panel-canvas-stage"><HeatmapCanvas session={session} history={argus.history} onNoGoChange={argus.setNoGoRegions} /><span className="vertical-dimension">{Math.round(session.panel.height_m * 1000)} mm</span><span className="horizontal-dimension">{Math.round(session.panel.width_m * 1000)} mm</span></div><div className="object-footer"><div><small>MAP ESTIMATE</small><b>X {status.map_x.toFixed(3)} · Y {status.map_y.toFixed(3)}</b></div><div><small>NORMALIZED ENTROPY</small><b>{status.normalized_entropy.toFixed(3)} H/H₀</b></div><div><small>CONFIDENCE</small><b className="accent">{(status.confidence * 100).toFixed(1)}%</b></div></div></article>
         <aside className="recommendation-card"><div className="scanline" /><p className="eyebrow accent">{status.should_stop ? 'TERMINATION CONDITION' : 'NEXT ARGUS RECOMMENDATION'}</p><h2>{status.should_stop ? 'Posterior sufficiently resolved.' : `Experiment ${String(status.experiment_count + 1).padStart(2, '0')} separates the leading hypotheses.`}</h2><div className="coordinate-pair"><div><small>EXCITATION</small><strong>{experiment.source_x.toFixed(2)}, {experiment.source_y.toFixed(2)}</strong><span>{Math.round(experiment.source_x * session.panel.width_m * 1000)} × {Math.round(experiment.source_y * session.panel.height_m * 1000)} mm</span></div><div><small>RECEIVER</small><strong>{experiment.receiver_x.toFixed(2)}, {experiment.receiver_y.toFixed(2)}</strong><span>{Math.round(experiment.receiver_x * session.panel.width_m * 1000)} × {Math.round(experiment.receiver_y * session.panel.height_m * 1000)} mm</span></div></div><div className="signal-spec"><span><small>WAVEFORM</small><b>{experiment.waveform.toUpperCase()}</b></span><span><small>SWEEP</small><b>{(experiment.frequency_start_hz / 1000).toFixed(1)} → {(experiment.frequency_end_hz / 1000).toFixed(1)} kHz</b></span><span><small>DRIVE</small><b>{Math.round(experiment.amplitude * 100)}%</b></span><span><small>DURATION</small><b>{Math.round(experiment.duration_s * 1000)} ms</b></span></div><div className="rationale"><span>WHY THIS PROBE</span><p>{recommendation.explanation}</p></div><div className="score-row"><span>EXPECTED INFORMATION GAIN</span><strong>{recommendation.expected_information_gain.toFixed(2)} <small>bits</small></strong></div><button className="run-button" onClick={runNext} disabled={argus.busy}><span>{argus.busy ? 'PROCESSING WAVEFIELD…' : physical ? 'CONFIRM PLACEMENT · ACQUIRE' : status.should_stop ? 'RUN ONE MORE EXPERIMENT' : 'RUN EXPERIMENT'}</span><b>{String(status.experiment_count + 1).padStart(2, '0')}</b></button></aside>
       </section>
       <section className="candidate-section"><div className="section-heading"><div><p className="eyebrow">Planner audit</p><h2>Top candidate experiments</h2></div><span>score = information + disagreement + coverage − cost − repetition</span></div><div className="candidate-table"><div className="candidate-head"><span>RANK / SOURCE → RECEIVER</span><span>INFO GAIN</span><span>DISAGREEMENT</span><span>COST</span><span>FINAL SCORE</span></div>{recommendation.top_candidates.map((candidate, index) => <div key={index} className={index === 0 ? 'selected-candidate' : ''}><span><b>{String(index + 1).padStart(2, '0')}</b> ({candidate.experiment.source_x.toFixed(2)},{candidate.experiment.source_y.toFixed(2)}) → ({candidate.experiment.receiver_x.toFixed(2)},{candidate.experiment.receiver_y.toFixed(2)})</span><span>{candidate.expected_information_gain.toFixed(3)}</span><span>{candidate.hypothesis_disagreement.toFixed(3)}</span><span>{candidate.experiment_cost.toFixed(3)}</span><strong>{candidate.final_score.toFixed(3)}</strong></div>)}</div></section>
       <section className="results-rail"><div><small>EXPERIMENTS</small><strong>{status.experiment_count}</strong></div><div><small>ENTROPY REDUCTION</small><strong>{((1 - status.normalized_entropy) * 100).toFixed(1)}%</strong></div><div><small>STOP RULE</small><strong>{status.stop_reason?.replaceAll('_', ' ').toUpperCase() || 'SEARCHING'}</strong></div><div><small>GROUND TRUTH</small><strong className={session.revealed ? 'truth-open' : ''}>{physical ? 'NOT AVAILABLE · PHYSICAL OBJECT' : session.revealed ? `${session.ground_truth?.defect_type.replaceAll('_', ' ').toUpperCase()} · ${session.localization_error_mm?.toFixed(1)} mm ERROR` : 'LOCKED'}</strong></div><button className="reveal-button" onClick={argus.reveal} disabled={physical || session.revealed || argus.busy}>{physical ? 'SIMULATION ONLY' : session.revealed ? 'GROUND TRUTH REVEALED' : 'REVEAL GROUND TRUTH'}</button></section>
     </>}
 
+    {tab === 'brain' && <ArgusBrain session={session} />}
     {tab === 'signal' && <section className="secondary-page"><div className="secondary-header"><div><p className="eyebrow">Signal interpretation engine</p><h1>Measurement anatomy.</h1></div><div className="acquisition-actions"><button className="ghost-button" onClick={argus.capture} disabled={argus.busy}>BROWSER MICROPHONE</button>{physical && <button className="ghost-button" onClick={() => argus.acquireDevice('serial_probe')} disabled={argus.busy}>ACQUIRE SERIAL PROBE</button>}<button className="ghost-button" onClick={() => uploadRef.current?.click()} disabled={argus.busy}>UPLOAD WAV</button><input ref={uploadRef} hidden type="file" accept=".wav,audio/wav" onChange={(event) => event.target.files?.[0] && argus.upload(event.target.files[0])} /><button className="run-button compact" onClick={() => argus.run(status.should_stop)} disabled={physical || argus.busy}>{status.should_stop ? 'SIMULATE ONE MORE' : 'SIMULATE SIGNAL'}</button></div></div><SignalPlots analysis={argus.measurement} /></section>}
     {tab === 'evolution' && <section className="secondary-page"><div className="secondary-header"><div><p className="eyebrow">Multi-measurement fusion</p><h1>Watch uncertainty collapse.</h1></div><span className="secondary-kpi">{argus.history.length} MEASUREMENTS · {((1 - status.normalized_entropy) * 100).toFixed(1)}% ENTROPY REDUCTION</span></div><BeliefEvolution history={argus.history} initial={uniformPrior} /></section>}
     {tab === 'benchmark' && <section className="secondary-page"><div className="secondary-header"><div><p className="eyebrow">Technical credibility</p><h1>Adaptive vs. brute force.</h1></div></div><BenchmarkPanel data={argus.benchmarks} onLoad={argus.loadBenchmarks} busy={argus.busy} /></section>}
+    {tab === 'research' && <ResearchLab />}
+    {tab === 'evidence' && <EvidenceLedger session={session} />}
     {tab === 'camera' && <section className="secondary-page"><div className="secondary-header"><div><p className="eyebrow">Physical positioning</p><h1>Project inference onto reality.</h1></div></div><CameraOverlay session={session} /></section>}
-    <footer className="footer-rail"><span className={tab === 'interrogate' ? 'active' : ''}><b>01</b> ACQUIRE</span><i /><span><b>02</b> INTERPRET</span><i /><span><b>03</b> UPDATE BELIEF</span><i /><span><b>04</b> CHOOSE NEXT</span><p>CALIBRATION <button onClick={argus.calibrate}>{session.calibration ? 'PROFILE ACTIVE' : physical ? 'SET NOMINAL PROFILE' : 'RUN REFERENCE'}</button></p></footer>
+    <footer className="footer-rail"><span className={tab === 'interrogate' ? 'active' : ''}><b>01</b> ACQUIRE</span><i /><span><b>02</b> INTERPRET</span><i /><span><b>03</b> UPDATE BELIEF</span><i /><span><b>04</b> CHOOSE NEXT</span><p>RESEARCH PROTOTYPE · NOT A CERTIFIED STRUCTURAL-SAFETY SYSTEM · <button onClick={argus.calibrate}>{session.calibration ? 'CALIBRATION ACTIVE' : 'RUN REFERENCE CALIBRATION'}</button></p></footer>
   </main>;
 }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,4 +12,4 @@ import uvicorn
 
 
 if __name__ == "__main__":
-    uvicorn.run("backend.app.main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("backend.app.main:app", host=os.getenv("ARGUS_BIND_HOST", "0.0.0.0"), port=8000, reload=False)

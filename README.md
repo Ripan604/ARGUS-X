@@ -22,6 +22,12 @@ Ordinary defect AI answers “what does this recording contain?” ARGUS repeate
 - Optional domain-randomized PyTorch forward-response surrogate with early stopping and CPU/GPU support
 - ESP32 firmware and safe wiring guidance
 - Patent-counsel-ready engineering disclosure and preliminary adjacent-art notes
+- ARGUS NEO joint structural/metrology uncertainty with diagnostic, calibration, verification, and exploration actions
+- Counterfactual hypothesis distributions, Bayes-risk objectives, waveform/geometry co-design, horizon planning, constraints, and adaptive model fidelity
+- Online discrepancy correction, robust/conformal OOD detection, explicit abstention, and confidence caps
+- SQLite research jobs for nine-policy benchmarks, seven ablations, calibration studies, response banks, demos, and CPU surrogate active learning
+- Tamper-evident experiment ledger, verification, integrity-manifested research bundle export/import, model registry, and failure/fault tooling
+- Zero-install phone probe and reconnecting Laptop-B acquisition node on a trusted local network
 
 ## Fast start
 
@@ -31,10 +37,11 @@ After installing the backend and frontend dependencies once, the one-command lau
 
 ```powershell
 python scripts\doctor.py
-python run_argus.py
+.\run_argus.ps1
 ```
 
 Then open `http://localhost:5173`. The API and OpenAPI documentation are at `http://localhost:8000` and `http://localhost:8000/docs`.
+The launcher also prints `http://<LAN-IP>:5173/probe` for a phone and the Laptop-B API address.
 
 ### 1. Backend
 
@@ -164,14 +171,28 @@ Create a **Physical** session, place source/receiver as recommended, then open S
 ## Test and verify
 
 ```powershell
-pytest
+python -m pytest backend\tests -q
 python scripts\doctor.py
 python scripts\demo_simulation.py --preset easy --seed 17 --experiments 8
 python scripts\evaluate_model.py --cases 30 --preset medium --experiments 10 --seed 100
 cd frontend
+npm test
 npm run lint
 npm run build
 ```
+
+ARGUS NEO research checks:
+
+```powershell
+python scripts\neo_calibration.py --quick
+python scripts\neo_benchmark.py --cases 2 --max-experiments 5
+python scripts\neo_benchmark.py --ablation --cases 2
+python scripts\run_neo_demo.py rival_hypotheses --output research_results\rival.json
+python scripts\run_neo_demo.py model_mismatch --output research_results\mismatch.json
+python scripts\active_learn_surrogate.py --samples 240 --query-count 24
+```
+
+The **Research** tab runs these in a one-worker SQLite-backed queue. The **ARGUS Brain** tab explains uncertainty, rivalry, counterfactual responses, utility, fidelity, OOD, and alternatives. The **Evidence** tab verifies/exports the adaptive decision chain.
 
 The backend suite covers simulation reproducibility, baseline/scatter physics, probability normalization, entropy, Bayesian update, signal preprocessing/features, candidate planning, repetition cost, API health, session lifecycle, persistence, and a multi-experiment integration loop.
 
@@ -211,6 +232,18 @@ docs/                 architecture, algorithms, demo, hardware, IP notes
 - [Pre-counsel patent specification and claim discussion set](docs/PATENT_DRAFT.md)
 - [Verification report and success criteria](docs/VERIFICATION_REPORT.md)
 - [Real training data and collection protocol](docs/REAL_DATA_GUIDE.md)
+- [ARGUS NEO architecture](docs/ARGUS_NEO_ARCHITECTURE.md)
+- [Scientific model](docs/SCIENTIFIC_MODEL.md)
+- [Dual control](docs/DUAL_CONTROL.md)
+- [Multi-fidelity digital twin](docs/MULTIFIDELITY.md)
+- [OOD and abstention](docs/OOD_AND_ABSTENTION.md)
+- [Benchmark protocol](docs/BENCHMARK_PROTOCOL.md)
+- [Phone probe](docs/PHONE_PROBE.md)
+- [Distributed demo](docs/DISTRIBUTED_DEMO.md)
+- [Evidence ledger](docs/EVIDENCE_LEDGER.md)
+- [Reproducibility](docs/REPRODUCIBILITY.md)
+- [Limitations](docs/LIMITATIONS.md)
+- [Technical disclosure notes](docs/PATENT_TECHNICAL_DISCLOSURE_NOTES.md)
 
 ## Limitations
 

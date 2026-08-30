@@ -103,12 +103,16 @@ class BeliefState:
         experiment: Experiment,
         simulator: AcousticSimulator,
         temperature: float = 4.8,
+        evidence_weight: float = 1.0,
     ) -> tuple[np.ndarray, dict[str, float]]:
         likelihood, diagnostics = measurement_likelihood(
             samples, experiment, simulator, self.grid_size, temperature=temperature
         )
-        self.posterior = posterior_update(self.posterior, likelihood)
+        weight = float(np.clip(evidence_weight, 0.0, 1.0))
+        tempered_likelihood = np.power(np.maximum(likelihood, EPSILON), weight)
+        self.posterior = posterior_update(self.posterior, tempered_likelihood)
         self.history.append(self.posterior.copy())
+        diagnostics["evidence_weight"] = weight
         return likelihood, diagnostics
 
     def estimate(self) -> dict[str, float | list[list[float]]]:

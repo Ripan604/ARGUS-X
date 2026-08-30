@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "mode": "quick",
+    "requested_trials": 4,
+    "completed_trials": 4,
+    "seed": 200,
+    "evidence_source": "simulated"
+  },
+  "coverage": {
+    "50": 1.0,
+    "80": 1.0,
+    "90": 1.0,
+    "95": 1.0
+  },
+  "expected_calibration_error": 0.7151112169753964,
+  "posterior_rank_histogram": {
+    "edges": [
+      0.0,
+      0.1,
+      0.2,
+      0.30000000000000004,
+      0.4,
+      0.5,
+      0.6000000000000001,
+      0.7000000000000001,
+      0.8,
+      0.9,
+      1.0
+    ],
+    "counts": [
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "reliability_plot": [
+    {
+      "confidence_low": 0.0,
+      "confidence_high": 0.2,
+      "count": 4,
+      "mean_confidence": 0.034888783024603645,
+      "empirical_success": 0.75
+    },
+    {
+      "confidence_low": 0.2,
+      "confidence_high": 0.4,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success": null
+    },
+    {
+      "confidence_low": 0.4,
+      "confidence_high": 0.6000000000000001,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success": null
+    },
+    {
+      "confidence_low": 0.6000000000000001,
+      "confidence_high": 0.8,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success": null
+    },
+    {
+      "confidence_low": 0.8,
+      "confidence_high": 1.0,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success": null
+    }
+  ],
+  "ood_status_counts": {
+    "ABSTAIN": 2,
+    "NOMINAL": 2
+  },
+  "trials": [
+    {
+      "seed": 200,
+      "posterior_rank_fraction": 0.01,
+      "coverage": {
+        "50": true,
+        "80": true,
+        "90": true,
+        "95": true
+      },
+      "reported_confidence": 0.004595935796228395,
+      "success_20mm": true,
+      "localization_error_mm": 19.56416763253127,
+      "experiments": 6,
+      "ood_status": "ABSTAIN"
+    },
+    {
+      "seed": 201,
+      "posterior_rank_fraction": 0.01,
+      "coverage": {
+        "50": true,
+        "80": true,
+        "90": true,
+        "95": true
+      },
+      "reported_confidence": 0.0011634140681394609,
+      "success_20mm": false,
+      "localization_error_mm": 20.02006679781041,
+      "experiments": 4,
+      "ood_status": "ABSTAIN"
+    },
+    {
+      "seed": 202,
+      "posterior_rank_fraction": 0.0025,
+      "coverage": {
+        "50": true,
+        "80": true,
+        "90": true,
+        "95": true
+      },
+      "reported_confidence": 0.06293589279697866,
+      "success_20mm": true,
+      "localization_error_mm": 10.765505666951562,
+      "experiments": 6,
+      "ood_status": "NOMINAL"
+    },
+    {
+      "seed": 203,
+      "posterior_rank_fraction": 0.0075,
+      "coverage": {
+        "50": true,
+        "80": true,
+        "90": true,
+        "95": true
+      },
+      "reported_confidence": 0.07085988943706809,
+      "success_20mm": true,
+      "localization_error_mm": 18.790952615121412,
+      "experiments": 6,
+      "ood_status": "NOMINAL"
+    }
+  ]
+}
