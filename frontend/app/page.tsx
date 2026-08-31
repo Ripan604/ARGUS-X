@@ -36,7 +36,7 @@ function Landing({ create, resume, resumable, apiOnline, busy, error }: { create
   const [panelWidthMm, setPanelWidthMm] = useState(600);
   const [panelHeightMm, setPanelHeightMm] = useState(400);
   return <main className="landing-shell">
-    <header className="landing-nav"><div className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>ARGUS</strong><small>ADAPTIVE PHYSICAL INTELLIGENCE</small></div></div><div className="landing-utilities"><a className="probe-link" href="/setup">PHYSICAL SETUP GUIDE</a><div className={`system-state ${apiOnline === false ? 'offline' : ''}`}><span className="live-dot" /> {apiOnline === null ? 'CHECKING LOCAL ENGINE' : apiOnline ? 'LOCAL ENGINE ONLINE · PRIVATE' : 'LOCAL ENGINE OFFLINE'}</div></div></header>
+    <header className="landing-nav"><div className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>ARGUS</strong><small>ADAPTIVE PHYSICAL INTELLIGENCE</small></div></div><div className="landing-utilities"><a className="probe-link" href="/simulator">VIRTUAL LAB</a><a className="probe-link" href="/setup">PHYSICAL SETUP GUIDE</a><div className={`system-state ${apiOnline === false ? 'offline' : ''}`}><span className="live-dot" /> {apiOnline === null ? 'CHECKING LOCAL ENGINE' : apiOnline ? 'LOCAL ENGINE ONLINE · PRIVATE' : 'LOCAL ENGINE OFFLINE'}</div></div></header>
     <section className="landing-hero">
       <div className="landing-copy"><p className="eyebrow accent">A CLOSED-LOOP SENSING SYSTEM</p><h1>Don’t just analyze<br />the measurement.<br /><em>Choose the next one.</em></h1><p className="hero-description">ARGUS interrogates opaque objects with vibration, carries uncertainty forward, and selects the next physical experiment that best separates competing hidden-defect hypotheses.</p>
         <div className="preset-picker"><span>SECRET DEFECT DIFFICULTY</span>{(['easy', 'medium', 'hard'] as Preset[]).map((item) => <button className={preset === item ? 'selected' : ''} key={item} onClick={() => setPreset(item)}>{item.toUpperCase()}</button>)}</div>
@@ -66,6 +66,7 @@ export default function Home() {
       <div className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>ARGUS</strong><small>ADAPTIVE PHYSICAL INTELLIGENCE</small></div></div>
       <nav className="mode-tabs">{(Object.keys(tabLabels) as Tab[]).map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => { setTab(item); if (item === 'benchmark' && !argus.benchmarks) argus.loadBenchmarks(); }}>{tabLabels[item]}</button>)}</nav>
       <div className={`system-state ${session.safety.emergency_stop.latched ? 'stop-latched' : ''}`}><span className="live-dot" /> {session.safety.emergency_stop.latched ? 'EMERGENCY STOP' : physical ? 'PHYSICAL INPUT' : 'SIMULATOR ONLINE'} <b>{String(status.experiment_count).padStart(2, '0')}/{session.config.max_experiments}</b></div>
+      <a className="probe-link" href="/simulator" target="_blank" rel="noreferrer">VIRTUAL LAB</a>
       <a className="probe-link" href="/setup" target="_blank" rel="noreferrer">SETUP GUIDE</a>
       <a className="probe-link" href="/probe" target="_blank" rel="noreferrer">PHONE PROBE</a>
       <button className="ghost-button" onClick={argus.reset}>NEW SESSION</button>

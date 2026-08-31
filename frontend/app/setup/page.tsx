@@ -80,7 +80,7 @@ export default function PhysicalSetupPage() {
   return <main className="setup-shell">
     <header className="setup-nav">
       <Link href="/" className="brand-lockup"><div className="brand-mark"><span /></div><div><strong>ARGUS</strong><small>ADAPTIVE PHYSICAL INTELLIGENCE</small></div></Link>
-      <div><Link href="/probe" className="probe-link">OPEN PHONE PROBE</Link><Link href="/" className="ghost-button setup-home-link">BACK TO ARGUS</Link></div>
+      <div><Link href="/simulator" className="probe-link">VIRTUAL LAB</Link><Link href="/probe" className="probe-link">OPEN PHONE PROBE</Link><Link href="/" className="ghost-button setup-home-link">BACK TO ARGUS</Link></div>
     </header>
     <section className="setup-hero">
       <div><p className="eyebrow accent">STUDENT PHYSICAL DATA PLAYBOOK</p><h1>Build a response bank<br /><em>with what you have.</em></h1></div>
