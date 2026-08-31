@@ -2,7 +2,9 @@
 
 ## What is already downloaded
 
-ARGUS now has a local, checksum-verified copy of the [LMSD 2021 Dataset for Damage Identification in Plates](https://zenodo.org/records/11033677), DOI `10.48804/GDE9TW`, under CC BY 4.0.
+ARGUS now has local, checksum-verified copies of [LMSD 2021](https://zenodo.org/records/11033677), the [TU Darmstadt GFRP acoustic dataset](https://tudatalib.ulb.tu-darmstadt.de/items/33756af4-eb6d-4156-8708-a41cbed33e7b), and the [Bologna paired impact-localization dataset](https://zenodo.org/records/10875042). All three selected records declare CC BY 4.0.
+
+The new measured-data bridge and its results are documented in [SIM2REAL_REPORT.md](SIM2REAL_REPORT.md). The key outcomes are 0.775 complete-plate-held-out balanced accuracy on 2,568 real GFRP microphone taps and a leave-one-position-out impact-localization reduction from 0.175 m to 0.141 m after adding measured few-shot calibration. Neither result is presented as validation of the final laptop/mobile apparatus.
 
 It contains:
 
@@ -36,6 +38,11 @@ Do not treat it as sufficient proof of cavity/delamination localization. It has 
 python scripts\download_lmsd_dataset.py --profile all
 python scripts\prepare_lmsd_dataset.py
 python scripts\train_model.py --data datasets\generated\lmsd_forward.npz --output models\lmsd_surrogate.pt --epochs 120 --patience 15 --split-mode group
+python scripts\download_sim2real_datasets.py
+python scripts\prepare_tud_gfrp_dataset.py
+python scripts\fit_sim2real_models.py
+python scripts\prepare_ae_impact_dataset.py
+python scripts\benchmark_ae_sim2real.py
 ```
 
 The downloader queries the official Zenodo record, downloads only declared files, and verifies every published MD5. `--profile minimal` fetches the healthy baseline plus the single point-mass case; `--profile metadata` fetches only documentation/license files.
@@ -105,8 +112,10 @@ Training an observation model only needs `(experiment, signal, truth)` rows. Eva
 
 ## Recommended staged program
 
-1. Use the downloaded LMSD data as a real-signal validation and adapter test.
-2. Add Open Guided Waves for ultrasonic/environmental diversity.
-3. Collect one healthy panel and ten reversible-defect positions using the exact ARGUS low-frequency protocol.
-4. Expand to three panels and at least twenty positions with specimen-held-out evaluation.
-5. Only then collect destructive or expensive true cavity/delamination specimens and fine-tune/calibrate the posterior.
+1. Use the downloaded LMSD data as a real multistatic response and adapter test.
+2. Use the downloaded TU GFRP data for microphone-domain feature transport, real-reference OOD monitoring, and specimen-held-out detection.
+3. Use the downloaded Bologna pair for simulation-transfer and measured few-shot localization studies.
+4. Collect one healthy panel and ten reversible-defect positions using the exact ARGUS low-frequency laptop/mobile protocol.
+5. Expand to three panels and at least twenty positions with specimen-held-out evaluation.
+6. Add a selected Open Guided Waves subset for temperature/environmental diversity rather than downloading the full collection prematurely.
+7. Only then collect destructive or expensive true cavity/delamination specimens and fine-tune/calibrate the posterior.

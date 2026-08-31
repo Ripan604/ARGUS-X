@@ -138,14 +138,21 @@ The dataset script varies geometry, material, noise, defect properties, and expe
 
 ## Public experimental training data
 
-ARGUS includes a downloader and adapter for KU Leuven's CC BY 4.0 LMSD CFRP plate dataset. The complete checksum-verified local copy contains a healthy baseline plus six known added-mass damage scenarios. It converts to 294 measured source/receiver examples:
+ARGUS includes checksum-verifying downloaders and adapters for KU Leuven LMSD, TU Darmstadt GFRP microphone data, and the University of Bologna paired simulated/experimental impact-localization data:
 
 ```powershell
 python scripts\download_lmsd_dataset.py --profile all
 python scripts\prepare_lmsd_dataset.py
+python scripts\download_sim2real_datasets.py
+python scripts\prepare_tud_gfrp_dataset.py
+python scripts\fit_sim2real_models.py
+python scripts\prepare_ae_impact_dataset.py
+python scripts\benchmark_ae_sim2real.py
 ```
 
-The raw 171 MB download and derived NPZ remain local and Git-ignored; citation, license, limitations, other public datasets, and an exact laboratory collection protocol are in [Real Training Data](docs/REAL_DATA_GUIDE.md).
+The TU adapter processed 2,568 measured taps from eight physical plates. Complete-plate-held-out evaluation achieved 0.775 balanced accuracy and 0.911 ROC-AUC for pointwise intact/defect screening. On the separate aluminium impact record, eight-position measured calibration reduced leave-one-position-out localization error from 0.175 m to 0.141 m; this is impact localization on one plate, not validation of persistent hidden-defect localization. The runtime now uses the GFRP reference as an additional OOD caution/abstention signal for uploaded or device-acquired physical waveforms while leaving simulation sessions unchanged.
+
+Raw downloads, derived NPZ files, and generated estimator binaries remain local and Git-ignored. Reproducibility, citations, exact limitations, other public datasets, and the remaining physical campaign are in [Sim-to-Real Report](docs/SIM2REAL_REPORT.md) and [Real Training Data](docs/REAL_DATA_GUIDE.md).
 
 ## Calibration
 

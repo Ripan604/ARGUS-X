@@ -31,6 +31,7 @@ class OODDetector:
         *,
         ensemble_disagreement: float,
         measurement_quality: float,
+        acoustic_reference_score: float = 0.0,
     ) -> OODAssessment:
         residual = np.asarray(residual_vector, dtype=np.float64).reshape(-1)
         scale = np.asarray([0.0008, 1.2, 1.0, 1.0], dtype=np.float64)[: len(residual)]
@@ -53,8 +54,9 @@ class OODDetector:
         else:
             conformal_score = float(np.clip(1 - np.exp(-0.20 * nonconformity), 0, 1))
         ensemble_score = float(np.clip(ensemble_disagreement, 0, 1))
+        reference_score = float(np.clip(acoustic_reference_score, 0, 1))
         quality_penalty = float(np.clip(1 - measurement_quality, 0, 1))
-        combined = float(np.clip(max(statistical_score, conformal_score, ensemble_score) * 0.82 + 0.18 * quality_penalty, 0, 1))
+        combined = float(np.clip(max(statistical_score, conformal_score, ensemble_score, reference_score) * 0.82 + 0.18 * quality_penalty, 0, 1))
         if combined >= self.abstain_threshold:
             status, cap, recommendation = "ABSTAIN", 0.20, "Do not issue a confident structural result; perform calibration or escalate to a reference method."
         elif combined >= max(self.caution_threshold + 0.15, self.abstain_threshold - 0.12):
@@ -67,7 +69,7 @@ class OODDetector:
         self.residual_vectors = self.residual_vectors[-128:]
         return OODAssessment(
             combined, status,
-            {"robust_residual": statistical_score, "conformal_nonconformity": conformal_score, "ensemble_disagreement": ensemble_score, "quality_penalty": quality_penalty},
+            {"robust_residual": statistical_score, "conformal_nonconformity": conformal_score, "ensemble_disagreement": ensemble_score, "real_acoustic_reference": reference_score, "quality_penalty": quality_penalty},
             cap, recommendation, len(self.calibration_nonconformity),
         )
 

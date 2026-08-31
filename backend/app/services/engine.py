@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
+from pathlib import Path
 
 import numpy as np
 from scipy.signal import correlate, correlation_lags
@@ -20,6 +21,7 @@ from backend.app.inference.joint_state import JointInferenceState
 from backend.app.inference.structural_posterior import StructuralPosterior
 from backend.app.models.domain import Defect, Experiment, Material, Panel, physical_distance
 from backend.app.ood.detection import OODDetector
+from backend.app.ood.acoustic_reference import AcousticReferenceMonitor
 from backend.app.safety.constraints import NoGoRegion
 from backend.app.signal.processing import analyze_signal
 from backend.app.simulation.physics import AcousticSimulator
@@ -61,6 +63,8 @@ class ArgusEngine:
         self.planner = ExperimentPlanner(self.simulator, self.config, self.seed + 10_000)
         self.discrepancy_model = OnlineDiscrepancyModel()
         self.ood_detector = OODDetector(self.config.ood_caution_threshold, self.config.ood_abstain_threshold)
+        reference_path = Path(__file__).resolve().parents[3] / "models" / "sim2real_acoustic_reference.json"
+        self.acoustic_reference = AcousticReferenceMonitor.from_file(reference_path) if reference_path.exists() else None
         self.neo_planner = NeoExperimentPlanner(self.simulator, self.config, self.discrepancy_model, self.seed + 20_000)
         self.loss_model = DecisionLossModel()
         self.stopping_engine = StoppingEngine()
@@ -105,6 +109,10 @@ class ArgusEngine:
         analysis = analyze_signal(signal, self.config.sample_rate)
         prior_signal = next((item.signal for item in reversed(self.results) if item.parameters == experiment), None)
         quality_context = quality_context or {}
+        reference_assessment = None
+        sensor_id = str(quality_context.get("sensor_id", "")).lower()
+        if self.acoustic_reference is not None and sensor_id and "simulation" not in sensor_id:
+            reference_assessment = self.acoustic_reference.assess(analysis["features"])
         quality = estimate_measurement_quality(
             signal, prior_signal,
             acceleration_rms=quality_context.get("acceleration_deviation_g"),
@@ -161,7 +169,12 @@ class ArgusEngine:
                     analysis["features"]["noise_estimate"], quality.coupling_quality, quality.signal_quality
                 )
             if self.config.enable_discrepancy_model or self.config.enable_ood_layer:
-                self._update_model_diagnostics(experiment, diagnostics, quality.evidence_weight)
+                self._update_model_diagnostics(
+                    experiment,
+                    diagnostics,
+                    quality.evidence_weight,
+                    reference_assessment.score if reference_assessment is not None else 0.0,
+                )
         diagnostics.update({
             "coupling_quality": quality.coupling_quality,
             "placement_quality": quality.placement_quality,
@@ -169,6 +182,9 @@ class ArgusEngine:
             "evidence_weight": evidence_weight if recommendation.action_type != "calibration" else 0.0,
             "motion_proxy": quality_context.get("acceleration_deviation_g"),
             "visual_position_error_proxy": quality_context.get("visual_position_error"),
+            "real_reference_distance": reference_assessment.distance if reference_assessment is not None else None,
+            "real_reference_quantile": reference_assessment.empirical_quantile if reference_assessment is not None else None,
+            "real_reference_score": reference_assessment.score if reference_assessment is not None else 0.0,
         })
         assurance_state = self.assurance.update(
             quality,
@@ -217,7 +233,13 @@ class ArgusEngine:
         self.current_recommendation = self._recommend()
         return result
 
-    def _update_model_diagnostics(self, experiment: Experiment, diagnostics: dict[str, float], quality_weight: float) -> None:
+    def _update_model_diagnostics(
+        self,
+        experiment: Experiment,
+        diagnostics: dict[str, float],
+        quality_weight: float,
+        acoustic_reference_score: float = 0.0,
+    ) -> None:
         hypotheses = self.belief.top_hypotheses(5)
         observed_delay = float(diagnostics.get("peak_delay_s", 0.0))
         observed_gain = float(np.log(max(diagnostics.get("residual_rms", 1e-8), 1e-8)))
@@ -261,6 +283,7 @@ class ArgusEngine:
                 ood_residual,
                 ensemble_disagreement=float(np.clip(correction_uncertainty / 0.8, 0, 1)),
                 measurement_quality=quality_weight,
+                acoustic_reference_score=acoustic_reference_score,
             )
             self.joint_state.ood_state = assessment.to_dict()
 

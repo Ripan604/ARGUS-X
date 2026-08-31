@@ -1,0 +1,286 @@
+{
+  "dataset": "Acoustic Emission dataset for impact localization: numerical and experimental case studies",
+  "doi": "10.5281/zenodo.10875042",
+  "license": "CC BY 4.0",
+  "simulation": {
+    "tx_group_held_out_mae_us": 22.181676727894544,
+    "tx_group_held_out_r2": 0.5985999683796326
+  },
+  "real_localization": {
+    "evaluation": "leave-one-impact-position-out timing calibration across nine measured positions",
+    "baseline_mean_error_m": 0.17488842447824646,
+    "baseline_median_error_m": 0.19525624189766633,
+    "calibrated_mean_error_m": 0.19720796111674688,
+    "calibrated_median_error_m": 0.20597329924045976,
+    "few_shot_mean_error_m": 0.1405628486299412,
+    "few_shot_median_error_m": 0.14633528200030882,
+    "few_shot_improvement_vs_simulation_percent": 19.627128525350088,
+    "baseline_predictions": [
+      [
+        0.495,
+        0.5
+      ],
+      [
+        0.505,
+        0.5
+      ],
+      [
+        0.505,
+        0.505
+      ],
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.505,
+        0.5
+      ],
+      [
+        0.5,
+        0.495
+      ],
+      [
+        0.5,
+        0.49
+      ],
+      [
+        0.51,
+        0.505
+      ],
+      [
+        0.5,
+        0.485
+      ]
+    ],
+    "calibrated_predictions": [
+      [
+        0.5650000000000001,
+        0.55
+      ],
+      [
+        0.5750000000000001,
+        0.545
+      ],
+      [
+        0.5650000000000001,
+        0.53
+      ],
+      [
+        0.545,
+        0.545
+      ],
+      [
+        0.55,
+        0.53
+      ],
+      [
+        0.53,
+        0.495
+      ],
+      [
+        0.525,
+        0.53
+      ],
+      [
+        0.53,
+        0.525
+      ],
+      [
+        0.505,
+        0.375
+      ]
+    ],
+    "few_shot_predictions": [
+      [
+        0.5493452041796945,
+        0.5453073080554425
+      ],
+      [
+        0.55,
+        0.5496164548747886
+      ],
+      [
+        0.5457801088516699,
+        0.5447073420667277
+      ],
+      [
+        0.4483459881280163,
+        0.6010849778040388
+      ],
+      [
+        0.5565934332643108,
+        0.5534587979881205
+      ],
+      [
+        0.5935940449001276,
+        0.5993381467333235
+      ],
+      [
+        0.6089399069199267,
+        0.5041671917483053
+      ],
+      [
+        0.651055824245445,
+        0.5950847978783729
+      ],
+      [
+        0.5940496035489183,
+        0.599061760219585
+      ]
+    ],
+    "truth": [
+      [
+        0.4,
+        0.4
+      ],
+      [
+        0.4,
+        0.55
+      ],
+      [
+        0.4,
+        0.7
+      ],
+      [
+        0.55,
+        0.4
+      ],
+      [
+        0.55,
+        0.55
+      ],
+      [
+        0.55,
+        0.7
+      ],
+      [
+        0.7,
+        0.4
+      ],
+      [
+        0.7,
+        0.55
+      ],
+      [
+        0.7,
+        0.7
+      ]
+    ],
+    "fold_calibrations": [
+      {
+        "held_out_position": [
+          0.4,
+          0.4
+        ],
+        "scale": 0.8528788282371104,
+        "sensor_offsets_us": [
+          -3.7271273048137887,
+          16.73066769528925,
+          -13.003540390475461
+        ]
+      },
+      {
+        "held_out_position": [
+          0.4,
+          0.55
+        ],
+        "scale": 1.961208171194234,
+        "sensor_offsets_us": [
+          -2.043276613749971,
+          15.124605129676674,
+          -13.081328515926703
+        ]
+      },
+      {
+        "held_out_position": [
+          0.4,
+          0.7
+        ],
+        "scale": 0.1716243053539631,
+        "sensor_offsets_us": [
+          0.5623212300938929,
+          14.122680125034975,
+          -14.685001355128867
+        ]
+      },
+      {
+        "held_out_position": [
+          0.55,
+          0.4
+        ],
+        "scale": 2.3197946926547934,
+        "sensor_offsets_us": [
+          -5.100083835184935,
+          11.935070745435864,
+          -6.834986910250927
+        ]
+      },
+      {
+        "held_out_position": [
+          0.55,
+          0.55
+        ],
+        "scale": 1.696824741371323,
+        "sensor_offsets_us": [
+          -2.9153315294448134,
+          11.488938595247607,
+          -8.573607065802792
+        ]
+      },
+      {
+        "held_out_position": [
+          0.55,
+          0.7
+        ],
+        "scale": 3.839316836166775,
+        "sensor_offsets_us": [
+          -1.5646832035723326,
+          9.642708448951966,
+          -8.078025245379635
+        ]
+      },
+      {
+        "held_out_position": [
+          0.7,
+          0.4
+        ],
+        "scale": 0.16911110240127825,
+        "sensor_offsets_us": [
+          -5.1739500171029205,
+          8.31453324608955,
+          -3.1405832289866304
+        ]
+      },
+      {
+        "held_out_position": [
+          0.7,
+          0.55
+        ],
+        "scale": 0.07463713099196541,
+        "sensor_offsets_us": [
+          -3.395568966962878,
+          8.460565341264457,
+          -5.064996374301579
+        ]
+      },
+      {
+        "held_out_position": [
+          0.7,
+          0.7
+        ],
+        "scale": 8.691055343716373,
+        "sensor_offsets_us": [
+          -2.9107277913492666,
+          4.338505384304223,
+          -1.4277775929549565
+        ]
+      }
+    ]
+  },
+  "limitations": [
+    "Only nine measured impact positions and three sensor channels are available.",
+    "The experiment concerns transient impacts at 250 kHz, not persistent delamination/cavity localization.",
+    "The measured calibration is evaluated leave-one-position-out but not specimen-held-out because the record contains one plate."
+  ]
+}

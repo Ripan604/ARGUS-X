@@ -1,0 +1,33 @@
+{
+  "method": "simulation-trained ToA regressor plus measured affine TDoA correction v1",
+  "effective_simulation_speed_m_s": 3044.316604250077,
+  "simulation_intercept_us": -7.015194520752478,
+  "simulation_geometric_rmse_us": 2.6030304222432434,
+  "measured_timing_scale": 1.5890197920214735,
+  "measured_sensor_offsets_us": [
+    -2.882140839358727,
+    11.514353682437456,
+    -8.632212843078728
+  ],
+  "timing_correction_accepted": false,
+  "negative_transfer_guard": "rejected because leave-one-position-out error increased",
+  "deployed_strategy": "measured_few_shot_knn_with_three_neighbors",
+  "sensor_coordinates_m": [
+    [
+      0.05,
+      0.95
+    ],
+    [
+      0.05,
+      0.05
+    ],
+    [
+      0.95,
+      0.05
+    ]
+  ],
+  "source": "Acoustic Emission dataset for impact localization: numerical and experimental case studies",
+  "doi": "10.5281/zenodo.10875042",
+  "license": "CC BY 4.0",
+  "scope": "250 kHz aluminium impact localization only; do not apply this speed or timing correction to the low-frequency GFRP/phone path."
+}

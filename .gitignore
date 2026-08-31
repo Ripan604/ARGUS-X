@@ -15,10 +15,13 @@ htmlcov/
 datasets/generated/*
 !datasets/generated/.gitkeep
 datasets/external/lmsd2021/
+datasets/external/tud_gfrp_2026/
+datasets/external/ae_impact_2024/
 models/*.pt
 !models/forward_surrogate.pt
 models/*.pth
 models/*.onnx
+models/*.joblib
 backend/data/
 backend/uploads/
 benchmark_results/*.png

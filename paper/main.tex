@@ -537,6 +537,11 @@ with SiLU activations and LayerNorm after the first hidden layer. Inputs and tar
 \subsection{Measured LMSD Adapter}
 The downloader queries the official Zenodo record, downloads declared NPZ files, and verifies each published MD5 checksum. The adapter converts each complex 0--1600 Hz FRF to a 0.12 s impulse response, normalizes known node coordinates, encodes the added mass as a dense inclusion, and extracts the same feature contract. Six scenarios times seven sources times seven receivers yield 294 channels. To prevent leakage, splitting is by entire damage scenario: 196 training, 49 validation, and 49 test channels. These channels are correlated views of six physical damage configurations, not 294 independent defects.
 
+\subsection{Measured Acoustic and Paired Localization Bridges}
+A second checksum-verifying adapter processes the TU Darmstadt GFRP acoustic dataset \cite{feldmann2026dataset}: 2,568 unaugmented microphone taps from eight 360 by 280 mm plates, including 2,100 intact and 468 defect-labelled point measurements. Signals are rationally resampled from 51.2 to 16 kHz and converted by the production feature contract. Splitting holds out complete physical plates. Separate healthy/damage robust CORAL maps align synthetic and measured first/second feature moments, while a robust empirical reference uses only gain-insensitive features. For external physical acquisitions, only the upper 10\% measured-reference tail contributes to OOD caution or abstention; simulation sessions are unaffected.
+
+The Bologna acoustic-emission record \cite{zonzini2024dataset} adds 1,000 ray-traced Tx--Rx paths with fourth-order boundary reflections and 27 measured channels from nine known impact positions on a $1\times1\times0.003$ m aluminium plate. Its 2 MHz, 250 kHz domain is not mixed with the low-frequency GFRP waveforms. It instead supports a separate simulation-transfer timing benchmark and a measured few-shot localization calibration. Repository files are accepted only after publisher-declared size and MD5 verification, and manifests preserve record, DOI, license, and selected-file provenance.
+
 \section{Physical and Software Realization}
 \subsection{Acquisition Abstraction}
 All devices implement connect, disconnect, acquire, and status operations. \code{SimulationDevice} executes Eq.~\eqref{eq:forward}; \code{MicrophoneDevice} records through the local audio stack; \code{UploadedSignalDevice} accepts WAV files; and \code{SerialProbeDevice} performs a line-framed transaction with an ESP32. Missing audio or serial hardware is reported without disabling simulation.
@@ -690,8 +695,30 @@ LMSD measured & 294 & 0.1902 & 0.4485 & 0.0010 & held-out scenario \\
 \footnotesize Synthetic best $R^2$: SNR 0.910, RMS 0.861, peak 0.825, crest 0.758, decay 0.622. Synthetic weak examples: dominant frequency $-0.019$, envelope-peak time 0.016.
 \end{table}
 
+\subsection{Measured-Domain Bridge Results}
+Table~\ref{tab:sim2real} reports two scoped real-data checks. The GFRP detector uses four-fold GroupKFold with complete plates held out; repeated taps, sides, runs, and points from a held-out plate cannot enter training. Balanced accuracy was 0.775, ROC--AUC 0.911, average precision 0.699, F1 0.634, and Brier score 0.097. These are pointwise screening results, not arbitrary multistatic localization.
+
+For the aluminium impact record, direct simulation transfer produced 0.175 m mean localization error. A three-neighbour measured localizer trained on eight positions and tested on the ninth reduced the leave-one-position-out mean to 0.141 m, or 19.6\%. An affine timing correction increased the mean to 0.197 m and was therefore rejected by a negative-transfer guard. The improvement demonstrates the value of a small measured calibration set, but one plate, nine interior positions, and transient impacts cannot validate persistent hidden-defect localization.
+
+\begin{table}[t]
+\caption{Scoped Measured-Domain Bridge Results}
+\label{tab:sim2real}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+Record/task & Split & Primary result & Scope limit \\
+\midrule
+GFRP acoustic detection & held-out plate & Bal. acc. 0.775; AUC 0.911 & pointwise taps \\
+Al impact, simulation transfer & held-out position & Mean error 0.175 m & one plate \\
+Al impact, measured few-shot & held-out position & Mean error 0.141 m & eight calibration points \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
 \subsection{Software Verification}
-The executed verification suite contains 41 passing backend tests. Besides the legacy deterministic simulation, posterior, planning, signal, API, persistence, surrogate, and data-contract tests, it covers dual-control switching, silence evidence, likelihood tempering, constraints, waveform bounds, discrepancy/OOD behavior, confidence gating, ledger tamper detection, bundle import, truth-sealed NPZ/CSV/WAV replay, additive migration, paired mismatch, injected faults, WebSockets, normalized healthy/damage/unknown state, accumulated sensor unreliability, duplicate-payload rejection, persisted emergency stop, and database hydration of assurance state. Four frontend utility/configuration tests pass; lint and the production build pass. The only observed backend warning is an upstream HTTP-test-client deprecation notice, not a runtime failure.
+The executed verification suite contains 45 passing backend tests. Besides the legacy deterministic simulation, posterior, planning, signal, API, persistence, surrogate, and data-contract tests, it covers dual-control switching, silence evidence, likelihood tempering, constraints, waveform bounds, discrepancy/OOD behavior, measured-reference gating, sim-to-real transport, acoustic dataset parsing, confidence gating, ledger tamper detection, bundle import, truth-sealed NPZ/CSV/WAV replay, additive migration, paired mismatch, injected faults, WebSockets, normalized healthy/damage/unknown state, accumulated sensor unreliability, duplicate-payload rejection, persisted emergency stop, and database hydration of assurance state. Eight frontend utility/configuration tests pass; lint and the production build pass. The only observed backend warning is an upstream HTTP-test-client deprecation notice, not a runtime failure.
 
 \section{Technical Differentiation and Candidate Protectable Nucleus}
 The system-level research hypothesis is that hidden-state inference becomes more reliable and measurement-efficient when the controller may improve both the object estimate and the instrument estimate. Seven coupled aspects distinguish the implemented prototype:

@@ -1,0 +1,170 @@
+{
+  "dataset": "Data for the Paper: Audio Signal-Based Defect Detection for Wind Turbine Rotor Blades Using an Autoencoder",
+  "record": "33756af4-eb6d-4156-8708-a41cbed33e7b",
+  "license": "CC BY 4.0",
+  "split": "4-fold GroupKFold with complete physical plates held out",
+  "samples": 2568,
+  "plates": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "class_counts": {
+    "intact": 2100,
+    "defect": 468
+  },
+  "classifier_features": [
+    "crest_factor",
+    "zero_crossing_rate",
+    "spectral_centroid_hz",
+    "spectral_bandwidth_hz",
+    "spectral_rolloff_hz",
+    "dominant_frequency_hz",
+    "spectral_entropy",
+    "band_energy_low",
+    "band_energy_mid",
+    "band_energy_high",
+    "envelope_peak_time_s",
+    "decay_time_s",
+    "snr_db"
+  ],
+  "held_out_metrics": {
+    "balanced_accuracy": 0.7751709401709401,
+    "roc_auc": 0.9107885632885632,
+    "average_precision": 0.6986279415263038,
+    "f1": 0.6337271750805585,
+    "brier": 0.0967606299176254,
+    "confusion_matrix": [
+      [
+        1932,
+        168
+      ],
+      [
+        173,
+        295
+      ]
+    ]
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "held_out_plates": [
+        3,
+        5
+      ],
+      "samples": 642,
+      "balanced_accuracy": 0.818231658692185,
+      "roc_auc": 0.9342935938330674,
+      "average_precision": 0.7981671688584381,
+      "f1": 0.5754189944134078,
+      "brier": 0.16172953782507424,
+      "confusion_matrix": [
+        [
+          387,
+          141
+        ],
+        [
+          11,
+          103
+        ]
+      ]
+    },
+    {
+      "fold": 2,
+      "held_out_plates": [
+        4,
+        8
+      ],
+      "samples": 630,
+      "balanced_accuracy": 0.6825396825396826,
+      "roc_auc": 0.8816295036533132,
+      "average_precision": 0.6957921085776524,
+      "f1": 0.5240641711229947,
+      "brier": 0.10085761310057278,
+      "confusion_matrix": [
+        [
+          492,
+          12
+        ],
+        [
+          77,
+          49
+        ]
+      ]
+    },
+    {
+      "fold": 3,
+      "held_out_plates": [
+        2,
+        6
+      ],
+      "samples": 630,
+      "balanced_accuracy": 0.878732174688057,
+      "roc_auc": 0.9743946821152704,
+      "average_precision": 0.9114557648228415,
+      "f1": 0.831578947368421,
+      "brier": 0.050011136250327486,
+      "confusion_matrix": [
+        [
+          519,
+          9
+        ],
+        [
+          23,
+          79
+        ]
+      ]
+    },
+    {
+      "fold": 4,
+      "held_out_plates": [
+        1,
+        7
+      ],
+      "samples": 666,
+      "balanced_accuracy": 0.7484126984126984,
+      "roc_auc": 0.9400499706055262,
+      "average_precision": 0.8338817914103995,
+      "f1": 0.653061224489796,
+      "brier": 0.07447991329383963,
+      "confusion_matrix": [
+        [
+          534,
+          6
+        ],
+        [
+          62,
+          64
+        ]
+      ]
+    }
+  ],
+  "alignment_metrics": {
+    "healthy": {
+      "mean_standardized_wasserstein_before": 97.96424461323411,
+      "mean_standardized_wasserstein_after": 0.193765915705662,
+      "relative_covariance_error_before": 2086762.0551815229,
+      "relative_covariance_error_after": 0.06228088887476163,
+      "synthetic_samples": 818,
+      "measured_samples": 2100
+    },
+    "damage": {
+      "mean_standardized_wasserstein_before": 0.2607252338176015,
+      "mean_standardized_wasserstein_after": 0.20090728962396606,
+      "relative_covariance_error_before": 17.09716443294284,
+      "relative_covariance_error_after": 0.09960110722383826,
+      "synthetic_samples": 818,
+      "measured_samples": 468
+    }
+  },
+  "limitations": [
+    "Detection labels are pointwise microphone/tapping measurements, not full ARGUS source-receiver localization trials.",
+    "The final classifier is trained on all eight plates for later transfer; only the out-of-fold metrics estimate unseen-plate performance.",
+    "CORAL alignment matches feature moments and cannot establish physical waveform fidelity or field reliability."
+  ]
+}
