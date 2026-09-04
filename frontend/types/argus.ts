@@ -85,6 +85,18 @@ export interface SessionStatus {
   ood_score: number;
   ood_status: 'NOMINAL' | 'CAUTION' | 'OUT_OF_DISTRIBUTION' | 'ABSTAIN';
   decision_confidence: number;
+  posterior_containment: {
+    reference: 'map_estimate';
+    reference_x: number;
+    reference_y: number;
+    probabilities: Array<{ radius_mm: number; probability: number }>;
+    cep50_mm: number;
+    radius90_mm: number;
+    grid_cell_width_mm: number;
+    grid_cell_height_mm: number;
+    method: 'discrete_posterior_cell_centers';
+    field_calibrated: false;
+  };
   bayes_risk: number;
   expected_value_of_information: number;
   credible_region_90: { mass: number; cell_count: number; area_fraction: number; x_min: number; x_max: number; y_min: number; y_max: number };

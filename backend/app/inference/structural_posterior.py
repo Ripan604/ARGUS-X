@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from backend.app.inference.belief import BeliefState, normalize_probability_grid, spatial_mode_cells
+from backend.app.models.domain import Panel
 
 
 class StructuralPosterior(BeliefState):
@@ -74,6 +75,58 @@ class StructuralPosterior(BeliefState):
             "x_max": float((columns.max() + 1) / self.grid_size),
             "y_min": float(rows.min() / self.grid_size),
             "y_max": float((rows.max() + 1) / self.grid_size),
+        }
+
+    def radial_containment(
+        self,
+        panel: Panel,
+        radii_mm: tuple[float, ...] = (10.0, 15.0, 20.0, 25.0, 50.0),
+    ) -> dict:
+        """Return posterior mass inside physical radii around the MAP.
+
+        These Bayesian containment quantities are evaluated at grid-cell
+        centers. They are not frequentist coverage guarantees; physical
+        calibration data are required before presenting them as such.
+        """
+
+        if not radii_mm or any(not np.isfinite(radius) or radius <= 0 for radius in radii_mm):
+            raise ValueError("containment radii must be finite and positive")
+        values = normalize_probability_grid(self.posterior)
+        axis = (np.arange(self.grid_size) + 0.5) / self.grid_size
+        x, y = np.meshgrid(axis, axis)
+        map_row, map_column = np.unravel_index(int(np.argmax(values)), values.shape)
+        map_x, map_y = float(axis[map_column]), float(axis[map_row])
+        distances_mm = 1_000.0 * np.hypot(
+            (x - map_x) * panel.width_m,
+            (y - map_y) * panel.height_m,
+        )
+        flattened_distances = distances_mm.ravel()
+        flattened_probability = values.ravel()
+        order = np.argsort(flattened_distances, kind="stable")
+        cumulative = np.cumsum(flattened_probability[order])
+
+        def radius_for_mass(mass: float) -> float:
+            index = min(int(np.searchsorted(cumulative, mass, side="left")), len(order) - 1)
+            return float(flattened_distances[order[index]])
+
+        probabilities = [
+            {
+                "radius_mm": float(radius),
+                "probability": float(np.sum(flattened_probability[flattened_distances <= radius + 1e-9])),
+            }
+            for radius in sorted(set(float(radius) for radius in radii_mm))
+        ]
+        return {
+            "reference": "map_estimate",
+            "reference_x": map_x,
+            "reference_y": map_y,
+            "probabilities": probabilities,
+            "cep50_mm": radius_for_mass(0.50),
+            "radius90_mm": radius_for_mass(0.90),
+            "grid_cell_width_mm": 1_000.0 * panel.width_m / self.grid_size,
+            "grid_cell_height_mm": 1_000.0 * panel.height_m / self.grid_size,
+            "method": "discrete_posterior_cell_centers",
+            "field_calibrated": False,
         }
 
     def ambiguity(self) -> float:

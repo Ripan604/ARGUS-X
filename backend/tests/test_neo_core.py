@@ -86,6 +86,22 @@ def test_uniform_prior_hypotheses_are_spatially_distributed():
     assert np.ptp(coordinates[:, 1]) > 0.5
 
 
+def test_radial_containment_reports_physical_posterior_mass_and_cep():
+    posterior = np.zeros((10, 10), dtype=np.float64)
+    posterior[5, 5] = 0.60
+    posterior[5, 6] = 0.40
+    belief = StructuralPosterior(10, posterior)
+
+    containment = belief.radial_containment(Panel(width_m=0.60, height_m=0.40), (25.0, 60.0))
+
+    assert containment["probabilities"][0]["radius_mm"] == 25.0
+    assert containment["probabilities"][0]["probability"] == pytest.approx(0.60)
+    assert containment["probabilities"][1]["probability"] == pytest.approx(1.0)
+    assert containment["cep50_mm"] == pytest.approx(0.0)
+    assert containment["radius90_mm"] == pytest.approx(60.0)
+    assert containment["field_calibrated"] is False
+
+
 def test_constraints_and_waveform_bounds_are_enforced():
     config = ArgusConfig(maximum_amplitude=0.6, maximum_frequency_hz=6_000)
     constraints = ExperimentConstraintEngine(config)

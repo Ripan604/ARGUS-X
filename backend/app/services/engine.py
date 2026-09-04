@@ -536,6 +536,7 @@ class ArgusEngine:
     def status(self) -> dict:
         estimate = self.belief.estimate()
         uncertainty = self.joint_state.uncertainty_summary()
+        posterior_containment = self.belief.radial_containment(self.panel)
         expected_value = float(self.current_recommendation.selected.expected_information_gain) if hasattr(self, "current_recommendation") else 1.0
         credible_area = float(self.belief.credible_region(0.90)["area_fraction"])
         decision_confidence = float(min(
@@ -581,6 +582,7 @@ class ArgusEngine:
             "ood_score": self.joint_state.ood_state.get("score", 0.0),
             "ood_status": self.joint_state.ood_state.get("status", "NOMINAL"),
             "decision_confidence": decision_confidence,
+            "posterior_containment": posterior_containment,
             "credible_region_90": self.belief.credible_region(0.90),
             "top_hypotheses": self.belief.top_hypotheses(5),
             "integrity_assessment": integrity,

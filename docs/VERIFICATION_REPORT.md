@@ -11,7 +11,7 @@ This report records commands actually executed in the delivered workspace. It is
 | Check | Command or action | Result |
 |---|---|---|
 | Readiness | `python scripts\doctor.py` | Ready; scientific imports, SQLite, Node/npm, frontend dependencies, benchmark artifact, and one closed-loop experiment passed |
-| Backend | `python -m pytest backend/tests -q` | 70 passed; one upstream deprecation warning |
+| Backend | `python -m pytest backend/tests -q` | 71 passed; one upstream deprecation warning |
 | Frontend tests | `cd frontend; npm test` | 11 passed |
 | Frontend lint | `cd frontend; npm run lint` | Passed, zero errors |
 | Frontend type check | `cd frontend; npm run typecheck` | Passed, zero errors |
@@ -34,6 +34,10 @@ This report records commands actually executed in the delivered workspace. It is
 | Unified shutdown | `Ctrl+C` | Launcher reported clean shutdown; no listeners remained on ports 5173 or 8000 |
 
 The only test warning is an upstream Starlette notice that its `TestClient` compatibility import will eventually move from `httpx` to `httpx2`; it does not affect runtime behavior or test correctness.
+
+### Physical posterior containment display
+
+Mission Control now replaces the ambiguous headline confidence percentage with adjustable posterior mass inside 10, 15, 20, 25, or 50 mm of the MAP estimate. It also reports CEP50 (the MAP-centered radius containing 50% of discrete posterior mass) and R90. These quantities use physical panel dimensions and posterior grid-cell centers. They are explicitly labeled as model-based posterior containment, not field-calibrated coverage. In the deterministic eight-action easy run, the display reported 31.0% mass within 25 mm, CEP50 36.1 mm, and R90 72.1 mm; the subsequently revealed simulator error was 10.0 mm.
 
 ### ARGUS NEO tail-risk regression
 
@@ -83,7 +87,7 @@ The checkpoint is optional. Core inference deliberately remains physics-based, s
 | 16 | ARGUS versus random benchmark runs | 30 paired cases plus grid baseline; saved JSON/CSV | Pass |
 | 17 | WAV upload works | real PCM WAV integration test updates the posterior | Pass |
 | 18 | Serial abstraction is functional | pyserial discovery, handshake, commands, parsing, errors; ESP32 firmware included | Pass* |
-| 19 | Tests pass | 70 backend and 11 frontend tests passing | Pass |
+| 19 | Tests pass | 71 backend and 11 frontend tests passing | Pass |
 | 20 | README has exact setup instructions | backend, frontend, unified launcher, demo, training, evaluation, and hardware commands | Pass |
 
 `*` The software/firmware path is implemented and absence is handled, but actual electrical hardware was not available in this workspace. Physical sensing performance therefore remains unvalidated.

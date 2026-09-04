@@ -16,6 +16,9 @@ def test_health_and_session_lifecycle(tmp_path):
     created = client.post("/sessions", json={"preset": "easy", "seed": 41, "max_experiments": 5})
     assert created.status_code == 201
     session = created.json()
+    containment = session["status"]["posterior_containment"]
+    assert [item["radius_mm"] for item in containment["probabilities"]] == [10.0, 15.0, 20.0, 25.0, 50.0]
+    assert containment["field_calibrated"] is False
     listed = client.get("/sessions").json()["sessions"]
     assert listed[0]["id"] == session["id"]
     assert listed[0]["experiment_count"] == 0
