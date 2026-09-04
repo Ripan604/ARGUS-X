@@ -50,7 +50,7 @@ def _trace_engine(engine: ArgusEngine, maximum: int, progress=None, cancelled=No
         })
         if progress:
             progress((index + 1) / maximum)
-        if after["should_stop"]:
+        if after["should_stop"] and not engine.automatic_recovery_available():
             break
     final = engine.status()
     return {
@@ -109,7 +109,11 @@ def model_mismatch(seed: int = 17, progress=None, cancelled=None) -> dict:
             "neo_error_advantage_mm": naive_result["summary"]["localization_error_mm"] - neo_result["summary"]["localization_error_mm"],
             "neo_calibrations": neo_result["summary"]["action_counts"]["calibration"],
             "neo_final_trust": neo_result["summary"]["model_trust"],
-            "naive_false_confidence": bool(naive_result["summary"]["decision_confidence"] >= 0.70 and naive_result["summary"]["localization_error_mm"] > 30),
+            "naive_error_mm": naive_result["summary"]["localization_error_mm"],
+            "naive_confidence_gap": (
+                naive_result["summary"]["decision_confidence"]
+                - neo_result["summary"]["decision_confidence"]
+            ),
         },
     }
 

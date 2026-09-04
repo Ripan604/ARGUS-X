@@ -17,6 +17,7 @@ class CalibrationResult:
     uncertainty_after: float
     observation: dict[str, float]
     explanation: str
+    accepted: bool = True
 
     def to_dict(self) -> dict:
         return {
@@ -26,6 +27,7 @@ class CalibrationResult:
             "uncertainty_after": self.uncertainty_after,
             "observation": self.observation,
             "explanation": self.explanation,
+            "accepted": self.accepted,
         }
 
 
@@ -40,7 +42,17 @@ class CalibrationEngine:
         calibration_type: str = "direct_path",
     ) -> CalibrationResult:
         before = posterior.uncertainty_summary()["combined"]
-        strength = float(np.clip(max(quality.evidence_weight, 0.08), 0, 1))
+        if not quality.accepted:
+            return CalibrationResult(
+                calibration_type,
+                (),
+                before,
+                before,
+                {},
+                "Calibration was rejected because the reference acquisition failed signal-quality checks.",
+                accepted=False,
+            )
+        strength = float(np.clip(quality.evidence_weight, 0, 1))
         updated: list[str] = []
         observation: dict[str, float] = {}
         if calibration_type in {"direct_path", "timing_calibration", "healthy_reference", "frequency_sweep"}:
@@ -62,6 +74,19 @@ class CalibrationEngine:
         posterior.parameter("receiver_coupling").update(quality.coupling_quality, 0.18, strength)
         observation.update({"noise_scale": noise, "coupling_quality": quality.coupling_quality})
         updated.extend(["noise_scale", "source_coupling", "receiver_coupling"])
+        if calibration_type in {"coupling_repeat", "microphone_level_check", "healthy_reference"}:
+            baseline_rms = max(float(diagnostics.get("baseline_rms", 0.0)), 1e-9)
+            signal_rms = max(float(diagnostics.get("signal_rms", baseline_rms)), 0.0)
+            observed_gain = float(np.clip(signal_rms / baseline_rms, 0.1, 3.0))
+            posterior.parameter("gain").update(observed_gain, 0.20, strength)
+            observation["estimated_gain"] = observed_gain
+            updated.append("gain")
+        if calibration_type == "phone_pose_recalibration":
+            pose_std = float(np.clip(0.08 * (1.1 - quality.placement_quality), 0.008, 0.08))
+            posterior.parameter("source_pose_error").update(0.0, pose_std, strength)
+            posterior.parameter("receiver_pose_error").update(0.0, pose_std, strength)
+            observation["pose_error_target"] = 0.0
+            updated.extend(["source_pose_error", "receiver_pose_error"])
         posterior.calibration_count += 1
         after = posterior.uncertainty_summary()["combined"]
         return CalibrationResult(

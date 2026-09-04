@@ -20,19 +20,31 @@ export function encodeWav(samples: Float32Array, sampleRate: number): Blob {
 
 export async function recordMicrophone(durationMs = 180): Promise<Blob> {
   if (!navigator.mediaDevices?.getUserMedia) throw new Error('Microphone capture is unavailable in this browser.');
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false } });
-  const context = new AudioContext({ sampleRate: 16_000 });
-  const source = context.createMediaStreamSource(stream);
-  const processor = context.createScriptProcessor(1024, 1, 1);
+  let stream: MediaStream | null = null;
+  let context: AudioContext | null = null;
+  let source: MediaStreamAudioSourceNode | null = null;
+  let processor: ScriptProcessorNode | null = null;
   const chunks: Float32Array[] = [];
-  processor.onaudioprocess = (event) => chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
-  source.connect(processor); processor.connect(context.destination);
-  await new Promise((resolve) => window.setTimeout(resolve, durationMs));
-  processor.disconnect(); source.disconnect(); stream.getTracks().forEach((track) => track.stop());
-  await context.close();
+  let sampleRate = 16_000;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    context = new AudioContext({ sampleRate: 16_000 });
+    sampleRate = context.sampleRate;
+    source = context.createMediaStreamSource(stream);
+    processor = context.createScriptProcessor(1024, 1, 1);
+    processor.onaudioprocess = (event) => chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+    source.connect(processor); processor.connect(context.destination);
+    await new Promise((resolve) => window.setTimeout(resolve, Math.max(40, durationMs)));
+  } finally {
+    try { processor?.disconnect(); } catch { /* already disconnected */ }
+    try { source?.disconnect(); } catch { /* already disconnected */ }
+    stream?.getTracks().forEach((track) => track.stop());
+    if (context && context.state !== 'closed') await context.close();
+  }
+  if (chunks.length === 0) throw new Error('The microphone returned no audio samples.');
   const length = chunks.reduce((total, chunk) => total + chunk.length, 0);
   const samples = new Float32Array(length);
   let offset = 0;
   chunks.forEach((chunk) => { samples.set(chunk, offset); offset += chunk.length; });
-  return encodeWav(samples, context.sampleRate);
+  return encodeWav(samples, sampleRate);
 }

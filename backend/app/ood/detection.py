@@ -34,6 +34,8 @@ class OODDetector:
         acoustic_reference_score: float = 0.0,
     ) -> OODAssessment:
         residual = np.asarray(residual_vector, dtype=np.float64).reshape(-1)
+        if residual.size < 1 or residual.size > 4 or not np.all(np.isfinite(residual)):
+            raise ValueError("OOD residual must contain one to four finite values")
         scale = np.asarray([0.0008, 1.2, 1.0, 1.0], dtype=np.float64)[: len(residual)]
         standardized = residual / np.maximum(scale, 1e-12)
         if len(self.residual_vectors) >= 6:
@@ -65,8 +67,12 @@ class OODDetector:
             status, cap, recommendation = "CAUTION", 0.68, "Collect an additional diverse measurement and monitor residuals."
         else:
             status, cap, recommendation = "NOMINAL", 1.0, "Response is within the current empirical model envelope."
-        self.residual_vectors.append(standardized.tolist())
-        self.residual_vectors = self.residual_vectors[-128:]
+        # The empirical reference set represents trusted in-domain behavior.
+        # Learning from observations already classified as OOD would let a
+        # sustained sensor/model fault gradually normalize itself.
+        if status in {"NOMINAL", "CAUTION"} and measurement_quality >= 0.25:
+            self.residual_vectors.append(standardized.tolist())
+            self.residual_vectors = self.residual_vectors[-128:]
         return OODAssessment(
             combined, status,
             {"robust_residual": statistical_score, "conformal_nonconformity": conformal_score, "ensemble_disagreement": ensemble_score, "real_acoustic_reference": reference_score, "quality_penalty": quality_penalty},
@@ -75,6 +81,8 @@ class OODDetector:
 
     def register_calibration(self, residual_vector: np.ndarray) -> None:
         residual = np.asarray(residual_vector, dtype=np.float64).reshape(-1)
+        if residual.size < 1 or residual.size > 4 or not np.all(np.isfinite(residual)):
+            raise ValueError("Calibration residual must contain one to four finite values")
         scale = np.asarray([0.0008, 1.2, 1.0, 1.0], dtype=np.float64)[: len(residual)]
         self.calibration_nonconformity.append(float(np.linalg.norm(residual / np.maximum(scale, 1e-12))))
         self.calibration_nonconformity = self.calibration_nonconformity[-256:]

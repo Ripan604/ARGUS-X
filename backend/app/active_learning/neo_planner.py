@@ -58,10 +58,37 @@ class NeoExperimentPlanner:
         *,
         mode: str = "fast",
     ) -> list[Experiment]:
-        baseline = self.baseline.generate_candidates(state.structural.posterior, history, self.config.candidate_count)
+        baseline = self.baseline.generate_candidates(
+            state.structural.posterior, history, self.config.candidate_count
+        )
         if not self.config.enable_waveform_optimization:
-            return baseline
-        return self.waveforms.expand(baseline, "research" if mode == "research" else "fast", maximum=max(self.config.candidate_count, 24))
+            return self.baseline.generate_candidates(
+                state.structural.posterior, history, self.config.candidate_count
+            )
+        return self.waveforms.expand(
+            baseline,
+            "research" if mode == "research" else "fast",
+            maximum=max(self.config.candidate_count * 3, 24),
+        )
+
+    def _waveform_utility(self, experiment: Experiment) -> float:
+        excitation = np.asarray(self.simulator.excitation(experiment), dtype=np.float64)
+        active = excitation[np.abs(excitation) > 1e-10]
+        if active.size < 8:
+            return 0.0
+        energy = float(np.clip(np.mean(active**2) / max(experiment.amplitude**2, 1e-12), 0, 1))
+        spectrum = np.abs(np.fft.rfft(active)) ** 2
+        spectrum /= float(np.sum(spectrum) + 1e-12)
+        spectral_entropy = float(-np.sum(spectrum * np.log(spectrum + 1e-12)) / max(np.log(spectrum.size), 1.0))
+        autocorrelation = np.abs(np.correlate(active, active, mode="full"))
+        peak_index = int(np.argmax(autocorrelation))
+        guard = max(2, int(0.0005 * self.config.sample_rate))
+        sidelobes = np.concatenate((
+            autocorrelation[: max(0, peak_index - guard)],
+            autocorrelation[min(len(autocorrelation), peak_index + guard + 1) :],
+        ))
+        sidelobe_ratio = float(np.max(sidelobes) / max(autocorrelation[peak_index], 1e-12)) if sidelobes.size else 0.0
+        return float(np.clip(0.60 * energy + 0.20 * spectral_entropy + 0.20 * (1 - sidelobe_ratio), 0, 1))
 
     def recommend(
         self,
@@ -89,6 +116,12 @@ class NeoExperimentPlanner:
             float(state.structural.credible_region(0.90)["area_fraction"]),
         )
         scored: list[CandidateScore] = []
+        baseline_scores = self.baseline.score_candidates(
+            state.structural.posterior, candidates, history
+        )
+        baseline_raw = {self._key(item.experiment): item.final_score for item in baseline_scores}
+        baseline_low = min(baseline_raw.values(), default=0.0)
+        baseline_high = max(baseline_raw.values(), default=1.0)
         analyses: dict[str, CounterfactualAnalysis] = {}
         rejected: list[dict] = []
         previous = history[-1] if history else None
@@ -131,10 +164,15 @@ class NeoExperimentPlanner:
             repetition = self.baseline._repetition_penalty(candidate, history)
             calibration_value = float(state.nuisance.predictive_variance(candidate)["magnitude"] * 0.20)
             time_cost = candidate.duration_s + 0.6 * movement + 0.12 * remount
+            waveform_utility = self._waveform_utility(candidate)
+            baseline_guard = float(
+                (baseline_raw.get(self._key(candidate), baseline_low) - baseline_low)
+                / max(baseline_high - baseline_low, 1e-12)
+            )
             final = self._objective_score(
                 objective, information, risk_reduction, separation, analysis.worst_case_separation,
                 coverage, calibration_value, experiment_cost, repetition, energy, time_cost, model_trust,
-                action_type,
+                action_type, waveform_utility, baseline_guard,
             )
             scored.append(
                 CandidateScore(
@@ -147,6 +185,8 @@ class NeoExperimentPlanner:
                     chosen_model_fidelity=fidelity.level,
                     reason_for_fidelity=fidelity.reason,
                     predicted_uncertainty_after=max(0.0, structural_summary["combined"] - 0.38 * information),
+                    waveform_utility=waveform_utility,
+                    baseline_guard_utility=baseline_guard,
                 )
             )
         if not scored:
@@ -171,6 +211,8 @@ class NeoExperimentPlanner:
             "expected_physical_cost": selected.experiment_cost,
             "movement_cost": selected.experiment_cost,
             "energy_cost": selected.energy_cost,
+            "waveform_utility": selected.waveform_utility,
+            "baseline_guard_utility": selected.baseline_guard_utility,
             "time_cost": selected.time_cost,
             "calibration_value": selected.calibration_value,
             "model_trust": selected.model_trust,
@@ -222,6 +264,8 @@ class NeoExperimentPlanner:
         time_cost: float,
         model_trust: float,
         action_type: str,
+        waveform_utility: float,
+        baseline_guard: float,
     ) -> float:
         penalty = self.config.planner_cost_weight * experiment_cost + self.config.planner_repetition_weight * repetition + self.config.planner_time_weight * time_cost
         if objective == "INFORMATION_GAIN":
@@ -240,6 +284,9 @@ class NeoExperimentPlanner:
             + self.config.planner_calibration_weight * calibration_value
             + self.config.planner_model_trust_weight * model_trust
             + action_bonus
+            + 0.45 * waveform_utility
+            + 0.35 * worst_case
+            + 0.80 * baseline_guard
             - penalty
             - 0.08 * energy
         )

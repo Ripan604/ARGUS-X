@@ -36,7 +36,9 @@ def estimate_measurement_quality(
 ) -> QualityEstimate:
     values = np.asarray(samples, dtype=np.float64).reshape(-1)
     finite_fraction = float(np.mean(np.isfinite(values))) if values.size else 0.0
-    values = np.nan_to_num(values)
+    # Preserve the finite-fraction diagnostic while preventing +/-inf from
+    # overflowing the RMS and FFT calculations below.
+    values = np.nan_to_num(values, nan=0.0, posinf=0.0, neginf=0.0)
     peak = float(np.max(np.abs(values))) if values.size else 0.0
     rms = float(np.sqrt(np.mean(values**2))) if values.size else 0.0
     if peak > 0:

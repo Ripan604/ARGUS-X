@@ -18,6 +18,12 @@ SCALES = {
 }
 
 
+def _write_manifest(path: Path, manifest: dict) -> None:
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    temporary.replace(path)
+
+
 def generate_counterfactual_bank(
     destination: str | Path,
     *,
@@ -36,6 +42,25 @@ def generate_counterfactual_bank(
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if resume and manifest_path.exists() else {
         "schema_version": 1, "scale": scale, "seed": seed, "chunks": [], "completed_scenarios": [],
     }
+    if manifest.get("schema_version") != 1 or manifest.get("scale") != scale or int(manifest.get("seed", -1)) != seed:
+        raise ValueError("Existing response-bank manifest does not match the requested schema, scale, and seed")
+    valid_chunks = []
+    valid_completed: set[int] = set()
+    for item in manifest.get("chunks", []):
+        scenario = int(item.get("scenario", -1))
+        chunk = (root / str(item.get("path", ""))).resolve()
+        expected_name = f"scenario_{scenario:05d}.npz"
+        if (
+            0 <= scenario < specification["scenarios"]
+            and chunk.parent == root.resolve()
+            and chunk.name == expected_name
+            and chunk.exists()
+            and sha256(chunk.read_bytes()).hexdigest() == item.get("sha256")
+        ):
+            valid_chunks.append(item)
+            valid_completed.add(scenario)
+    manifest["chunks"] = valid_chunks
+    manifest["completed_scenarios"] = sorted(valid_completed)
     completed = set(manifest.get("completed_scenarios", []))
     for scenario_index in range(specification["scenarios"]):
         if cancelled and cancelled():
@@ -49,7 +74,7 @@ def generate_counterfactual_bank(
             preset="medium",
         )
         actions = engine.planner.generate_candidates(engine.belief.posterior, [], specification["actions"])
-        signals = np.stack([engine.simulator.simulate(engine.truth, action) for action in actions])
+        signals = np.stack([engine.acquisition_simulator.simulate(engine.truth, action) for action in actions])
         metadata = {
             "scenario_index": scenario_index,
             "seed": scenario_seed,
@@ -69,10 +94,9 @@ def generate_counterfactual_bank(
         manifest["chunks"].append({"scenario": scenario_index, "path": chunk.name, "sha256": digest})
         completed.add(scenario_index)
         manifest["completed_scenarios"] = sorted(completed)
-        manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        _write_manifest(manifest_path, manifest)
         if progress:
             progress(len(completed) / specification["scenarios"])
     manifest["complete"] = len(completed) == specification["scenarios"]
-    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    _write_manifest(manifest_path, manifest)
     return manifest
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { argusApi } from '@/services/api';
 import { recordMicrophone } from '@/utils/audio';
 import type { BenchmarkResult, HistoryItem, MeasurementAnalysis, Preset, SessionState } from '@/types/argus';
@@ -14,23 +14,31 @@ export function useArgusSession() {
   const [error, setError] = useState<string | null>(null);
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [lastSessionId, setLastSessionId] = useState<string | null>(null);
+  const busyRef = useRef(false);
 
   useEffect(() => {
     let active = true;
-    Promise.resolve(window.localStorage.getItem('argus_last_session')).then((saved) => {
-      if (active && saved) setLastSessionId(saved);
-    });
+    const storageTimer = window.setTimeout(() => {
+      try {
+        const saved = window.localStorage.getItem('argus_last_session');
+        if (active && saved) setLastSessionId(saved);
+      } catch {
+        // Storage can be disabled in private/restricted browser contexts.
+      }
+    }, 0);
     argusApi.health()
       .then(() => { if (active) setApiOnline(true); })
       .catch(() => { if (active) setApiOnline(false); });
-    return () => { active = false; };
+    return () => { active = false; window.clearTimeout(storageTimer); };
   }, []);
 
   const execute = useCallback(async <T,>(operation: () => Promise<T>): Promise<T | undefined> => {
+    if (busyRef.current) return undefined;
+    busyRef.current = true;
     setBusy(true); setError(null);
     try { return await operation(); }
     catch (reason) { setError(reason instanceof Error ? reason.message : 'Unknown ARGUS error'); return undefined; }
-    finally { setBusy(false); }
+    finally { busyRef.current = false; setBusy(false); }
   }, []);
 
   const refreshHistory = useCallback(async (id: string) => {
@@ -39,7 +47,8 @@ export function useArgusSession() {
 
   const create = (preset: Preset, mode: 'simulation' | 'physical' = 'simulation', panelWidthMm = 600, panelHeightMm = 400) => execute(async () => {
     const state = await argusApi.createSession(preset, undefined, mode, panelWidthMm, panelHeightMm);
-    window.localStorage.setItem('argus_last_session', state.id); setLastSessionId(state.id); setApiOnline(true);
+    try { window.localStorage.setItem('argus_last_session', state.id); } catch { /* optional convenience only */ }
+    setLastSessionId(state.id); setApiOnline(true);
     setSession(state); setMeasurement(null); setHistory([]); return state;
   });
   const resume = () => lastSessionId && execute(async () => {

@@ -1,0 +1,53 @@
+{
+  "evaluation_dataset": "datasets\\generated\\argus_forward_external_test.npz",
+  "evaluation_seed": 104729,
+  "evaluation_samples": 3000,
+  "models": [
+    {
+      "checkpoint": "models\\forward_surrogate.pt",
+      "training_samples": 3000,
+      "standardized_mae": 0.46818384528160095,
+      "mean_feature_r2": 0.40701478719711304,
+      "per_feature_r2": {
+        "rms": 0.8416823148727417,
+        "peak_amplitude": 0.806005597114563,
+        "crest_factor": 0.7418791055679321,
+        "zero_crossing_rate": 0.39118683338165283,
+        "spectral_centroid_hz": 0.34206873178482056,
+        "spectral_bandwidth_hz": 0.2590430974960327,
+        "spectral_rolloff_hz": 0.15631604194641113,
+        "dominant_frequency_hz": 0.03181898593902588,
+        "spectral_entropy": 0.18568891286849976,
+        "band_energy_low": 0.13911700248718262,
+        "band_energy_mid": 0.2964865565299988,
+        "band_energy_high": 0.39488905668258667,
+        "envelope_peak_time_s": 0.02368074655532837,
+        "decay_time_s": 0.5885506272315979,
+        "snr_db": 0.9068083763122559
+      }
+    },
+    {
+      "checkpoint": "models\\forward_surrogate_candidate.pt",
+      "training_samples": 15000,
+      "standardized_mae": 0.43708741664886475,
+      "mean_feature_r2": 0.46079355478286743,
+      "per_feature_r2": {
+        "rms": 0.9169948101043701,
+        "peak_amplitude": 0.8964086771011353,
+        "crest_factor": 0.7897138595581055,
+        "zero_crossing_rate": 0.41742485761642456,
+        "spectral_centroid_hz": 0.37071555852890015,
+        "spectral_bandwidth_hz": 0.3137269616127014,
+        "spectral_rolloff_hz": 0.18402862548828125,
+        "dominant_frequency_hz": 0.06907713413238525,
+        "spectral_entropy": 0.21379786729812622,
+        "band_energy_low": 0.27421486377716064,
+        "band_energy_mid": 0.4427052140235901,
+        "band_energy_high": 0.43853557109832764,
+        "envelope_peak_time_s": 0.03646504878997803,
+        "decay_time_s": 0.619328498840332,
+        "snr_db": 0.9287658929824829
+      }
+    }
+  ]
+}

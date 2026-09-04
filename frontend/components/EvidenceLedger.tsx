@@ -8,11 +8,12 @@ export function EvidenceLedger({ session }: { session: SessionState }) {
   const [entries, setEntries] = useState<Array<Record<string, unknown>>>([]);
   const [verification, setVerification] = useState<Record<string, unknown> | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => { argusApi.ledger(session.id).then((result) => setEntries(result.entries)).catch(() => setEntries([])); }, [session.id, session.status.experiment_count]);
-  const verify = async () => { setBusy(true); try { setVerification(await argusApi.verifyLedger(session.id)); } finally { setBusy(false); } };
-  const exportBundle = async () => { setBusy(true); try { const blob = await argusApi.exportBundle(session.id); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `argus_session_${session.id}.zip`; anchor.click(); URL.revokeObjectURL(url); } finally { setBusy(false); } };
+  const verify = async () => { setBusy(true); setError(null); try { setVerification(await argusApi.verifyLedger(session.id)); } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); } finally { setBusy(false); } };
+  const exportBundle = async () => { setBusy(true); setError(null); try { const blob = await argusApi.exportBundle(session.id); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `argus_session_${session.id}.zip`; anchor.click(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); } finally { setBusy(false); } };
   return <section className="secondary-page evidence-page"><div className="secondary-header"><div><p className="eyebrow">INNOVATION EVIDENCE</p><h1>Trace mechanism to measurement.</h1></div><div className="acquisition-actions"><button className="ghost-button" onClick={verify} disabled={busy}>VERIFY LEDGER</button><button className="run-button compact" onClick={exportBundle} disabled={busy}>EXPORT RESEARCH BUNDLE</button></div></div>
-    <div className="innovation-grid">{[
+    {error && <p className="error-banner">{error}</p>}<div className="innovation-grid">{[
       ['DIAGNOSTIC ↔ CALIBRATION', session.recommendation.action_type, `Structural ${session.status.structural_uncertainty.toFixed(3)} · metrology ${session.status.metrology_uncertainty.toFixed(3)}`],
       ['JOINT UNCERTAINTY', 'ACTIVE', `${Object.keys((session.joint_inference.nuisance as Record<string, unknown> | undefined)?.parameters as Record<string, unknown> ?? {}).length} nuisance variables tracked`],
       ['WAVEFORM + GEOMETRY', session.recommendation.experiment.waveform, `${(session.recommendation.experiment.frequency_start_hz / 1000).toFixed(1)}–${(session.recommendation.experiment.frequency_end_hz / 1000).toFixed(1)} kHz`],
@@ -25,4 +26,3 @@ export function EvidenceLedger({ session }: { session: SessionState }) {
     <p className="research-disclaimer">This is a tamper-evident cryptographic hash chain, not a blockchain and not a certification record. Patentability cannot be determined by this software.</p>
   </section>;
 }
-

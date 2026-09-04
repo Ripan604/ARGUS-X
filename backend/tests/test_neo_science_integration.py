@@ -18,14 +18,16 @@ def test_benchmark_policies_share_paired_hidden_seeds():
     assert result["metadata"]["evidence_source"] == "simulated"
 
 
-def test_model_mismatch_demo_observes_calibration_and_avoids_naive_false_confidence():
+def test_model_mismatch_demo_observes_calibration_and_reduces_error():
     result = model_mismatch()
     neo = result["argus_neo"]["summary"]
     naive = result["naive_ablation"]["summary"]
     assert neo["action_counts"]["calibration"] >= 1
     assert neo["localization_error_mm"] < naive["localization_error_mm"]
     assert naive["decision_confidence"] > neo["decision_confidence"]
-    assert result["observed_effect"]["naive_false_confidence"]
+    assert result["observed_effect"]["neo_error_advantage_mm"] > 0
+    assert result["observed_effect"]["naive_error_mm"] > 30
+    assert result["observed_effect"]["naive_confidence_gap"] > 0
 
 
 def test_fault_injection_detects_dropout_clipping_and_corruption():
@@ -42,13 +44,16 @@ def test_session_and_probe_websocket_protocol(tmp_path):
     client = TestClient(create_app(tmp_path / "websocket.db"))
     state = client.post("/sessions", json={"seed": 99}).json()
     with client.websocket_connect(f"/ws/session/{state['id']}") as socket:
+        socket.send_json([])
+        assert socket.receive_json()["type"] == "error"
         socket.send_json({"type": "state"})
         payload = socket.receive_json()
         assert payload["type"] == "state"
         assert payload["state"]["id"] == state["id"]
     with client.websocket_connect("/ws/probe/edge-test") as socket:
+        socket.send_json({"type": "hello", "node_type": ["invalid"], "capabilities": []})
+        assert socket.receive_json()["type"] == "error"
         socket.send_json({"type": "hello", "node_type": "edge_laptop", "capabilities": {"microphone": True}, "session_id": state["id"]})
         payload = socket.receive_json()
         assert payload["type"] == "ack"
         assert payload["node"]["node_type"] == "edge_laptop"
-

@@ -3,11 +3,11 @@
   "effective_simulation_speed_m_s": 3044.316604250077,
   "simulation_intercept_us": -7.015194520752478,
   "simulation_geometric_rmse_us": 2.6030304222432434,
-  "measured_timing_scale": 1.5890197920214735,
+  "measured_timing_scale": 1.589019792021466,
   "measured_sensor_offsets_us": [
-    -2.882140839358727,
-    11.514353682437456,
-    -8.632212843078728
+    -2.8821408393587347,
+    11.514353682437461,
+    -8.632212843078726
   ],
   "timing_correction_accepted": false,
   "negative_transfer_guard": "rejected because leave-one-position-out error increased",

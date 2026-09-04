@@ -8,11 +8,11 @@ from pydantic import BaseModel, Field, model_validator
 class CreateSessionRequest(BaseModel):
     mode: Literal["simulation", "physical"] = "simulation"
     preset: Literal["easy", "medium", "hard"] = "medium"
-    seed: int | None = None
+    seed: int | None = Field(default=None, ge=0, le=2_147_483_647)
     panel_width_mm: float = Field(600, ge=100, le=5_000)
     panel_height_mm: float = Field(400, ge=100, le=5_000)
     grid_size: int = Field(20, ge=10, le=40)
-    max_experiments: int = Field(12, ge=3, le=30)
+    max_experiments: int = Field(12, ge=1, le=30)
     material_profile: Literal["generic_plate", "aluminum_demo", "cfrp_demo"] = "generic_plate"
     config_profile: Literal["demo", "research", "phone", "distributed", "benchmark"] = "demo"
 
@@ -33,12 +33,14 @@ class ExperimentParameters(BaseModel):
     phase_code: str | None = Field(default=None, max_length=128)
     code_length: int = Field(default=0, ge=0, le=256)
     sample_rate_hz: int | None = Field(default=None, ge=1_000, le=384_000)
-    spectral_notches_hz: tuple[tuple[float, float], ...] = ()
+    spectral_notches_hz: tuple[tuple[float, float], ...] = Field(default=(), max_length=16)
 
     @model_validator(mode="after")
     def validate_band(self):
         if self.frequency_end_hz < self.frequency_start_hz:
             raise ValueError("frequency_end_hz must be greater than or equal to frequency_start_hz")
+        if any(low < 0 or high <= low or high > 20_000 for low, high in self.spectral_notches_hz):
+            raise ValueError("spectral notches must be increasing pairs within 0 to 20 kHz")
         return self
 
 
@@ -79,6 +81,12 @@ class HumanDecisionRequest(BaseModel):
     decision: Literal["accept", "modify", "reject"]
     reason: Literal["inaccessible", "poor_contact", "unsafe", "user_preference", "hardware_limitation", "other"] | None = None
     experiment: ExperimentParameters | None = None
+
+    @model_validator(mode="after")
+    def validate_modification(self):
+        if self.decision == "modify" and self.experiment is None:
+            raise ValueError("A modified experiment is required when decision is modify")
+        return self
 
 
 class EmergencyStopRequest(BaseModel):

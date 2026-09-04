@@ -30,7 +30,10 @@ def _run_strategy(seed: int, preset: str, strategy: str, max_experiments: int) -
     total_cost = 0.0
     entropy_trajectory = [engine.status()["normalized_entropy"]]
     error_trajectory_mm = [engine.localization_error() * 1_000]
-    while not engine.status()["should_stop"]:
+    while (
+        not engine.status()["should_stop"]
+        or (strategy == "argus" and engine.automatic_recovery_available())
+    ):
         if strategy == "argus":
             recommendation = engine.current_recommendation
             experiment = recommendation.selected.experiment

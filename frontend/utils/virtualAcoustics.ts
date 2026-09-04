@@ -121,7 +121,9 @@ export function flexuralPlateProperties(materialKey: MaterialKey, thicknessMm: n
   return {
     flexuralRigidityNm: rigidity,
     groupVelocityMps: groupVelocity,
-    wavelengthM: groupVelocity / frequency,
+    // For a Kirchhoff-Love flexural wave, group velocity is twice phase
+    // velocity. Wavelength is phase velocity / frequency.
+    wavelengthM: groupVelocity / (2 * frequency),
   };
 }
 
@@ -227,6 +229,7 @@ function fftSpectrum(samples: number[], sampleRateHz: number) {
 }
 
 export function simulateVirtualExperiment(input: VirtualExperimentConfig): VirtualSimulation {
+  const sampleRateHz = clamp(Math.round(input.sampleRateHz), 8000, 96000);
   const config: VirtualExperimentConfig = {
     ...input,
     panelWidthMm: clamp(input.panelWidthMm, 100, 5000),
@@ -235,11 +238,11 @@ export function simulateVirtualExperiment(input: VirtualExperimentConfig): Virtu
     defectRadiusMm: clamp(input.defectRadiusMm, 1, 250),
     defectSeverity: clamp(input.defectSeverity, 0, 1),
     impactEnergyJ: clamp(input.impactEnergyJ, 0.01, 10),
-    centerFrequencyHz: clamp(input.centerFrequencyHz, 100, Math.min(40000, input.sampleRateHz * 0.42)),
+    centerFrequencyHz: clamp(input.centerFrequencyHz, 100, Math.min(40000, sampleRateHz * 0.42)),
     noiseFloorDb: clamp(input.noiseFloorDb, -100, -6),
     boundaryReflectivity: clamp(input.boundaryReflectivity, 0, 0.95),
     sensorGain: clamp(input.sensorGain, 0.1, 10),
-    sampleRateHz: clamp(Math.round(input.sampleRateHz), 8000, 96000),
+    sampleRateHz,
     durationMs: clamp(input.durationMs, 20, 500),
     velocityScale: clamp(input.velocityScale, 0.5, 1.5),
     source: { x: clamp(input.source.x, 0.01, 0.99), y: clamp(input.source.y, 0.01, 0.99) },
@@ -312,7 +315,7 @@ export function simulateVirtualExperiment(input: VirtualExperimentConfig): Virtu
     metrics: {
       groupVelocityMps: velocity,
       flexuralRigidityNm: plate.flexuralRigidityNm,
-      wavelengthMm: velocity / config.centerFrequencyHz * 1000,
+      wavelengthMm: velocity / (2 * config.centerFrequencyHz) * 1000,
       directPathM: directLength,
       scatterPathM: scatterLength,
       directArrivalMs: paths[0].arrivalMs,

@@ -26,17 +26,16 @@ class RecedingHorizonPlanner:
         beam = candidates[: max(2, beam_width)]
         scores: dict[int, HorizonScore] = {}
         for candidate in candidates:
-            future_options = []
+            future_options: list[tuple[float, float]] = []
             for future in beam:
                 if future is candidate:
                     continue
                 route = float(np.hypot(candidate.experiment.source_x - future.experiment.source_x, candidate.experiment.source_y - future.experiment.source_y))
                 diversity = 1.0 - candidate.repetition_penalty * future.repetition_penalty
-                future_options.append(0.62 * future.final_score * diversity - 0.12 * route)
-            future_value = max(future_options, default=0.0)
+                future_options.append((0.62 * future.final_score * diversity - 0.12 * route, route))
+            future_value, route_cost = max(future_options, default=(0.0, 0.0), key=lambda item: item[0])
             if horizon == 3:
                 future_value *= 1.28
             total = candidate.final_score + future_value
-            scores[id(candidate)] = HorizonScore(candidate.final_score, future_value, max(0.0, candidate.final_score + future_value - total), total, horizon)
+            scores[id(candidate)] = HorizonScore(candidate.final_score, future_value, route_cost, total, horizon)
         return sorted(candidates, key=lambda item: scores[id(item)].total, reverse=True), scores
-

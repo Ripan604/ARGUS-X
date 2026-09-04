@@ -35,6 +35,53 @@ def posterior_update(prior: np.ndarray, likelihood: np.ndarray) -> np.ndarray:
     return normalize_probability_grid(np.asarray(prior) * np.maximum(np.asarray(likelihood), EPSILON))
 
 
+def spatial_mode_cells(
+    probability: np.ndarray,
+    count: int,
+    minimum_separation_cells: int = 2,
+) -> list[tuple[int, int]]:
+    """Select probability-aware, spatially diverse representative cells.
+
+    Plain argsort has a pathological tie behavior for a uniform prior: it can
+    return a row of adjacent cells and make the first active experiment depend
+    on array ordering. This farthest-weighted selection remains concentrated
+    on real modes while distributing equal-probability representatives.
+    """
+
+    values = normalize_probability_grid(probability)
+    rows, columns = np.indices(values.shape)
+    chosen: list[tuple[int, int]] = []
+    available = np.ones(values.shape, dtype=bool)
+    target = max(1, min(int(count), values.size))
+    separation = max(0, int(minimum_separation_cells))
+    for _ in range(target):
+        if not np.any(available):
+            break
+        if not chosen:
+            maximum = float(np.max(values[available]))
+            tied = np.argwhere(available & np.isclose(values, maximum, rtol=1e-12, atol=1e-15))
+            center = np.asarray([(values.shape[0] - 1) / 2, (values.shape[1] - 1) / 2])
+            row, column = tied[int(np.argmin(np.sum((tied - center) ** 2, axis=1)))]
+        else:
+            distances = np.full(values.shape, np.inf)
+            for old_row, old_column in chosen:
+                distances = np.minimum(distances, np.hypot(rows - old_row, columns - old_column))
+            eligible = available & (distances >= separation)
+            if not np.any(eligible):
+                break
+            normalized_distance = distances / max(np.hypot(*values.shape), 1.0)
+            probability_ratio = values / max(float(np.max(values)), EPSILON)
+            utility = probability_ratio * (0.35 + 0.65 * normalized_distance)
+            utility[~eligible] = -np.inf
+            row, column = np.unravel_index(int(np.argmax(utility)), values.shape)
+        chosen.append((int(row), int(column)))
+        if separation <= 0:
+            available[row, column] = False
+        else:
+            available &= np.hypot(rows - row, columns - column) >= separation
+    return chosen
+
+
 def measurement_likelihood(
     samples: np.ndarray,
     experiment: Experiment,

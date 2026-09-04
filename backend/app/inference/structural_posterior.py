@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from backend.app.inference.belief import BeliefState, normalize_probability_grid
+from backend.app.inference.belief import BeliefState, normalize_probability_grid, spatial_mode_cells
 
 
 class StructuralPosterior(BeliefState):
@@ -42,13 +42,8 @@ class StructuralPosterior(BeliefState):
 
     def top_hypotheses(self, count: int = 5, minimum_separation_cells: int = 2) -> list[dict]:
         values = normalize_probability_grid(self.posterior)
-        selected: list[tuple[int, int]] = []
         result: list[dict] = []
-        for flat_index in np.argsort(values.ravel())[::-1]:
-            row, column = np.unravel_index(int(flat_index), values.shape)
-            if any(np.hypot(row - old_row, column - old_column) < minimum_separation_cells for old_row, old_column in selected):
-                continue
-            selected.append((row, column))
+        for row, column in spatial_mode_cells(values, count, minimum_separation_cells):
             result.append(
                 {
                     "rank": len(result) + 1,
@@ -60,8 +55,6 @@ class StructuralPosterior(BeliefState):
                     "dominant_type": max(self.type_probabilities, key=self.type_probabilities.get),
                 }
             )
-            if len(result) >= count:
-                break
         return result
 
     def credible_region(self, mass: float = 0.90) -> dict:
@@ -136,4 +129,3 @@ class StructuralPosterior(BeliefState):
 
 def structural_entropy_bounds(grid_size: int) -> tuple[float, float]:
     return 0.0, float(np.log2(grid_size * grid_size))
-

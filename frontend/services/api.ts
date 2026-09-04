@@ -1,12 +1,34 @@
 import type { BenchmarkResult, ExperimentParameters, HistoryItem, MeasurementAnalysis, Preset, ResearchJob, SessionState } from '@/types/argus';
 
-const API_URL = process.env.NEXT_PUBLIC_ARGUS_API_URL || 'http://127.0.0.1:8000';
+const CONFIGURED_API_URL = process.env.NEXT_PUBLIC_ARGUS_API_URL?.replace(/\/+$/, '');
+
+export function resolveApiUrl(configured: string | undefined, hostname: string | undefined) {
+  if (configured) return configured.replace(/\/+$/, '');
+  return `http://${hostname || '127.0.0.1'}:8000`;
+}
+
+export function getApiUrl() {
+  return resolveApiUrl(CONFIGURED_API_URL, typeof window === 'undefined' ? undefined : window.location.hostname);
+}
+
+function readableApiError(payload: string, status: number) {
+  try {
+    const parsed = JSON.parse(payload) as { detail?: string | Array<{ loc?: Array<string | number>; msg?: string }> };
+    if (typeof parsed.detail === 'string') return parsed.detail;
+    if (Array.isArray(parsed.detail)) {
+      const details = parsed.detail.map((item) => `${item.loc?.slice(1).join('.') || 'request'}: ${item.msg || 'invalid value'}`);
+      if (details.length) return details.join('; ');
+    }
+  } catch {
+    // Non-JSON error responses are shown verbatim below.
+  }
+  return payload || `ARGUS API returned ${status}`;
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, init);
+  const response = await fetch(`${getApiUrl()}${path}`, init);
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `ARGUS API returned ${response.status}`);
+    throw new Error(readableApiError(await response.text(), response.status));
   }
   return response.json() as Promise<T>;
 }
@@ -53,7 +75,7 @@ export const argusApi = {
   ledger: (id: string) => request<{ entries: Array<Record<string, unknown>> }>(`/api/ledger/${id}`),
   verifyLedger: (id: string) => request<{ status: string; valid: boolean; record_count: number; head_hash: string }>(`/api/ledger/${id}/verify`),
   exportBundle: async (id: string) => {
-    const response = await fetch(`${API_URL}/api/export/${id}`);
+    const response = await fetch(`${getApiUrl()}/api/export/${id}`);
     if (!response.ok) throw new Error(await response.text());
     return response.blob();
   },
@@ -82,5 +104,3 @@ export const argusApi = {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
   }),
 };
-
-export { API_URL };

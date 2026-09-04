@@ -74,6 +74,12 @@ class SessionRepository:
                 (session_id, now, now, mode, preset, json.dumps(state)),
             )
 
+    def delete_session(self, session_id: str) -> None:
+        """Remove one exact session, used to roll back a failed bundle import."""
+
+        with self._lock, self.connection() as connection:
+            connection.execute("DELETE FROM sessions WHERE id=?", (session_id,))
+
     def update_session(self, session_id: str, state: dict) -> None:
         now = datetime.now(timezone.utc).isoformat()
         with self._lock, self.connection() as connection:
@@ -252,6 +258,13 @@ class SessionRepository:
             ).fetchall()
         return [self._job_row(row) for row in rows]
 
+    def count_active_jobs(self) -> int:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT COUNT(*) FROM research_jobs WHERE status IN ('queued', 'running')"
+            ).fetchone()
+        return int(row[0])
+
     @staticmethod
     def _job_row(row) -> dict:
         item = dict(row)
@@ -264,8 +277,9 @@ class SessionRepository:
     def recover_interrupted_jobs(self) -> int:
         with self._lock, self.connection() as connection:
             cursor = connection.execute(
-                """UPDATE research_jobs SET status='failed', error='Process restarted while job was running',
-                   updated_at=? WHERE status='running'""",
+                """UPDATE research_jobs SET status='failed',
+                   error='Process restarted before the queued or running job completed',
+                   updated_at=? WHERE status IN ('queued', 'running')""",
                 (datetime.now(timezone.utc).isoformat(),),
             )
             return int(cursor.rowcount)
@@ -309,6 +323,14 @@ class SessionRepository:
             cursor = connection.execute(
                 "INSERT INTO session_events(session_id, created_at, event_type, payload_json) VALUES(?,?,?,?)",
                 (session_id, datetime.now(timezone.utc).isoformat(), event_type, json.dumps(payload)),
+            )
+            return int(cursor.lastrowid)
+
+    def import_event(self, session_id: str, created_at: str, event_type: str, payload: dict) -> int:
+        with self._lock, self.connection() as connection:
+            cursor = connection.execute(
+                "INSERT INTO session_events(session_id, created_at, event_type, payload_json) VALUES(?,?,?,?)",
+                (session_id, created_at, event_type, json.dumps(payload)),
             )
             return int(cursor.lastrowid)
 

@@ -1,10 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { API_URL, argusApi } from '@/services/api';
+import { getApiUrl, argusApi } from '@/services/api';
 import type { SessionState } from '@/types/argus';
 
 type Point = { x: number; y: number };
+
+function recommendationKey(state: SessionState): string {
+  return JSON.stringify(state.recommendation.experiment);
+}
 
 function bilinear(corners: Point[], x: number, y: number): Point | null {
   if (corners.length !== 4) return null;
@@ -30,6 +34,7 @@ export default function ProbePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const cameraStream = useRef<MediaStream | null>(null);
   const socket = useRef<WebSocket | null>(null);
+  const lastRecommendation = useRef('');
 
   useEffect(() => {
     const detected = {
@@ -51,13 +56,32 @@ export default function ProbePage() {
   const connect = async () => {
     try {
       const state = await argusApi.getSession(sessionId.trim());
-      setSession(state); setMessage('Probe linked. Follow the source and receiver coordinates below.');
+      setSessionId(state.id); setSession(state);
+      lastRecommendation.current = recommendationKey(state);
+      setManual({ x: state.recommendation.experiment.receiver_x, y: state.recommendation.experiment.receiver_y });
+      setMessage('Probe linked. Follow the source and receiver coordinates below.');
       await argusApi.registerProbe(nodeId, capabilities);
-      const base = API_URL.replace(/^http/, 'ws');
-      socket.current?.close(); socket.current = new WebSocket(`${base}/ws/probe/${encodeURIComponent(nodeId)}`);
-      socket.current.onopen = () => { socket.current?.send(JSON.stringify({ type: 'hello', node_type: 'phone', capabilities, session_id: state.id })); setStreaming('connected'); };
-      socket.current.onmessage = (event) => { const payload = JSON.parse(event.data); if (payload.type === 'session_state') setSession(payload.state); };
-      socket.current.onclose = () => setStreaming('disconnected');
+      const base = getApiUrl().replace(/^http/, 'ws');
+      socket.current?.close();
+      const connection = new WebSocket(`${base}/ws/probe/${encodeURIComponent(nodeId)}`);
+      socket.current = connection;
+      connection.onopen = () => { connection.send(JSON.stringify({ type: 'hello', node_type: 'phone', capabilities, session_id: state.id })); setStreaming('connected'); };
+      connection.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.type === 'session_state') {
+            const next = payload.state as SessionState;
+            setSession(next);
+            const key = recommendationKey(next);
+            if (key !== lastRecommendation.current) {
+              lastRecommendation.current = key;
+              setManual({ x: next.recommendation.experiment.receiver_x, y: next.recommendation.experiment.receiver_y });
+            }
+          }
+        } catch { setMessage('ARGUS sent an unreadable probe update. Reconnect this phone.'); }
+      };
+      connection.onerror = () => { if (socket.current === connection) { setStreaming('error'); setMessage('The live probe connection failed. Check Wi-Fi and the Laptop A server.'); } };
+      connection.onclose = () => { if (socket.current === connection) setStreaming('disconnected'); };
     } catch (reason) { setMessage(reason instanceof Error ? reason.message : String(reason)); }
   };
 
@@ -65,12 +89,12 @@ export default function ProbePage() {
     if (!socket.current || streaming !== 'connected') return;
     const timer = window.setInterval(() => {
       if (socket.current?.readyState === WebSocket.OPEN) {
-        socket.current.send(JSON.stringify({ type: 'heartbeat', node_type: 'phone', capabilities, session_id: sessionId }));
-        socket.current.send(JSON.stringify({ type: 'state', session_id: sessionId }));
+        socket.current.send(JSON.stringify({ type: 'heartbeat', node_type: 'phone', capabilities, session_id: session?.id }));
+        socket.current.send(JSON.stringify({ type: 'state', session_id: session?.id }));
       }
     }, 2500);
     return () => window.clearInterval(timer);
-  }, [streaming, capabilities, sessionId]);
+  }, [streaming, capabilities, session?.id]);
 
   const enableCamera = async () => {
     try {
@@ -92,19 +116,34 @@ export default function ProbePage() {
   const captureAudio = async () => {
     if (!session) return;
     setStreaming('recording');
+    let stream: MediaStream | null = null;
+    let context: AudioContext | null = null;
+    let source: MediaStreamAudioSourceNode | null = null;
+    let processor: ScriptProcessorNode | null = null;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }, video: false });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }, video: false });
       setPermissions((old) => ({ ...old, microphone: 'granted' }));
-      const context = new AudioContext(); const source = context.createMediaStreamSource(stream); const processor = context.createScriptProcessor(2048, 1, 1); const chunks: Float32Array[] = [];
+      context = new AudioContext(); source = context.createMediaStreamSource(stream); processor = context.createScriptProcessor(2048, 1, 1); const chunks: Float32Array[] = [];
       processor.onaudioprocess = (event) => chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
       source.connect(processor); processor.connect(context.destination);
       await new Promise((resolve) => window.setTimeout(resolve, Math.max(350, session.recommendation.experiment.duration_s * 1000 + 250)));
-      processor.disconnect(); source.disconnect(); stream.getTracks().forEach((track) => track.stop());
       const samples = Array.from(chunks.flatMap((chunk) => Array.from(chunk))).slice(0, Math.round(context.sampleRate * Math.max(0.12, session.recommendation.experiment.duration_s)));
-      await context.close();
-      const result = await argusApi.sendProbeMeasurement({ session_id: session.id, node_id: nodeId, sample_rate: context.sampleRate, samples, experiment: session.recommendation.experiment, timestamp: new Date().toISOString(), sensor_metadata: { orientation, acceleration_rms: motion, acceleration_deviation_g: Math.abs(motion - 9.80665) / 9.80665, visual_position_error: corners.length === 4 ? 0.015 : 0.08, manual_location: manual, corner_count: corners.length } });
-      setSession(result.state); setMessage(`Measurement accepted · coupling proxy ${Number(result.quality.coupling_quality ?? 0).toFixed(2)} · signal proxy ${Number(result.quality.signal_quality ?? 0).toFixed(2)}`); setStreaming('connected');
-    } catch (reason) { setPermissions((old) => ({ ...old, microphone: 'denied or unavailable' })); setMessage(reason instanceof Error ? reason.message : String(reason)); setStreaming('error'); }
+      if (samples.length < 8) throw new Error('The phone microphone returned no usable samples.');
+      const experiment = { ...session.recommendation.experiment, receiver_x: manual.x, receiver_y: manual.y };
+      const measurementId = `${nodeId}-${typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Date.now()}`;
+      const result = await argusApi.sendProbeMeasurement({ session_id: session.id, node_id: nodeId, measurement_id: measurementId, sample_rate: context.sampleRate, samples, experiment, timestamp: new Date().toISOString(), sensor_metadata: { orientation, acceleration_rms: motion, acceleration_deviation_g: Math.abs(motion - 9.80665) / 9.80665, visual_position_error: corners.length === 4 ? 0.015 : 0.08, actual_receiver_location: manual, corner_count: corners.length } });
+      setSession(result.state);
+      lastRecommendation.current = recommendationKey(result.state);
+      setManual({ x: result.state.recommendation.experiment.receiver_x, y: result.state.recommendation.experiment.receiver_y });
+      setMessage(`Measurement accepted · coupling proxy ${Number(result.quality.coupling_quality ?? 0).toFixed(2)} · signal proxy ${Number(result.quality.signal_quality ?? 0).toFixed(2)}`); setStreaming('connected');
+    } catch (reason) {
+      setMessage(reason instanceof Error ? reason.message : String(reason)); setStreaming('error');
+    } finally {
+      try { processor?.disconnect(); } catch { /* already disconnected */ }
+      try { source?.disconnect(); } catch { /* already disconnected */ }
+      stream?.getTracks().forEach((track) => track.stop());
+      if (context && context.state !== 'closed') await context.close();
+    }
   };
 
   const overlay = useMemo(() => {
@@ -122,6 +161,6 @@ export default function ProbePage() {
     <section className="capability-strip">{Object.entries(capabilities).map(([name, available]) => <div key={name}><i className={available ? 'available' : ''} /><b>{name.toUpperCase()}</b><span>{available ? permissions[name] ?? 'available' : 'unavailable'}</span></div>)}</section>
     {session && <><section className="probe-command"><p>NEXT PHYSICAL ACTION · {session.recommendation.action_type.toUpperCase()}</p><div><article><small>SOURCE</small><strong>{session.recommendation.experiment.source_x.toFixed(3)}, {session.recommendation.experiment.source_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.source_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.source_y * session.panel.height_m * 1000)} mm</span></article><b>→</b><article><small>RECEIVER / PHONE</small><strong>{session.recommendation.experiment.receiver_x.toFixed(3)}, {session.recommendation.experiment.receiver_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.receiver_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.receiver_y * session.panel.height_m * 1000)} mm</span></article></div><p>{session.recommendation.explanation}</p><button onClick={captureAudio} disabled={streaming === 'recording'}>{streaming === 'recording' ? 'RECORDING MEASUREMENT…' : 'CAPTURE MICROPHONE RESPONSE'}</button></section>
       <section className="probe-camera"><div className="probe-section-title"><div><p>CAMERA REGISTRATION</p><h2>Tap panel corners clockwise.</h2></div><div><button onClick={enableCamera}>ENABLE CAMERA</button><button onClick={requestMotionPermission}>ENABLE MOTION</button><button onClick={() => setCorners([])}>RESET CORNERS</button></div></div><div className="probe-video-stage" onClick={(event) => { if (corners.length >= 4) return; const rect = event.currentTarget.getBoundingClientRect(); setCorners((old) => [...old, { x: (event.clientX - rect.left) / rect.width, y: (event.clientY - rect.top) / rect.height }]); }}><video ref={videoRef} autoPlay playsInline muted />{corners.map((point, index) => <i key={index} className="corner-point" style={{ left: `${point.x * 100}%`, top: `${point.y * 100}%` }}>{index + 1}</i>)}{overlay.source && <i className="overlay-point source" style={{ left: `${overlay.source.x * 100}%`, top: `${overlay.source.y * 100}%` }}>S</i>}{overlay.receiver && <i className="overlay-point receiver" style={{ left: `${overlay.receiver.x * 100}%`, top: `${overlay.receiver.y * 100}%` }}>R</i>}{overlay.estimate && <i className="overlay-point estimate" style={{ left: `${overlay.estimate.x * 100}%`, top: `${overlay.estimate.y * 100}%` }}>?</i>}</div><div className="probe-telemetry"><span>CORNERS <b>{corners.length}/4</b></span><span>ORIENTATION <b>{orientation.beta.toFixed(1)}° / {orientation.gamma.toFixed(1)}°</b></span><span>MOTION <b>{motion.toFixed(2)} m/s² proxy</b></span><span>TIMESTAMP <b>{new Date().toLocaleTimeString()}</b></span></div></section>
-      <section className="manual-position"><label>MANUAL X <input type="range" min="0" max="1" step="0.01" value={manual.x} onChange={(event) => setManual((old) => ({ ...old, x: Number(event.target.value) }))} /><b>{manual.x.toFixed(2)}</b></label><label>MANUAL Y <input type="range" min="0" max="1" step="0.01" value={manual.y} onChange={(event) => setManual((old) => ({ ...old, y: Number(event.target.value) }))} /><b>{manual.y.toFixed(2)}</b></label></section></>}
+      <section className="manual-position"><p>ACTUAL PHONE / RECEIVER POSITION · SENT WITH THE WAVEFORM</p><label>MANUAL X <input type="range" min="0" max="1" step="0.01" value={manual.x} onChange={(event) => setManual((old) => ({ ...old, x: Number(event.target.value) }))} /><b>{manual.x.toFixed(2)}</b></label><label>MANUAL Y <input type="range" min="0" max="1" step="0.01" value={manual.y} onChange={(event) => setManual((old) => ({ ...old, y: Number(event.target.value) }))} /><b>{manual.y.toFixed(2)}</b></label></section></>}
   </main>;
 }

@@ -17,6 +17,15 @@ class NoGoRegion:
     y_max: float
     label: str = "inaccessible"
 
+    def __post_init__(self) -> None:
+        values = (self.x_min, self.y_min, self.x_max, self.y_max)
+        if any(not np.isfinite(value) or value < 0 or value > 1 for value in values):
+            raise ValueError("No-go bounds must be finite and in [0, 1]")
+        if self.x_max <= self.x_min or self.y_max <= self.y_min:
+            raise ValueError("No-go maxima must exceed minima")
+        if not isinstance(self.label, str) or not self.label.strip() or len(self.label) > 80:
+            raise ValueError("No-go label must contain 1 to 80 characters")
+
     def contains(self, x: float, y: float) -> bool:
         return self.x_min <= x <= self.x_max and self.y_min <= y <= self.y_max
 

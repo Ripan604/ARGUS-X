@@ -44,7 +44,7 @@ def run_calibration_study(mode: str = "quick", seed: int = 200, progress=None, c
             preset="medium",
         )
         for _ in range(engine.config.max_experiments):
-            if engine.status()["should_stop"]:
+            if engine.status()["should_stop"] and not engine.automatic_recovery_available():
                 break
             engine.run_recommended()
         rank, coverage = _truth_rank_and_coverage(engine)

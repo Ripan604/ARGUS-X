@@ -1,6 +1,8 @@
 # ARGUS model artifacts
 
-ARGUS runs with its interpretable physics likelihood when no checkpoint is present. `python scripts/train_model.py` creates an optional `forward_surrogate.pt` plus transparent training metadata. The 58 KB reference checkpoint and JSON metrics are intentionally small enough to share; other generated checkpoints remain excluded from Git.
+ARGUS runs with its interpretable physics likelihood when no checkpoint is present. `python scripts/train_model.py` creates an optional `forward_surrogate.pt` plus transparent training metadata. The 59 KB reference checkpoint and JSON metrics are intentionally small enough to share; other generated checkpoints remain excluded from Git.
+
+The current checkpoint was trained on 15,000 domain-randomized simulator examples, five times the original training set. It was promoted only after a fixed 3,000-case external simulator benchmark improved mean feature R² from 0.407 to 0.461 and reduced standardized MAE from 0.468 to 0.437. Reproduce the same-checkpoint comparison with `scripts/evaluate_surrogate_checkpoints.py`; the recorded result is `research_results/surrogate_external_benchmark.json`.
 
 `lmsd_surrogate.json` records the scenario-held-out experiment on the downloaded KU Leuven data. Its mean held-out feature R² is approximately zero despite a low aggregate Smooth L1 loss, demonstrating why six physical damage configurations are useful for pipeline validation but insufficient for a deployable response model. The generated weights remain local and ignored.
 

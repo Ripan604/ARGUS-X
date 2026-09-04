@@ -39,7 +39,7 @@ These are hypotheses for professional IP analysis, not patentability conclusions
 
 ## Numbers worth memorizing
 
-- Deterministic easy demo: 8 experiments, 10.0 mm simulated error, 59.7% entropy reduction.
+- Deterministic easy demo: 8 experiments, 10.0 mm simulated error, 53.3% entropy reduction.
 - Thirty-case medium benchmark: ARGUS entropy 0.419 versus 0.498 random and 0.621 grid.
 - Success within 15 mm: 73.3% ARGUS versus 56.7% random and 60.0% grid.
 - Paired entropy advantage confidence intervals exclude zero; localization-error intervals do not.

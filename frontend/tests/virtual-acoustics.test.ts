@@ -37,3 +37,11 @@ test('moving the receiver changes path length and predicted arrival', () => {
   assert.ok(far.metrics.directPathM > near.metrics.directPathM);
   assert.ok(far.metrics.directArrivalMs > near.metrics.directArrivalMs);
 });
+
+test('invalid sample-rate input is sanitized before enforcing the Nyquist margin', () => {
+  const invalid = simulateVirtualExperiment({ ...DEFAULT_VIRTUAL_CONFIG, sampleRateHz: Number.NaN, centerFrequencyHz: 16000 });
+  assert.equal(invalid.config.sampleRateHz, 8000);
+  assert.equal(invalid.config.centerFrequencyHz, 3360);
+  assert.ok(invalid.samples.every(Number.isFinite));
+  assert.ok(Object.values(invalid.metrics).every((value) => typeof value === 'boolean' || Number.isFinite(value)));
+});

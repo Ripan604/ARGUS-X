@@ -32,6 +32,8 @@ export interface CandidateScore {
   chosen_model_fidelity?: number;
   reason_for_fidelity?: string;
   predicted_uncertainty_after?: number | null;
+  waveform_utility?: number;
+  baseline_guard_utility?: number;
 }
 
 export interface Recommendation {

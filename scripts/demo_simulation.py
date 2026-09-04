@@ -21,11 +21,11 @@ def main() -> None:
 
     config = ArgusConfig(max_experiments=args.experiments, seed=args.seed)
     engine = ArgusEngine(config=config, seed=args.seed, preset=args.preset)
-    print("ARGUS — Adaptive Recursive Guided Uncertainty Sensing")
+    print("ARGUS - Adaptive Recursive Guided Uncertainty Sensing")
     print(f"Secret {args.preset} defect generated. Ground truth remains hidden during interrogation.")
     print(" idx | source -> receiver    | band (Hz)   | entropy | confidence | EIG proxy")
     print("-----+-----------------------+-------------+---------+------------+----------")
-    while not engine.status()["should_stop"]:
+    while not engine.status()["should_stop"] or engine.automatic_recovery_available():
         recommendation = engine.current_recommendation
         result = engine.run_recommended()
         status = engine.status()

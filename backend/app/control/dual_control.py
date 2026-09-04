@@ -58,7 +58,13 @@ class AdaptiveDualControlManager:
         diagnostic_value = float(np.clip(diagnostic_value * structural * model_trust, 0, 1.5))
         margin = calibration_value - diagnostic_value
 
-        if state.ood_state.get("status") == "ABSTAIN":
+        if model_trust < 0.18:
+            action_type = "calibration"
+            reason = (
+                "Calibration selected because learned model trust is below the "
+                "minimum supported level for structural experiment planning."
+            )
+        elif state.ood_state.get("status") == "ABSTAIN":
             action_type: ActionType = "calibration"
             reason = "Calibration selected because the current response is out of distribution and a structural conclusion is blocked."
         elif policy == "threshold" and metrology >= self.config.metrology_calibration_threshold:
@@ -100,13 +106,18 @@ class AdaptiveDualControlManager:
 
     @staticmethod
     def calibration_experiment(calibration_type: str | None, index: int = 0) -> Experiment:
+        offset = index % 3
         if calibration_type == "coupling_repeat":
-            return Experiment(0.05, 0.08, 0.95, 0.08, 2_200, 4_400, 0.30, 0.12, "chirp")
+            y = (0.08, 0.50, 0.92)[offset]
+            return Experiment(0.05, y, 0.95, y, 2_200, 4_400, 0.30, 0.12, "chirp")
         if calibration_type == "phone_pose_recalibration":
-            return Experiment(0.08, 0.05, 0.08, 0.95, 1_200, 3_000, 0.26, 0.12, "tone_burst")
+            x = (0.08, 0.50, 0.92)[offset]
+            return Experiment(x, 0.05, x, 0.95, 1_200, 3_000, 0.26, 0.12, "tone_burst")
         if calibration_type == "microphone_level_check":
-            return Experiment(0.05, 0.92, 0.95, 0.92, 1_000, 2_200, 0.24, 0.10, "multisine")
+            y = (0.08, 0.50, 0.92)[offset]
+            return Experiment(0.05, y, 0.95, y, 1_000, 2_200, 0.24, 0.10, "multisine")
         if calibration_type == "frequency_sweep":
-            return Experiment(0.05, 0.50, 0.95, 0.50, 900, 6_500, 0.28, 0.16, "chirp")
-        y = (0.08, 0.50, 0.92)[index % 3]
+            y = (0.08, 0.50, 0.92)[offset]
+            return Experiment(0.05, y, 0.95, y, 900, 6_500, 0.28, 0.16, "chirp")
+        y = (0.08, 0.50, 0.92)[offset]
         return Experiment(0.05, y, 0.95, y, 1_200, 3_000, 0.28, 0.12, "chirp")

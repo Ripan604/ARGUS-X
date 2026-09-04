@@ -60,12 +60,19 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
     app.state.devices = devices
     app.state.jobs = jobs
     app.state.model_registry = model_registry
+    app.router.add_event_handler("shutdown", jobs.shutdown)
 
     def runtime_or_404(session_id: str):
         try:
             return manager.get(session_id)
         except KeyError:
             raise HTTPException(404, "Session not found")
+
+    def submit_job_or_422(job_type: str, parameters: dict | None = None) -> dict:
+        try:
+            return jobs.submit(job_type, parameters or {})
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
 
     @app.get("/health")
     def health() -> dict:
@@ -81,7 +88,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.post("/api/demo/run", status_code=202)
     def start_demo_scenario(parameters: dict | None = None) -> dict:
-        return jobs.submit("demo_scenario", parameters or {"scenario": "rival_hypotheses"})
+        return submit_job_or_422("demo_scenario", parameters or {"scenario": "rival_hypotheses"})
 
     @app.post("/sessions", status_code=201)
     def create_session(request: CreateSessionRequest) -> dict:
@@ -100,7 +107,10 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
     @app.post("/sessions/{session_id}/calibrate")
     def calibrate(session_id: str) -> dict:
         runtime_or_404(session_id)
-        return manager.calibrate(session_id)
+        try:
+            return manager.calibrate(session_id)
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc))
 
     @app.get("/sessions/{session_id}/recommendation")
     def recommendation(session_id: str) -> dict:
@@ -149,14 +159,20 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         device = devices[request.device]
         if not device.connected:
             raise HTTPException(409, f"{request.device} is not connected")
-        experiment = Experiment(**request.experiment.model_dump()) if request.experiment else runtime.engine.current_recommendation.selected.experiment
         try:
-            samples = device.acquire(experiment, runtime.engine.config.sample_rate)
-            result = manager.process_samples(
-                session_id, samples, runtime.engine.config.sample_rate, experiment, acquisition_source=request.device
-            )
-        except (RuntimeError, ValueError) as exc:
-            raise HTTPException(400, str(exc))
+            # Hold the per-session lock from recommendation selection through
+            # ingestion so another request cannot silently change the action
+            # whose physical response is being recorded.
+            with runtime.lock:
+                experiment = Experiment(**request.experiment.model_dump()) if request.experiment else runtime.engine.current_recommendation.selected.experiment
+                samples = device.acquire(experiment, runtime.engine.config.sample_rate)
+                result = manager.process_samples(
+                    session_id, samples, runtime.engine.config.sample_rate, experiment, acquisition_source=request.device
+                )
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc))
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
         logger.info("device_experiment_completed session=%s device=%s index=%s", session_id, request.device, result.index)
         return {"experiment": result.index, "state": manager.public_state(manager.get(session_id)), "measurement": result.analysis, "diagnostics": result.diagnostics}
 
@@ -252,15 +268,21 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
     @app.put("/api/sessions/{session_id}/no-go-regions")
     def set_no_go_regions(session_id: str, request: NoGoRegionsRequest) -> dict:
         runtime_or_404(session_id)
-        return manager.set_no_go_regions(session_id, [item.model_dump() for item in request.regions])
+        try:
+            return manager.set_no_go_regions(session_id, [item.model_dump() for item in request.regions])
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
 
     @app.post("/api/sessions/{session_id}/human-decision")
     def human_decision(session_id: str, request: HumanDecisionRequest) -> dict:
         runtime_or_404(session_id)
-        return manager.human_decision(
-            session_id, request.decision, request.reason,
-            request.experiment.model_dump() if request.experiment else None,
-        )
+        try:
+            return manager.human_decision(
+                session_id, request.decision, request.reason,
+                request.experiment.model_dump() if request.experiment else None,
+            )
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
 
     @app.post("/api/sessions/{session_id}/emergency-stop")
     def emergency_stop(session_id: str, request: EmergencyStopRequest) -> dict:
@@ -320,19 +342,19 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         if file.content_type not in {"application/zip", "application/octet-stream", "application/x-zip-compressed"}:
             raise HTTPException(415, "Only an ARGUS ZIP research bundle is accepted")
         payload = await file.read(100 * 1024 * 1024 + 1)
+        result: dict | None = None
         try:
             result = import_research_bundle(repository, payload)
             manager.get(result["session_id"])
             return result
-        except (ValueError, KeyError, OSError) as exc:
+        except (ValueError, KeyError, OSError, TypeError) as exc:
+            if result is not None:
+                repository.delete_session(result["session_id"])
             raise HTTPException(400, str(exc))
 
     @app.post("/api/research/jobs", status_code=202)
     def create_research_job(request: ResearchJobRequest) -> dict:
-        try:
-            return jobs.submit(request.job_type, request.parameters)
-        except ValueError as exc:
-            raise HTTPException(422, str(exc))
+        return submit_job_or_422(request.job_type, request.parameters)
 
     @app.get("/api/research/jobs")
     def list_research_jobs(limit: int = 50) -> dict:
@@ -354,15 +376,15 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.post("/api/benchmark/run", status_code=202)
     def start_benchmark(parameters: dict | None = None) -> dict:
-        return jobs.submit("benchmark", parameters or {})
+        return submit_job_or_422("benchmark", parameters)
 
     @app.post("/api/ablation/run", status_code=202)
     def start_ablation(parameters: dict | None = None) -> dict:
-        return jobs.submit("ablation", parameters or {})
+        return submit_job_or_422("ablation", parameters)
 
     @app.post("/api/calibration/run", status_code=202)
     def start_calibration_study(parameters: dict | None = None) -> dict:
-        return jobs.submit("calibration", parameters or {})
+        return submit_job_or_422("calibration", parameters)
 
     @app.get("/api/models")
     def list_models() -> dict:
@@ -391,7 +413,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             if skew_seconds > 300:
                 repository.add_event(request.session_id, "measurement_rejected", {"reason": "timestamp_skew", "skew_seconds": skew_seconds, "node_id": request.node_id})
                 raise HTTPException(400, "Probe timestamp differs from server time by more than five minutes")
-        experiment = Experiment(**request.experiment.model_dump()) if request.experiment else runtime.engine.current_recommendation.selected.experiment
+        experiment = Experiment(**request.experiment.model_dump()) if request.experiment else None
         metadata = dict(request.sensor_metadata)
         metadata.update({"node_id": request.node_id, "sensor_id": request.node_id})
         if request.measurement_id:
@@ -401,9 +423,11 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
                 request.session_id, np.asarray(request.samples, dtype=np.float32), request.sample_rate,
                 experiment, acquisition_source=f"probe:{request.node_id}", sensor_metadata=metadata,
             )
-        except (RuntimeError, ValueError) as exc:
-            raise HTTPException(400, str(exc))
-        repository.upsert_probe_node(request.node_id, "browser", request.sensor_metadata, {"status": "streaming", "session_id": request.session_id})
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc))
+        except ValueError as exc:
+            raise HTTPException(422, str(exc))
+        repository.upsert_probe_node(request.node_id, "phone", request.sensor_metadata, {"status": "streaming", "session_id": request.session_id})
         return {"experiment": result.index, "state": manager.public_state(runtime), "quality": result.quality, "diagnostics": result.diagnostics}
 
     @app.websocket("/ws/probe/{node_id}")
@@ -411,16 +435,34 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         await websocket.accept()
         try:
             while True:
-                message = await websocket.receive_json()
+                try:
+                    message = await websocket.receive_json()
+                except ValueError:
+                    await websocket.send_json({"type": "error", "message": "Message must be valid JSON"})
+                    continue
+                if not isinstance(message, dict):
+                    await websocket.send_json({"type": "error", "message": "Message must be a JSON object"})
+                    continue
                 message_type = message.get("type")
                 if message_type in {"hello", "heartbeat"}:
+                    node_type = message.get("node_type", "browser")
+                    capabilities = message.get("capabilities", {})
+                    valid_node_types = {"browser", "phone", "edge_laptop", "serial_bridge", "serial_probe"}
+                    if not isinstance(node_type, str) or node_type not in valid_node_types or not isinstance(capabilities, dict):
+                        await websocket.send_json({"type": "error", "message": "Invalid probe node metadata"})
+                        continue
                     node = repository.upsert_probe_node(
-                        node_id, message.get("node_type", "browser"), message.get("capabilities", {}),
+                        node_id, node_type, capabilities,
                         {"status": "connected", "session_id": message.get("session_id")},
                     )
                     await websocket.send_json({"type": "ack", "node": node})
                 elif message_type == "state" and message.get("session_id"):
-                    await websocket.send_json({"type": "session_state", "state": manager.public_state(runtime_or_404(message["session_id"]))})
+                    try:
+                        runtime = manager.get(str(message["session_id"]))
+                    except KeyError:
+                        await websocket.send_json({"type": "error", "message": "Session not found"})
+                        continue
+                    await websocket.send_json({"type": "session_state", "state": manager.public_state(runtime)})
                 else:
                     await websocket.send_json({"type": "error", "message": "Unsupported probe message"})
         except WebSocketDisconnect:
@@ -428,11 +470,22 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.websocket("/ws/session/{session_id}")
     async def session_socket(websocket: WebSocket, session_id: str) -> None:
-        runtime = runtime_or_404(session_id)
+        try:
+            runtime = manager.get(session_id)
+        except KeyError:
+            await websocket.close(code=4404, reason="Session not found")
+            return
         await websocket.accept()
         try:
             while True:
-                message = await websocket.receive_json()
+                try:
+                    message = await websocket.receive_json()
+                except ValueError:
+                    await websocket.send_json({"type": "error", "message": "Message must be valid JSON"})
+                    continue
+                if not isinstance(message, dict):
+                    await websocket.send_json({"type": "error", "message": "Message must be a JSON object"})
+                    continue
                 if message.get("type") == "state":
                     await websocket.send_json({"type": "state", "state": manager.public_state(runtime)})
                 elif message.get("type") == "planner_status":

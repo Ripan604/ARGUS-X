@@ -101,7 +101,9 @@ def _run_policy(seed: int, strategy: str, maximum: int, overrides: dict | None =
         previous = experiment
     status = engine.status()
     error_mm = engine.localization_error() * 1_000
-    true_velocity = engine.material.wave_velocity
+    # Compare against the sealed acquisition physics, not the calibrated
+    # inference twin (which intentionally tracks the posterior mean).
+    true_velocity = engine.acquisition_simulator.material.wave_velocity
     estimated_velocity = engine.joint_state.nuisance.parameter("wave_velocity").mean
     return {
         "seed": seed,

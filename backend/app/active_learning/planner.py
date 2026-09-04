@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass
 import numpy as np
 
 from backend.app.core.config import ArgusConfig
-from backend.app.inference.belief import entropy
+from backend.app.inference.belief import entropy, spatial_mode_cells
 from backend.app.models.domain import Experiment
 from backend.app.simulation.physics import AcousticSimulator
 
@@ -29,6 +29,8 @@ class CandidateScore:
     chosen_model_fidelity: int = 1
     reason_for_fidelity: str = "Existing physics-inspired signature model"
     predicted_uncertainty_after: float | None = None
+    waveform_utility: float = 0.0
+    baseline_guard_utility: float = 0.0
 
     def to_dict(self) -> dict:
         return {"experiment": self.experiment.to_dict(), **{k: v for k, v in asdict(self).items() if k != "experiment"}}
@@ -112,9 +114,9 @@ class ExperimentPlanner:
     ) -> list[Experiment]:
         target_count = count or self.config.candidate_count
         grid_size = posterior.shape[0]
-        flat_top = np.argpartition(posterior.ravel(), -min(8, posterior.size))[-min(8, posterior.size) :]
         hypothesis_points = [
-            ((index % grid_size + 0.5) / grid_size, (index // grid_size + 0.5) / grid_size) for index in flat_top
+            ((column + 0.5) / grid_size, (row + 0.5) / grid_size)
+            for row, column in spatial_mode_cells(posterior, min(8, posterior.size), max(2, grid_size // 8))
         ]
         perimeter = [
             (0.06, 0.06), (0.50, 0.04), (0.94, 0.06), (0.96, 0.50),
@@ -149,11 +151,10 @@ class ExperimentPlanner:
         return candidates
 
     def score_candidates(self, posterior: np.ndarray, candidates: list[Experiment], history: list[Experiment]) -> list[CandidateScore]:
-        flat = posterior.ravel()
-        top_k = min(self.config.top_hypotheses, flat.size)
-        indices = np.argpartition(flat, -top_k)[-top_k:]
-        indices = indices[np.argsort(flat[indices])[::-1]]
         grid_size = posterior.shape[0]
+        cells = spatial_mode_cells(posterior, min(self.config.top_hypotheses, posterior.size), 1)
+        indices = np.asarray([row * grid_size + column for row, column in cells], dtype=int)
+        flat = posterior.ravel()
         xs = (indices % grid_size + 0.5) / grid_size
         ys = (indices // grid_size + 0.5) / grid_size
         raw_weights = flat[indices]
@@ -203,8 +204,10 @@ class ExperimentPlanner:
             motion = 0.0
         else:
             previous = history[-1]
-            motion = np.hypot(candidate.source_x - previous.source_x, candidate.source_y - previous.source_y)
-        return float(0.52 * energy + 0.48 * motion / np.sqrt(2))
+            source_motion = np.hypot(candidate.source_x - previous.source_x, candidate.source_y - previous.source_y)
+            receiver_motion = np.hypot(candidate.receiver_x - previous.receiver_x, candidate.receiver_y - previous.receiver_y)
+            motion = source_motion + receiver_motion
+        return float(0.52 * energy + 0.48 * motion / (2 * np.sqrt(2)))
 
     @staticmethod
     def _repetition_penalty(candidate: Experiment, history: list[Experiment]) -> float:
@@ -212,9 +215,13 @@ class ExperimentPlanner:
             return 0.0
         penalties = []
         for previous in history:
-            location_delta = np.hypot(candidate.source_x - previous.source_x, candidate.source_y - previous.source_y)
+            source_delta = np.hypot(candidate.source_x - previous.source_x, candidate.source_y - previous.source_y)
+            receiver_delta = np.hypot(candidate.receiver_x - previous.receiver_x, candidate.receiver_y - previous.receiver_y)
             frequency_delta = abs(candidate.center_frequency_hz - previous.center_frequency_hz) / 3_000
-            penalties.append(np.exp(-6 * location_delta) * np.exp(-2 * frequency_delta))
+            # Reusing either endpoint preserves substantial geometric
+            # ambiguity, so repetition must include both source and receiver.
+            endpoint_overlap = np.sqrt(np.exp(-6 * source_delta) * np.exp(-6 * receiver_delta))
+            penalties.append(endpoint_overlap * np.exp(-2 * frequency_delta))
         return float(max(penalties))
 
     @staticmethod
