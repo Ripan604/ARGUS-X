@@ -1,6 +1,6 @@
 # ARGUS verification report
 
-**Last verified:** 4 September 2026
+**Last verified:** 5 September 2026
 **Workspace:** Windows, Python 3.10.11, Node 24.14.1, npm, CPU PyTorch 2.5.1  
 **Target:** local operation without Docker, cloud services, or a mandatory learned checkpoint
 
@@ -12,7 +12,7 @@ This report records commands actually executed in the delivered workspace. It is
 |---|---|---|
 | Readiness | `python scripts\doctor.py` | Ready; scientific imports, SQLite, Node/npm, frontend dependencies, benchmark artifact, and one closed-loop experiment passed |
 | Backend | `python -m pytest backend/tests -q` | 71 passed; one upstream deprecation warning |
-| Frontend tests | `cd frontend; npm test` | 11 passed |
+| Frontend tests | `cd frontend; npm test` | 12 passed |
 | Frontend lint | `cd frontend; npm run lint` | Passed, zero errors |
 | Frontend type check | `cd frontend; npm run typecheck` | Passed, zero errors |
 | Production compile | `cd frontend; npm run build` | Passed; client, server, RSC, and SSR environments built |
@@ -87,7 +87,7 @@ The checkpoint is optional. Core inference deliberately remains physics-based, s
 | 16 | ARGUS versus random benchmark runs | 30 paired cases plus grid baseline; saved JSON/CSV | Pass |
 | 17 | WAV upload works | real PCM WAV integration test updates the posterior | Pass |
 | 18 | Serial abstraction is functional | pyserial discovery, handshake, commands, parsing, errors; ESP32 firmware included | Pass* |
-| 19 | Tests pass | 71 backend and 11 frontend tests passing | Pass |
+| 19 | Tests pass | 71 backend and 12 frontend tests passing | Pass |
 | 20 | README has exact setup instructions | backend, frontend, unified launcher, demo, training, evaluation, and hardware commands | Pass |
 
 `*` The software/firmware path is implemented and absence is handled, but actual electrical hardware was not available in this workspace. Physical sensing performance therefore remains unvalidated.

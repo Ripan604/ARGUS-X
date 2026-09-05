@@ -27,3 +27,12 @@ test('development runtime disables unsafe pre-socket console forwarding', () => 
   const config = readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8');
   assert.match(config, /forwardConsole:\s*false/);
 });
+
+test('3D narrative preserves semantic story and reduced-motion accessibility', () => {
+  const component = readFileSync(new URL('../components/NarrativeTwin.tsx', import.meta.url), 'utf8');
+  const styles = readFileSync(new URL('../app/globals.css', import.meta.url), 'utf8');
+  assert.match(component, /From silence to a defensible next move/);
+  assert.match(component, /Animated digital twin showing an acoustic experiment/);
+  assert.match(styles, /prefers-reduced-motion:\s*reduce/);
+  assert.match(styles, /\.mission-narrative/);
+});
