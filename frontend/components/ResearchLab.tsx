@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { argusApi } from '@/services/api';
 import type { ResearchJob } from '@/types/argus';
+import { ResearchEvidence } from '@/components/ResearchEvidence';
 
 export function ResearchLab() {
   const [jobs, setJobs] = useState<ResearchJob[]>([]);
@@ -35,6 +36,7 @@ export function ResearchLab() {
     finally { setBusy(false); }
   };
   return <section className="secondary-page research-page"><div className="secondary-header"><div><p className="eyebrow">REPRODUCIBLE LOCAL SCIENCE</p><h1>Research and failure lab.</h1></div><span className="secondary-kpi">CPU-FIRST · SEALED TRUTHS · NO PAID SERVICE</span></div>
+    <ResearchEvidence />
     <div className="research-actions"><button disabled={busy} onClick={() => start('benchmark')}>RUN QUICK BENCHMARK MATRIX<small>Nine planners · paired scenarios</small></button><button disabled={busy} onClick={() => start('calibration')}>RUN CALIBRATION CHECK<small>Coverage · rank · reliability</small></button><button disabled={busy} onClick={() => start('ablation')}>RUN MECHANISM ABLATION<small>Seven controlled removals</small></button><button disabled={busy} onClick={() => start('dataset_generation')}>GENERATE TINY RESPONSE BANK<small>Chunked · resumable · sealed truth</small></button><button disabled={busy} onClick={() => start('surrogate_training')}>ACTIVE-LEARN SURROGATE<small>Ensemble disagreement · sealed physics oracle</small></button><button disabled={busy} onClick={() => start('demo_scenario', { scenario: 'rival_hypotheses', seed: 17 })}>DEMO · RIVAL HYPOTHESES<small>Legitimate deterministic simulator trace</small></button><button disabled={busy} onClick={() => start('demo_scenario', { scenario: 'model_mismatch', seed: 17 })}>DEMO · MODEL MISMATCH<small>NEO versus naive paired ablation</small></button><button disabled={busy} onClick={() => start('demo_scenario', { scenario: 'measurement_compression', cases: 4, seed: 100 })}>DEMO · COMPRESSION<small>Paired seeds · shared stopping criterion</small></button></div>
     {error && <p className="error-banner">{error}</p>}
     <div className="job-table"><div><b>JOB</b><b>STATE</b><b>PROGRESS</b><b>RESULT</b></div>{jobs.length === 0 && <p className="empty-copy">No local research jobs have been submitted.</p>}{jobs.map((job) => <article key={job.id}><span><b>{job.job_type.replaceAll('_', ' ').toUpperCase()}</b><small>{job.id}</small></span><strong className={`job-${job.status}`}>{job.status.toUpperCase()}{(['queued', 'running'] as const).includes(job.status as 'queued' | 'running') && <button disabled={busy || job.cancellation_requested} onClick={() => cancel(job.id)}>{job.cancellation_requested ? 'CANCELLING' : 'CANCEL'}</button>}</strong><span><i><em style={{ width: `${Math.round(job.progress * 100)}%` }} /></i><small>{Math.round(job.progress * 100)}%</small></span><span>{job.error ? <small className="danger-copy">{job.error}</small> : job.result ? <details><summary>OPEN RESULT</summary><pre>{JSON.stringify(job.result, null, 2).slice(0, 12000)}</pre></details> : <small>Awaiting result</small>}</span></article>)}</div>

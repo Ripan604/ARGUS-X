@@ -34,17 +34,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const argusApi = {
-  health: () => request<{ status: string }>('/health'),
+  health: (signal?: AbortSignal) => request<{ status: string }>('/health', { signal }),
   createSession: (
     preset: Preset,
     seed?: number,
     mode: 'simulation' | 'physical' = 'simulation',
     panelWidthMm = 600,
     panelHeightMm = 400,
+    nuisanceAwareDesign = false,
   ) => request<SessionState>('/sessions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mode, preset, seed, panel_width_mm: panelWidthMm, panel_height_mm: panelHeightMm, grid_size: 20, max_experiments: 12 }),
+    body: JSON.stringify({ mode, preset, seed, panel_width_mm: panelWidthMm, panel_height_mm: panelHeightMm, grid_size: 20, max_experiments: 12, enable_nuisance_aware_design: nuisanceAwareDesign }),
   }),
   getSession: (id: string) => request<SessionState>(`/sessions/${id}`),
   runExperiment: (id: string, experiment?: ExperimentParameters) => request<{ state: SessionState; measurement: MeasurementAnalysis }>(`/sessions/${id}/experiments/run`, {

@@ -34,6 +34,8 @@ export interface CandidateScore {
   predicted_uncertainty_after?: number | null;
   waveform_utility?: number;
   baseline_guard_utility?: number;
+  nuisance_information_bits?: number;
+  nuisance_penalty_bits?: number;
 }
 
 export interface Recommendation {

@@ -31,6 +31,8 @@ class CandidateScore:
     predicted_uncertainty_after: float | None = None
     waveform_utility: float = 0.0
     baseline_guard_utility: float = 0.0
+    nuisance_information_bits: float = 0.0
+    nuisance_penalty_bits: float = 0.0
 
     def to_dict(self) -> dict:
         return {"experiment": self.experiment.to_dict(), **{k: v for k, v in asdict(self).items() if k != "experiment"}}

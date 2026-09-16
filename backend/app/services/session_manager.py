@@ -57,6 +57,7 @@ class SessionManager:
         config = config_for_profile(
             request.config_profile, grid_size=request.grid_size,
             max_experiments=request.max_experiments, seed=seed,
+            enable_nuisance_aware_design=request.enable_nuisance_aware_design,
         )
         profile = get_material_profile(request.material_profile)
         panel = Panel(request.panel_width_mm / 1_000, request.panel_height_mm / 1_000, request.material_profile)

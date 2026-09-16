@@ -5,7 +5,7 @@ This directory is a self-contained, upload-ready IEEE conference manuscript for 
 ## Overleaf
 
 1. Create a **Blank Project** in Overleaf.
-2. Upload `main.tex`, `references.bib`, and this guide into the project root.
+2. Upload `main.tex`, `nuisance-design-section.tex`, `references.bib`, and this guide into the project root.
 3. In **Menu > Compiler**, select **pdfLaTeX**.
 4. Click **Recompile**. Overleaf will run BibTeX and the cross-reference passes.
 
@@ -41,7 +41,8 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 
 - `main.tex` - detailed IEEE manuscript with TG-CDI equations and pseudocode, competitor positioning, a claim-oriented technical map, diagrams, observed results, limitations, and appendices.
 - `references.bib` - primary scholarly references, reviewed patent documents, official product sources, and the LMSD dataset record.
-- `main.pdf` - locally compiled and visually verified 14-page manuscript.
+- `nuisance-design-section.tex` - researched arrival-time information extension, numerical assumptions, and the 80-run paired evaluation (including negative and inconclusive findings).
+- `main.pdf` - compiled manuscript, including the research extension.
 - `argus-ieee-overleaf.zip` - upload-ready archive containing the source files and this guide.
 
 The manuscript is technical evidence and research positioning, not a patent application, patentability opinion, freedom-to-operate opinion, certification record, or proof of market superiority.

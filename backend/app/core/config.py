@@ -59,6 +59,7 @@ class ArgusConfig:
     enable_ood_layer: bool = True
     enable_waveform_optimization: bool = True
     enable_multifidelity_controller: bool = True
+    enable_nuisance_aware_design: bool = False
 
     def __post_init__(self) -> None:
         integer_fields = (
@@ -72,6 +73,7 @@ class ArgusConfig:
             self.enable_nuisance_inference, self.enable_discrepancy_model,
             self.enable_calibration_actions, self.enable_ood_layer,
             self.enable_waveform_optimization, self.enable_multifidelity_controller,
+            self.enable_nuisance_aware_design,
         )
         if any(not isinstance(value, bool) for value in boolean_fields):
             raise ValueError("ARGUS feature flags must be booleans")

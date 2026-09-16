@@ -7,6 +7,7 @@ import numpy as np
 
 from backend.app.active_learning.counterfactual import CounterfactualAnalysis, CounterfactualExperimentEngine
 from backend.app.active_learning.horizon import RecedingHorizonPlanner
+from backend.app.active_learning.nuisance_design import NuisanceArrivalTimeDesign, SpatialDesignRegions
 from backend.app.active_learning.planner import CandidateScore, ExperimentPlanner, PlannedExperiment
 from backend.app.active_learning.waveform_optimizer import WaveformGeometryOptimizer
 from backend.app.core.config import ArgusConfig
@@ -35,6 +36,7 @@ class NeoExperimentPlanner:
         self.config = config
         self.baseline = ExperimentPlanner(simulator, config, seed)
         self.counterfactual = CounterfactualExperimentEngine()
+        self.nuisance_design = NuisanceArrivalTimeDesign(simulator.panel, config.sample_rate)
         self.waveforms = WaveformGeometryOptimizer(seed + 1)
         self.constraints = ExperimentConstraintEngine(config)
         self.loss = DecisionLossModel()
@@ -108,6 +110,8 @@ class NeoExperimentPlanner:
         hypotheses = state.structural.top_hypotheses(min(5, self.config.top_hypotheses))
         represented = sum(item["probability"] for item in hypotheses) + 1e-12
         hypotheses = [{**item, "probability": item["probability"] / represented} for item in hypotheses]
+        regions = SpatialDesignRegions.from_posterior(state.structural.posterior, hypotheses, self.simulator.panel) if self.config.enable_nuisance_aware_design else None
+        nuisance_analyses: dict = {}
         structural_summary = state.structural.uncertainty_summary()
         estimate = state.structural.estimate()
         model_trust = float(state.discrepancy_state.get("model_trust", 1.0))
@@ -150,6 +154,16 @@ class NeoExperimentPlanner:
             analyses[self._key(candidate)] = analysis
             separation = analysis.combined_separation
             information = float(entropy(state.structural.posterior, normalized=True) * separation * model_trust)
+            worst_case = analysis.worst_case_separation
+            nuisance_analysis = None
+            if regions is not None:
+                nuisance_analysis = self.nuisance_design.analyze(candidate, regions, state.nuisance)
+                nuisance_analyses[self._key(candidate)] = nuisance_analysis
+                separation = nuisance_analysis.separation
+                worst_case = nuisance_analysis.worst_case_separation
+                # Scale bits by a fixed capacity for compatibility with existing
+                # objective weights. Report the unscaled MI separately.
+                information = nuisance_analysis.information_bits / max(np.log2(len(regions.probabilities)), 1.0) * model_trust
             risk_reduction = float(self.loss.expected_reduction(current_risk, information, separation, model_trust))
             source_distance = np.asarray([np.hypot(item["x"] - candidate.source_x, item["y"] - candidate.source_y) for item in hypotheses])
             receiver_distance = np.asarray([np.hypot(item["x"] - candidate.receiver_x, item["y"] - candidate.receiver_y) for item in hypotheses])
@@ -170,7 +184,7 @@ class NeoExperimentPlanner:
                 / max(baseline_high - baseline_low, 1e-12)
             )
             final = self._objective_score(
-                objective, information, risk_reduction, separation, analysis.worst_case_separation,
+                objective, information, risk_reduction, separation, worst_case,
                 coverage, calibration_value, experiment_cost, repetition, energy, time_cost, model_trust,
                 action_type, waveform_utility, baseline_guard,
             )
@@ -187,6 +201,8 @@ class NeoExperimentPlanner:
                     predicted_uncertainty_after=max(0.0, structural_summary["combined"] - 0.38 * information),
                     waveform_utility=waveform_utility,
                     baseline_guard_utility=baseline_guard,
+                    nuisance_information_bits=nuisance_analysis.information_bits if nuisance_analysis else 0.0,
+                    nuisance_penalty_bits=nuisance_analysis.diagnostics["nuisance_penalty_bits"] if nuisance_analysis else 0.0,
                 )
             )
         if not scored:
@@ -205,6 +221,10 @@ class NeoExperimentPlanner:
             "top_competing_hypotheses": hypotheses,
             "most_separated_hypotheses": selected_hypotheses,
             "counterfactual": analysis.to_dict(),
+            "nuisance_design": nuisance_analyses[self._key(selected.experiment)].diagnostics if regions is not None else {
+                "enabled": False, "method": "legacy_counterfactual", "field_calibrated": False,
+            },
+            "information_score_units": "capacity_normalized_bits_times_model_trust" if regions is not None else "legacy_entropy_separation_proxy",
             "expected_information_gain": selected.expected_information_gain,
             "expected_risk_reduction": selected.expected_risk_reduction,
             "hypothesis_separation": selected.hypothesis_disagreement,
@@ -234,13 +254,14 @@ class NeoExperimentPlanner:
             "planning_seconds": perf_counter() - started,
             "objective": objective,
             "horizon": self.config.planner_horizon,
+            "nuisance_aware_design": self.config.enable_nuisance_aware_design,
             "cache": {name: model.cache.stats() for name, model in self.models.items()},
         }
         return PlannedExperiment(
             selected,
             tuple(reranked[:5]),
             reason,
-            strategy="argus_neo_counterfactual",
+            strategy="argus_neo_nuisance_information" if regions is not None else "argus_neo_counterfactual",
             action_type=action_type,
             objective=objective,
             structured_explanation=structured,

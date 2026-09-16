@@ -15,6 +15,7 @@ class CreateSessionRequest(BaseModel):
     max_experiments: int = Field(12, ge=1, le=30)
     material_profile: Literal["generic_plate", "aluminum_demo", "cfrp_demo"] = "generic_plate"
     config_profile: Literal["demo", "research", "phone", "distributed", "benchmark"] = "demo"
+    enable_nuisance_aware_design: bool = Field(default=False, strict=True)
 
 
 class ExperimentParameters(BaseModel):

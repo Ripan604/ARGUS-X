@@ -26,10 +26,29 @@ export function useArgusSession() {
         // Storage can be disabled in private/restricted browser contexts.
       }
     }, 0);
-    argusApi.health()
-      .then(() => { if (active) setApiOnline(true); })
-      .catch(() => { if (active) setApiOnline(false); });
-    return () => { active = false; window.clearTimeout(storageTimer); };
+    let checkingHealth = false;
+    let healthController: AbortController | undefined;
+    const checkHealth = async () => {
+      if (checkingHealth || document.hidden) return;
+      checkingHealth = true;
+      const controller = new AbortController();
+      healthController = controller;
+      const timeout = window.setTimeout(() => controller.abort(), 5_000);
+      try { await argusApi.health(controller.signal); if (active) setApiOnline(true); }
+      catch { if (active) setApiOnline(false); }
+      finally { window.clearTimeout(timeout); checkingHealth = false; }
+    };
+    void checkHealth();
+    // Recover when the local engine starts after the page, without a reload.
+    const healthTimer = window.setInterval(checkHealth, 12_000);
+    document.addEventListener('visibilitychange', checkHealth);
+    return () => {
+      active = false;
+      window.clearTimeout(storageTimer);
+      window.clearInterval(healthTimer);
+      document.removeEventListener('visibilitychange', checkHealth);
+      healthController?.abort();
+    };
   }, []);
 
   const execute = useCallback(async <T,>(operation: () => Promise<T>): Promise<T | undefined> => {
@@ -45,8 +64,8 @@ export function useArgusSession() {
     const result = await argusApi.history(id); setHistory(result.experiments);
   }, []);
 
-  const create = (preset: Preset, mode: 'simulation' | 'physical' = 'simulation', panelWidthMm = 600, panelHeightMm = 400) => execute(async () => {
-    const state = await argusApi.createSession(preset, undefined, mode, panelWidthMm, panelHeightMm);
+  const create = (preset: Preset, mode: 'simulation' | 'physical' = 'simulation', panelWidthMm = 600, panelHeightMm = 400, nuisanceAwareDesign = false) => execute(async () => {
+    const state = await argusApi.createSession(preset, undefined, mode, panelWidthMm, panelHeightMm, nuisanceAwareDesign);
     try { window.localStorage.setItem('argus_last_session', state.id); } catch { /* optional convenience only */ }
     setLastSessionId(state.id); setApiOnline(true);
     setSession(state); setMeasurement(null); setHistory([]); return state;

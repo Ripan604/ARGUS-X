@@ -10,9 +10,29 @@ Ordinary defect AI answers “what does this recording contain?” ARGUS repeate
 
 ## What works
 
+### Research and spatial-interface update
+
+ARGUS now includes an opt-in **nuisance-aware arrival-time design** method,
+an app-wide animated spatial environment, a live 3D posterior relief, physical
+R90 geometry, and an in-app **Research** evidence report. Enable the experimental
+method on the launch screen and inspect its calculation in **Reasoning**.
+
+The paired study has 80 completed synthetic runs. Nominal mean localization
+error is essentially tied (15.12 versus 15.10 mm); under mismatch/noise it is
+180.14 versus 146.56 mm. Both paired uncertainty intervals include zero, and both
+methods fail the 30 mm threshold in 17/20 stress cases. Therefore the new method
+remains experimental, not a demonstrated accuracy or field-performance upgrade.
+See [method and related work](docs/RESEARCH_CONTRIBUTION.md) and
+[protocol, results and failures](docs/RESEARCH_EVALUATION.md).
+
+Motion can be paused throughout the app; reduced-motion preferences are
+respected. 3D relief depicts posterior probability, not actual defect depth.
+
+### Existing capabilities
+
 - Physics-inspired direct + defect-scattered wave simulation with delay, attenuation, resonance, material/domain randomization, and reproducible noise
 - Easy, medium, and hard secret-defect judge modes
-- Recursive normalized 2D posterior; MAP/mean estimate, covariance ellipse, entropy, confidence, and termination rules
+- Recursive normalized 2D posterior; MAP/mean estimate, physical containment radii, entropy, confidence, and termination rules
 - Adaptive Physical Experiment Planner with counterfactual hypothesis disagreement, information-gain proxy, uncertainty coverage, energy/motion cost, and repetition penalty
 - Random and uniform-grid baselines with actual JSON/CSV evaluation output
 - DC removal, bandpass, waveform, FFT, PSD, spectrogram, envelope timing, decay, robust noise/SNR, and interpretable features

@@ -1,0 +1,142 @@
+\section{Research Extension: Nuisance-Marginal Arrival-Time Design}
+\label{sec:nuisance-design}
+This extension, implemented after the earlier studies, replaces the diagnostic
+information proxy with a numerically integrated information calculation for an
+explicit, approximate observation model. It is an opt-in research mode, not an
+efficacy claim. The established planner remains the default.
+
+\subsection{Prior Art and Scope}
+Nuisance-aware Bayesian experimental design is established: Bartuska et al.
+derive small-noise approximations for nuisance marginalization
+\cite{bartuska2022nuisance}. Robust information design under prior ambiguity is
+also established \cite{go2022robust}; ARGUS does not implement that criterion or
+inherit its guarantees. In the directly adjacent acoustic domain, Raorane et al.
+optimize sensor-cluster placement for acoustic-emission source localization in
+isotropic plates and include physical validation \cite{raorane2024placement}.
+Consequently, acoustic localization combined with information-based sensing
+cannot be claimed as a new principle here. The narrower contribution is an
+inspectable implementation of live posterior-region compression,
+nuisance-marginal scalar design, numerical diagnostics and paired evaluation
+within the sequential bistatic-interrogation workflow. Its legal novelty and
+commercial superiority have not been established.
+
+\subsection{Mass-Preserving Spatial Compression}
+Let $p_i$ denote posterior mass at cell position $\vect{x}_i$, expressed in
+physical metres. Up to five spatial representatives define nearest-centre
+regions $R_k$ using physical Euclidean distance. Unlike renormalizing only the
+representative cells, the regional weights preserve the entire posterior:
+\begin{equation}
+ w_k=\sum_{i\in R_k}p_i,\qquad
+ \sum_k w_k=1,\qquad q_{i|k}=p_i/w_k.
+\end{equation}
+For source $\vect{s}$ and receiver $\vect{r}$, define
+$L_i=\|\vect{x}_i-\vect{s}\|+\|\vect{x}_i-\vect{r}\|$.
+The region-conditioned expectation and variance of this bistatic path are
+computed using $q_{i|k}$. With nuisance posterior means $b$ for timing offset and
+$v$ for velocity, the approximate regional arrival distribution is
+\begin{align}
+Y\mid K=k,e &\sim \mathcal{N}(\mu_k,\sigma_k^2),\\
+\mu_k &=b+\E_k[L]/v,\\
+\sigma_k^2 &=\operatorname{Var}_k[L]/v^2+\sigma_{\rm meas}^2+\sigma_b^2\nonumber\\
+ &\quad+\E_k[L^2]\sigma_v^2/v^4+\sigma_{{\rm pose},k}^2.
+\end{align}
+The last term propagates independent source/receiver placement second moments
+through first-order path gradients, scaled by the actual panel dimensions.
+Coincident probe/cell geometry uses a conservative finite sensitivity rather
+than an undefined derivative. A scalar pose bias without a known direction is
+included through its squared magnitude. These are assumptions, not measured
+pose-error distributions.
+
+The measurement floor is
+$\sigma_{\rm meas}^2=1.5\times10^{-8}+(3/f_s)^2/3$ in seconds squared,
+combining the existing model floor with an approximate matched-filter sampling
+neighbourhood. It is not a learned timing calibration or a waveform-dependent
+precision bound. Moment matching and first-order nuisance propagation make
+this a surrogate for the real observation likelihood.
+
+\subsection{Information Calculation and Numerical Audit}
+For Gaussian density $f_k$, the design utility is
+\begin{equation}
+ I(K;Y\mid e)=\sum_k w_k\int f_k(y)
+ \log_2\!\frac{f_k(y)}{\sum_jw_j f_j(y)}\,dy.
+\end{equation}
+It targets the regional latent variable $K$, not exact cell location or the
+full waveform. Deterministic Gauss--Hermite quadrature uses 24 and 48 nodes,
+increasing to 96 when their difference exceeds 0.002 bits. Log-sum-exp
+evaluation avoids direct mixture underflow. The implementation reports raw
+information, the clamp to $[0,H(K)]$, node count and last-order difference.
+That difference is a numerical diagnostic, not a certified error bound.
+Independent adaptive integration tests check a nontrivial mixture; other tests
+check identical-response and separated-response limits, unit invariance,
+physical-coordinate partitioning and non-mutating planning.
+
+For compatibility with existing multiobjective weights, the legacy-named API
+score becomes $I(K;Y\mid e)T/\max\{\log_2 K,1\}$, where $T$ is model trust.
+Unscaled information is exposed separately in bits. The remaining cost,
+waveform, repetition, constraint and baseline-guard terms are retained; this
+is not a pure mutual-information maximizer. A nuisance penalty compares the
+nominal and marginalized information, with the signed change also retained.
+Region-dependent variances can themselves convey information, so arbitrary
+heteroscedastic nuisance changes do not imply monotonic information loss.
+
+\subsection{Frozen Paired Synthetic Evaluation}
+The protocol reserved seeds 41000--41019 before evaluation, distinct from
+pilot seeds 31000--31005. Each method receives exactly eight acquisitions and
+24 shared candidate opportunities per step, independent of truth and the
+method's posterior. Candidate and acquisition random streams are controlled
+separately. The production inference and calibration controller remain active;
+the planning horizon is one. A second context changes acquisition velocity by
+$+2\%$, attenuation by $+4\%$ and noise by $\times2$, without giving these
+changes to the inference model. All 80 runs completed, with no execution or
+measurement-rejection failures. Source fingerprints were unchanged during
+evaluation. Table~\ref{tab:nuisance-design} reports physical MAP error.
+
+\begin{table}[t]
+\centering
+\caption{Held-out fixed-candidate synthetic ablation. Errors in mm;
+20 seeds per context and method, eight acquisitions per run.}
+\label{tab:nuisance-design}
+\setlength{\tabcolsep}{3pt}
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Context & Method & Mean & Median & P90 & $>30$ mm\\
+\midrule
+Nominal & Established & 15.12 & 13.85 & 23.80 & 1/20\\
+Nominal & Nuisance & 15.10 & 15.20 & 20.43 & 1/20\\
+Stress & Established & 180.14 & 191.93 & 285.29 & 17/20\\
+Stress & Nuisance & 146.56 & 126.36 & 275.54 & 17/20\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Define paired advantage as established error minus nuisance-aware error.
+The nominal mean advantage is 0.014 mm, with 95\% paired-bootstrap interval
+$[-2.24,2.94]$ mm: three wins, seven losses and ten ties. Under stress it is
+33.58 mm, interval $[-30.62,95.83]$ mm: ten wins and ten losses. Intervals use
+10,000 paired-seed resamples. Both include zero; reliable superiority is not
+established. Both methods exceed 30 mm in 85\% of stress cases. The new method
+reaches 426.96 mm error on seed 41011, worse than the baseline by 220.46 mm.
+No run crosses the predefined 0.70 false-confidence threshold, but stress
+abstention is only 1/20 versus 0/20. Low thresholded false confidence does not
+mean failures are recognized.
+
+The supported outcome is an auditable observation-level design calculation,
+not proven localization improvement or sim-to-real transfer. The method remains
+explicitly experimental. The complete artifact preserves per-step actions,
+errors, nuisance diagnostics, configuration and code hashes in
+\path{research_results/nuisance_design_validation.json}. A compact in-app
+report is generated from that artifact and hash-checked, rather than manually
+transcribing favourable results. Subsequent tuning requires development data
+and a new reserved confirmatory test set.
+
+\subsection{Scientific Interface}
+The redesigned interface represents the live posterior as a three-dimensional
+relief whose height is probability relative to the current peak, not physical
+defect depth. R90 contours are computed in millimetres from panel dimensions
+and discrete posterior cell centres. They are not field-calibrated coverage.
+Source/receiver markers reflect the recommended experiment; decorative moving
+excitation rings are explicitly illustrative. Global pause, reduced-motion
+support and off-screen animation suspension keep motion subordinate to the
+scientific readout. The interface separates the old unitless utility, the new
+model-information bits, posterior containment and actual benchmark error.

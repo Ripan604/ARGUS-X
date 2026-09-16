@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "evidence_source": "synthetic_only",
+  "artifact": "research_results/nuisance_design_validation.json",
+  "artifact_sha256": "8708012f5f854251ae5f47b47de8be23a57e2dface639aa9ffd42573f1c09abf",
+  "command": "python scripts/research_validation.py --cases 20 --seed 41000 --steps 8 --candidates 24",
+  "seeds": [
+    41000,
+    41001,
+    41002,
+    41003,
+    41004,
+    41005,
+    41006,
+    41007,
+    41008,
+    41009,
+    41010,
+    41011,
+    41012,
+    41013,
+    41014,
+    41015,
+    41016,
+    41017,
+    41018,
+    41019
+  ],
+  "steps": 8,
+  "candidate_count": 24,
+  "summary": {
+    "nominal": {
+      "legacy_proxy": {
+        "attempted": 20,
+        "completed": 20,
+        "execution_failures": 0,
+        "localization_error_mm": {
+          "mean": 15.118096932606033,
+          "median": 13.845755051398596,
+          "p90": 23.79915576079233,
+          "mean_bootstrap_95ci": [
+            12.326035815882445,
+            18.306367357010497
+          ]
+        },
+        "success_20mm_rate": 0.85,
+        "failure_30mm_rate": 0.05,
+        "false_confidence_rate": 0.0,
+        "abstained_rate": 0.15,
+        "mean_measurements": 8.0,
+        "mean_calibrations": 0.7,
+        "mean_normalized_entropy": 0.7981788029338288,
+        "mean_computation_seconds": 0.6371405699959724,
+        "mean_rejected_measurements": 0.0
+      },
+      "nuisance_aware": {
+        "attempted": 20,
+        "completed": 20,
+        "execution_failures": 0,
+        "localization_error_mm": {
+          "mean": 15.10441715201498,
+          "median": 15.203651628392915,
+          "p90": 20.432709935629457,
+          "mean_bootstrap_95ci": [
+            12.143531821996497,
+            18.320475746696292
+          ]
+        },
+        "success_20mm_rate": 0.85,
+        "failure_30mm_rate": 0.05,
+        "false_confidence_rate": 0.0,
+        "abstained_rate": 0.05,
+        "mean_measurements": 8.0,
+        "mean_calibrations": 0.65,
+        "mean_normalized_entropy": 0.7670186445357067,
+        "mean_computation_seconds": 0.9383434499934082,
+        "mean_rejected_measurements": 0.0
+      }
+    },
+    "mismatch_noise": {
+      "legacy_proxy": {
+        "attempted": 20,
+        "completed": 20,
+        "execution_failures": 0,
+        "localization_error_mm": {
+          "mean": 180.13612640821358,
+          "median": 191.92501315370222,
+          "p90": 285.29393056216884,
+          "mean_bootstrap_95ci": [
+            133.73730096335885,
+            223.78491847227963
+          ]
+        },
+        "success_20mm_rate": 0.05,
+        "failure_30mm_rate": 0.85,
+        "false_confidence_rate": 0.0,
+        "abstained_rate": 0.05,
+        "mean_measurements": 8.0,
+        "mean_calibrations": 0.15,
+        "mean_normalized_entropy": 0.8533776455083227,
+        "mean_computation_seconds": 0.6770374450017698,
+        "mean_rejected_measurements": 0.0
+      },
+      "nuisance_aware": {
+        "attempted": 20,
+        "completed": 20,
+        "execution_failures": 0,
+        "localization_error_mm": {
+          "mean": 146.5602204561461,
+          "median": 126.35574226084367,
+          "p90": 275.5373447099763,
+          "mean_bootstrap_95ci": [
+            97.20368495177672,
+            199.01009483969585
+          ]
+        },
+        "success_20mm_rate": 0.15,
+        "failure_30mm_rate": 0.85,
+        "false_confidence_rate": 0.0,
+        "abstained_rate": 0.0,
+        "mean_measurements": 8.0,
+        "mean_calibrations": 0.2,
+        "mean_normalized_entropy": 0.9195224844424175,
+        "mean_computation_seconds": 1.011397619996569,
+        "mean_rejected_measurements": 0.0
+      }
+    }
+  },
+  "paired_comparisons": {
+    "nominal": {
+      "complete_pairs": 20,
+      "seeds": [
+        41000,
+        41001,
+        41002,
+        41003,
+        41004,
+        41005,
+        41006,
+        41007,
+        41008,
+        41009,
+        41010,
+        41011,
+        41012,
+        41013,
+        41014,
+        41015,
+        41016,
+        41017,
+        41018,
+        41019
+      ],
+      "error_advantage_sign": "positive means nuisance-aware has lower error",
+      "mean_error_advantage_mm": 0.013679780591053703,
+      "bootstrap_95ci_mm": [
+        -2.2429555330935775,
+        2.9381063143058377
+      ],
+      "win_rate": 0.15,
+      "loss_rate": 0.35,
+      "tie_rate": 0.5,
+      "per_seed_error_advantage_mm": [
+        -5.413971221499187,
+        0.0,
+        0.0,
+        7.749315405447719,
+        0.0,
+        0.0,
+        0.0,
+        5.189072586369006,
+        -4.450361365080187,
+        0.0,
+        -4.728781357607804,
+        20.80551340106481,
+        0.0,
+        -7.666201691928291,
+        0.0,
+        -1.1710961127415818,
+        0.0,
+        -3.7133945670876383,
+        0.0,
+        -6.3264994651157735
+      ]
+    },
+    "mismatch_noise": {
+      "complete_pairs": 20,
+      "seeds": [
+        41000,
+        41001,
+        41002,
+        41003,
+        41004,
+        41005,
+        41006,
+        41007,
+        41008,
+        41009,
+        41010,
+        41011,
+        41012,
+        41013,
+        41014,
+        41015,
+        41016,
+        41017,
+        41018,
+        41019
+      ],
+      "error_advantage_sign": "positive means nuisance-aware has lower error",
+      "mean_error_advantage_mm": 33.57590595206748,
+      "bootstrap_95ci_mm": [
+        -30.619952047520076,
+        95.83226718236658
+      ],
+      "win_rate": 0.5,
+      "loss_rate": 0.5,
+      "tie_rate": 0.0,
+      "per_seed_error_advantage_mm": [
+        -32.037749378373974,
+        147.2313991171343,
+        210.70458495795933,
+        252.78857218533759,
+        -46.61158711335173,
+        71.51801147493163,
+        -9.347551745046353,
+        -191.98809838309265,
+        -120.28908798686635,
+        121.1507361036071,
+        -5.669151106753247,
+        -220.45910763855204,
+        162.36075032437066,
+        296.6222038956123,
+        114.76097149452835,
+        7.089826146704452,
+        -154.74609375348967,
+        151.08765774677767,
+        -59.10770484969524,
+        -23.54046245039258
+      ]
+    }
+  }
+}
