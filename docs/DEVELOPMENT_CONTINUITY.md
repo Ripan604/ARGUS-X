@@ -59,6 +59,9 @@ changes in the shared dirty working tree.
   Direct 3D inspection now picks the visible relief and links the same 2D/profile
   cell, with keyboard navigation. Latest retained frontend checks passed 88 tests,
   type checking, lint and build; the status script determines current freshness.
+  The subsequent visual refinement shares a graphite/teal palette across the
+  landing, workspace and spatial panels; read `docs/VISUAL_AESTHETICS_2026_10_12.md`.
+  Its final source-bound frontend run also passed all 88 tests and other checks.
 - Scientific boundary: reference-conditioned measured replay remains experimental.
   Read `docs/FUNDAMENTAL_UPGRADE_RESULTS_2026_10_08.md` before changing performance
   claims. Improved visual presentation is not evidence of patent novelty.

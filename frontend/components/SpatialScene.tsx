@@ -44,7 +44,7 @@ export function SpatialScene({ session, history = EMPTY_HISTORY, presentation = 
       if (!active || width < 2 || height < 2) return;
       ctx.clearRect(0, 0, width, height);
       const { project, aspectX, aspectY } = panelProjection({ widthMm, heightMm, viewportWidth: Math.max(width, 1), viewportHeight: Math.max(height, 1), azimuthDeg: camera.azimuth, elevationDeg: camera.elevation, zoom: camera.zoom });
-      const polygon = (points: ProjectedPoint[], fill: string, stroke?: string) => {
+      const polygon = (points: ProjectedPoint[], fill: string | CanvasGradient, stroke?: string) => {
         ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.closePath();
         ctx.fillStyle = fill; ctx.fill(); if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = .65; ctx.stroke(); }
       };
@@ -59,13 +59,18 @@ export function SpatialScene({ session, history = EMPTY_HISTORY, presentation = 
       };
       // A physical-aspect floor and schematic thickness anchor the probability relief.
       const corners = [[0, 0], [1, 0], [1, 1], [0, 1]];
+      ctx.save(); ctx.shadowColor = '#02080fc0'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10;
       polygon(corners.map(([x, y]) => project(x, y, -.05)), '#030b1580');
+      ctx.restore();
       const sides = corners.map((a, i) => {
         const b = corners[(i + 1) % 4], points = [project(...a as [number, number]), project(...b as [number, number]), project(b[0], b[1], -.032), project(a[0], a[1], -.032)];
         return { points, depth: points.reduce((sum, p) => sum + p.depth, 0) / 4 };
       }).sort((a, b) => a.depth - b.depth);
       for (const side of sides) polygon(side.points, '#12283d', '#6a9bb34d');
-      polygon(corners.map(([x, y]) => project(x, y)), '#0c2033', '#8ac4e373');
+      const lightOrigin = project(0, 0), lightEnd = project(1, 1);
+      const panelFinish = ctx.createLinearGradient(lightOrigin.x, lightOrigin.y, lightEnd.x, lightEnd.y);
+      panelFinish.addColorStop(0, '#173344'); panelFinish.addColorStop(1, '#0b1b28');
+      polygon(corners.map(([x, y]) => project(x, y)), panelFinish, '#9ccddd66');
       if (field) field.forEach((row, r) => row.forEach((value, c) => {
         polygon([[c / columns, r / rows], [(c + 1) / columns, r / rows], [(c + 1) / columns, (r + 1) / rows], [c / columns, (r + 1) / rows]].map(([x, y]) => project(x, y, .001)), `rgba(116,211,236,${.025 + Math.sqrt(value) * .24})`);
       }));
@@ -136,8 +141,28 @@ export function SpatialScene({ session, history = EMPTY_HISTORY, presentation = 
       }
       const x1 = project(0, 1.11, -.032), x2 = project(1, 1.11, -.032), y1 = project(-.09, 0, -.032), y2 = project(-.09, 1, -.032);
       line([x1, x2], '#89aac461'); line([y1, y2], '#89aac461');
-      label(`X · ${widthMm.toFixed(0)} mm`, { ...x1, x: (x1.x + x2.x) / 2, y: (x1.y + x2.y) / 2 }, '#9cbbd0', -25, 18);
-      label(`Y · ${heightMm.toFixed(0)} mm`, { ...y1, x: (y1.x + y2.x) / 2, y: (y1.y + y2.y) / 2 }, '#9cbbd0', -50, -10);
+      const xGraduated = width >= 460 && Math.hypot(x2.x - x1.x, x2.y - x1.y) >= 220;
+      const yGraduated = width >= 460 && Math.hypot(y2.x - y1.x, y2.y - y1.y) >= 220;
+      const tickLabel = (text: string, point: ProjectedPoint, dx: number, dy: number) => {
+        ctx.font = '10px ui-monospace, monospace'; ctx.fillStyle = '#96b0c1';
+        const x = point.x + dx, y = point.y + dy;
+        if (x < 8 || x + ctx.measureText(text).width > width - 8 || y < 14 || y > height - 28) return;
+        ctx.fillText(text, x, y);
+      };
+      for (const fraction of [.25, .5, .75]) {
+        if (xGraduated) {
+          const point = project(fraction, 1.11, -.032);
+          line([point, project(fraction, 1.125, -.032)], '#89aac480');
+          tickLabel((fraction * widthMm).toFixed(0), point, -8, 15);
+        }
+        if (yGraduated) {
+          const point = project(-.09, fraction, -.032);
+          line([point, project(-.105, fraction, -.032)], '#89aac480');
+          tickLabel((fraction * heightMm).toFixed(0), point, -31, 3);
+        }
+      }
+      label(`X · ${widthMm.toFixed(0)} mm`, { ...x1, x: (x1.x + x2.x) / 2, y: (x1.y + x2.y) / 2 }, '#b0c8d5', -25, xGraduated ? 34 : 18);
+      label(`Y · ${heightMm.toFixed(0)} mm`, yGraduated ? y1 : { ...y1, x: (y1.x + y2.x) / 2, y: (y1.y + y2.y) / 2 }, '#b0c8d5', -50, yGraduated ? -23 : -10);
       label('0,0', project(0, 0), '#6e93ad', -20, -15);
     };
     const tick = (now: number) => { if (now - last >= 33) { time += .033; draw(); last = now; } frame = requestAnimationFrame(tick); };
