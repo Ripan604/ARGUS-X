@@ -19,7 +19,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CHECKPOINT = "output/development/checkpoint.json"
 CONTINUITY = "docs/DEVELOPMENT_CONTINUITY.md"
-SOURCE_FOLDERS = ("app", "components", "hooks", "services", "utils", "tests")
+SOURCE_FOLDERS = ("app", "components", "hooks", "services", "utils", "tests", "scripts")
 SOURCE_CONFIGS = ("package.json", "package-lock.json", "vite.config.ts", "tsconfig.json")
 MAX_JSON_BYTES = 2 * 1024 * 1024
 MAX_SOURCE_BYTES = 16 * 1024 * 1024
@@ -79,7 +79,7 @@ def source_hashes(root: Path) -> dict[str, str]:
     for folder in SOURCE_FOLDERS:
         directory = bounded_path(root, f"frontend/{folder}")
         for path in sorted(directory.rglob("*")):
-            if path.is_file() and path.suffix in {".ts", ".tsx", ".css", ".js"}:
+            if path.is_file() and path.suffix in {".ts", ".tsx", ".css", ".js", ".mjs"}:
                 relative = path.relative_to(root).as_posix()
                 safe = bounded_path(root, relative)
                 if safe.stat().st_size > MAX_SOURCE_BYTES:

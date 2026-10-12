@@ -1,0 +1,73 @@
+{
+  "verification": "Live Vinext/RSC integration in jsdom; no visual browser verification",
+  "checkedAt": "2026-10-12T15:52:44.481Z",
+  "route": "/",
+  "status": "hydrated",
+  "moduleCount": 187,
+  "clientReferenceCount": 8,
+  "landingDOMPreserved": true,
+  "sceneDOMPreserved": true,
+  "engineHealthFixture": false,
+  "engineHealthRequests": 1,
+  "engineStatus": "Local engine offline",
+  "browserAPIMocks": [
+    "Vite HMR and WebSocket",
+    "CSS import application",
+    "Canvas drawing",
+    "Animation frames",
+    "Reduced-motion media query"
+  ],
+  "sourceFingerprintScope": "Selected landing code, styles, hydration checks and dependency manifests",
+  "errors": [],
+  "sources": {
+    "frontend/package.json": {
+      "sha256": "2122556f64e8c12196b22e9979abe197923c5adea2065b4509d89401fb637581",
+      "modifiedAt": "2026-10-12T15:48:45.397Z"
+    },
+    "frontend/package-lock.json": {
+      "sha256": "c9c9d766addd410f5c79569215e508efb14e9384b3a5fda96f2248dcde2048c7",
+      "modifiedAt": "2026-10-12T15:39:52.012Z"
+    },
+    "frontend/app/page.tsx": {
+      "sha256": "5595ad7b9ff8a83a4ba99c59811be3856ae3bbe8762c460674f5343d48326c64",
+      "modifiedAt": "2026-10-12T14:47:51.920Z"
+    },
+    "frontend/app/layout.tsx": {
+      "sha256": "d24b38e949fad0d471b0d9f32ab3192c3c3b570d1d7335780ca8dc93c652ed14",
+      "modifiedAt": "2026-09-16T07:17:30.179Z"
+    },
+    "frontend/app/globals.css": {
+      "sha256": "e19c2f763f3851f7d1fb2e3ce4ef236efbfa68928dd2e33389fce2d5f495ea56",
+      "modifiedAt": "2026-10-12T14:43:36.840Z"
+    },
+    "frontend/components/SpatialWorld.tsx": {
+      "sha256": "e83dcace4e0cc67436a3fea1024dee9d61d6472762bf79ce303e630c413b0e9e",
+      "modifiedAt": "2026-09-15T19:35:58.496Z"
+    },
+    "frontend/components/SpatialScene.tsx": {
+      "sha256": "558b824bd36c90dc81839491ba7f6ee408f040e072b27432ee503acc4b28ddb2",
+      "modifiedAt": "2026-10-12T14:51:51.678Z"
+    },
+    "frontend/components/spatial-scene.css": {
+      "sha256": "0012d9f9a90ea35298692197e50dfee55be6c51b71a549c025b2d4ac39bce4e3",
+      "modifiedAt": "2026-10-12T14:46:56.684Z"
+    },
+    "frontend/components/landing-aesthetic.css": {
+      "sha256": "d52b95e2893fb4945881e6e585c2f6d36d05c99c6134e558eb07b959b906963b",
+      "modifiedAt": "2026-10-12T14:51:51.678Z"
+    },
+    "frontend/hooks/useArgusSession.ts": {
+      "sha256": "ac7d854e6ea34ebf1be249359490a1e30c5fcf38a34399577ae708737e1b861d",
+      "modifiedAt": "2026-10-08T19:43:37.189Z"
+    },
+    "frontend/tests/hydration.test.ts": {
+      "sha256": "2a0effc6086415509bc84afbb7af193325b9153ab1b0723a1c5d68c439e70794",
+      "modifiedAt": "2026-10-12T15:44:56.508Z"
+    },
+    "frontend/scripts/check-hydration-live.mjs": {
+      "sha256": "0ff4145f0f7d80f51e6d732f073aa448836b50f7d78f57685dfde5d945c986c0",
+      "modifiedAt": "2026-10-12T15:50:15.132Z"
+    }
+  },
+  "passed": true
+}

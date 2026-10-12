@@ -13,9 +13,9 @@ FRONTEND=ROOT/'frontend'
 npm=shutil.which('npm.cmd' if sys.platform=='win32' else 'npm')
 if not npm: raise SystemExit('npm is unavailable')
 sources={}
-for folder in ('app','components','hooks','services','utils','tests'):
+for folder in ('app','components','hooks','services','utils','tests','scripts'):
     for path in sorted((FRONTEND/folder).rglob('*')):
-        if path.is_file() and path.suffix in {'.ts','.tsx','.css','.js'}:
+        if path.is_file() and path.suffix in {'.ts','.tsx','.css','.js','.mjs'}:
             sources[str(path.relative_to(ROOT)).replace('\\','/')]=sha256(path.read_bytes()).hexdigest()
 for name in ('package.json','package-lock.json','vite.config.ts','tsconfig.json'):
     path=FRONTEND/name

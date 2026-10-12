@@ -28,6 +28,8 @@ lint and a production build; connected-browser visual review remains pending.
 The [12 October visual refinement](docs/VISUAL_AESTHETICS_2026_10_12.md) adds a
 shared graphite/teal palette, clearer typography, rounded panels, framed
 profiles, polished candidate cards and physical axis ticks in the 3D scene.
+Startup verification now includes a real component hydration regression and an
+explicit local-router check; see the [hydration diagnostics](docs/HYDRATION_DIAGNOSTICS_2026_10_12.md).
 
 ### Wave-packet imaging development (12 October 2026)
 

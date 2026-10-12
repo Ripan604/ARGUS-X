@@ -46,6 +46,17 @@ def test_freshness_never_reads_paths_from_artifact(tmp_path):
     assert result["removed_sources"] == 1
 
 
+def test_new_frontend_diagnostic_script_invalidates_retained_checks(tmp_path):
+    _frontend_record(tmp_path)
+    assert checkpoint.frontend_checks(tmp_path)["status"] == "current_pass"
+    script = tmp_path / "frontend/scripts/check-hydration-live.mjs"
+    script.parent.mkdir(parents=True)
+    script.write_text("export {};", encoding="utf-8")
+    result = checkpoint.frontend_checks(tmp_path)
+    assert result["status"] == "stale"
+    assert result["added_sources"] == 1
+
+
 def test_git_counts_handle_rename_path_and_overlapping_changes():
     raw = "R  renamed.txt\0old.txt\0 M changed.txt\0MM both.txt\0?? new.txt\0UU conflict.txt\0"
     result = checkpoint.parse_git_status(raw)

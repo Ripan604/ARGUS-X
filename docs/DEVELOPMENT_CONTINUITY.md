@@ -62,6 +62,13 @@ changes in the shared dirty working tree.
   The subsequent visual refinement shares a graphite/teal palette across the
   landing, workspace and spatial panels; read `docs/VISUAL_AESTHETICS_2026_10_12.md`.
   Its final source-bound frontend run also passed all 88 tests and other checks.
+- Landing hydration report: the user supplied a React mismatch screenshot.
+  The local runtime was restarted without deleting saved data. Read
+  `docs/HYDRATION_DIAGNOSTICS_2026_10_12.md`: the current 89 frontend tests and live
+  router virtual DOM check pass, but the precise browser trigger is unconfirmed.
+  Do not label the issue's root cause proven without the copied element diff or
+  an actual browser reproduction. The new explicit command is
+  `npm run test:hydration-live` from `frontend/` with local services running.
 - Scientific boundary: reference-conditioned measured replay remains experimental.
   Read `docs/FUNDAMENTAL_UPGRADE_RESULTS_2026_10_08.md` before changing performance
   claims. Improved visual presentation is not evidence of patent novelty.

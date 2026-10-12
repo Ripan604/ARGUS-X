@@ -3,27 +3,27 @@
     {
       "task": "test",
       "exit_code": 0,
-      "seconds": 2.2168152001686394,
-      "output_sha256": "79844af7ffcc34040abcb3cd27b61e1496d8426b63b8ad546464f28cae9b14c4",
-      "tests": 88
+      "seconds": 1.4410592000931501,
+      "output_sha256": "60fb3f7c7f6afe1d851827ebd1e42238df3e931ad4f681a46272079fbd8a4068",
+      "tests": 89
     },
     {
       "task": "typecheck",
       "exit_code": 0,
-      "seconds": 3.221577800111845,
+      "seconds": 1.9194326000288129,
       "output_sha256": "5a769efcc3a432820d9412f7ac70fbd24c3f55737bc1a2a3babd093d43488a78"
     },
     {
       "task": "lint",
       "exit_code": 0,
-      "seconds": 46.026072199922055,
+      "seconds": 8.942593900021166,
       "output_sha256": "cae1340eacd3552aa0dd3fcc6d6531ba38f2cb55c3cc9149716415bbca7c3c06"
     },
     {
       "task": "build",
       "exit_code": 0,
-      "seconds": 15.925133799901232,
-      "output_sha256": "34ae6dbdef4cf5531ef95f584ce2d31adaa22a7636867436802d23ea8f76c937"
+      "seconds": 4.483609499875456,
+      "output_sha256": "d96989ebeb73252309c38f0da8a947cffb988b7e4ec6553338fb99c71a856874"
     }
   ],
   "source_sha256": {
@@ -91,6 +91,7 @@
     "frontend/tests/candidateGeometry.test.ts": "2359f85e37533ab4d8c838c0cb7d69561ac2be6657745c809b72ae73fe0228b7",
     "frontend/tests/fundamentalEvidence.test.ts": "abfbcaba5dcb52c2d44c9e3cbf05cede26771cbf8cb54cc34204ae6f9fbc29b9",
     "frontend/tests/heatmapGeometry.test.ts": "be8e9cce397eb8e61705d1bdccf7ff0f0748e1e5a560b588a1c97c962f9ca3bc",
+    "frontend/tests/hydration.test.ts": "2a0effc6086415509bc84afbb7af193325b9153ab1b0723a1c5d68c439e70794",
     "frontend/tests/mapGestures.test.ts": "3efd6ea0a7a55c13483d90a8bd292376b577c0b4aa711cd838c43ea93daabf8b",
     "frontend/tests/measuredEvidence.test.ts": "01d72b159d6e80f4e6a8535e666955043af16bea3983a535b051cf3cad4d1ba6",
     "frontend/tests/neo.test.ts": "3ce40afe5121207a510303f1a4cb59b5c55a16aec013a9a9f3686e8b672783ba",
@@ -104,8 +105,9 @@
     "frontend/tests/spatialGeometry.test.ts": "7bd5b10ba76c6bb18b565988ad1b0502bfa75d01d075c7c2e0d72e5eaa507322",
     "frontend/tests/spatialPicking.test.ts": "bbc49ee6d07ae7d386af9de44c23fbad9ebc88c2057acee11ae4961d29e932f9",
     "frontend/tests/virtual-acoustics.test.ts": "9784807cd3dc71cee77d1d990253ca9354befe26e0a240c2985032329489d4e5",
-    "frontend/package.json": "b1a459ff919e6ca422f8e29ce796f3da8c62c0a7126c6dbf7b5285d80e8c532e",
-    "frontend/package-lock.json": "3b8012c1c4e55a8a15d10cea6200b6b5a8e32b04647384f8c12af68e87fb8a38",
+    "frontend/scripts/check-hydration-live.mjs": "0ff4145f0f7d80f51e6d732f073aa448836b50f7d78f57685dfde5d945c986c0",
+    "frontend/package.json": "2122556f64e8c12196b22e9979abe197923c5adea2065b4509d89401fb637581",
+    "frontend/package-lock.json": "c9c9d766addd410f5c79569215e508efb14e9384b3a5fda96f2248dcde2048c7",
     "frontend/vite.config.ts": "a7703e54209d86725658965f2f620d6b0b5ba1d91b18935b0713d63a4fe78cd5",
     "frontend/tsconfig.json": "0518b5a613caaff145f0cdda356b16e8b0032c0b8fdfdd01c11e58b39e609f5d"
   },
