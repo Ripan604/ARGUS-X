@@ -1,0 +1,47 @@
+{
+    "schema_version":  1,
+    "assessment_date":  "2026-10-07",
+    "status":  "not_compiled_toolchain_install_incomplete",
+    "target_fqbn":  "esp32:esp32:esp32",
+    "arduino_cli_version":  "1.5.1",
+    "arduino_cli_version_output":  "arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:12Z",
+    "cli_source":  "https://github.com/arduino/arduino-cli/releases/tag/v1.5.1",
+    "cli_zip_sha256":  "fabe42e0eb04d00e776a66178299ff95a46c623dbc260f997e58fd514853dd40",
+    "cli_zip_sha256_verified":  true,
+    "requested_official_core":  "esp32:esp32@3.3.12",
+    "core_source":  "https://github.com/espressif/arduino-esp32/releases/tag/3.3.12",
+    "official_board_index":  "https://espressif.github.io/arduino-esp32/package_esp32_index.json",
+    "core_installed":  false,
+    "board_compile_command_executed":  false,
+    "compiler_dependencies_minimum_bytes":  1119725992,
+    "minimum_compiler_dependency_components":  [
+                                                   {
+                                                       "name":  "esp-x32",
+                                                       "version":  "2601",
+                                                       "windows_archive_bytes":  413859845
+                                                   },
+                                                   {
+                                                       "name":  "esp-rv32",
+                                                       "version":  "2601",
+                                                       "windows_archive_bytes":  705866147
+                                                   }
+                                               ],
+    "reason":  "Bounded official installation attempt stopped before completion; more than 1 GiB of compiler downloads plus chip libraries/core could not finish within the attempted window.",
+    "isolated_install_directory":  "tmp/toolchains/argus-v2",
+    "installation_log":  "tmp/toolchains/argus-v2/core-install.log",
+    "host_validation":  "Portable C++ properties and complete sketch compiled against Arduino mocks, both passed; this is not board SDK validation.",
+    "firmware_sources":  [
+                             {
+                                 "path":  "firmware/esp32/argus_probe.ino",
+                                 "sha256":  "5cbb6bf460a5cc36dd0ac9bc668f7ef0b699fe6e570eaed1f732e1e4c17e0821"
+                             },
+                             {
+                                 "path":  "firmware/esp32/argus_protocol.h",
+                                 "sha256":  "39f4079b54f425cd33de25793d0b82d19b360e8fe1a5d226107663c64988f993"
+                             }
+                         ],
+    "board_binary_sha256":  null,
+    "hardware_flashed":  false,
+    "serial_device_connected":  false,
+    "physical_measurement_performed":  false
+}

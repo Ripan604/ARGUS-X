@@ -1,0 +1,37 @@
+{
+  "review_date": "2026-10-09",
+  "scope": "Browser interaction and visual review of the local ARGUS workspace and evidence laboratory",
+  "instrument_url": "http://localhost:5173",
+  "evidence_url": "http://localhost:5173/research",
+  "browser_checks": {
+    "saved_session_resume": true,
+    "simulation_measurement_completed": true,
+    "posterior_before_after_and_difference_overlays": true,
+    "mass_region_overlay": true,
+    "view_search_filter_and_enter_navigation": true,
+    "control_k_and_escape": true,
+    "mobile_view_selector": true,
+    "measured_task_filter": true,
+    "baseline_context_and_metric_selection": true,
+    "frontend_errors_at_final_inspection": [],
+    "desktop_page_width_css_pixels": 1521,
+    "mobile_viewport_setting_pixels": 390,
+    "mobile_content_width_css_pixels": 375,
+    "mobile_page_scroll_width_css_pixels": 375,
+    "viewport_overrides_restored": true
+  },
+  "limits": [
+    "Browser tests did not actuate physical hardware.",
+    "Stop/release ordering is covered by controlled request unit tests; another saved session was not stopped for browser testing.",
+    "Development hot-module hook changes required a full reload; final inspected page had no captured error logs.",
+    "Visual review does not establish field accuracy or patent novelty."
+  ],
+  "screenshots": [
+    "output/ui/posterior-review.png",
+    "output/ui/evidence-laboratory.png"
+  ],
+  "frontend_checks": "output/release/frontend-checks.json",
+  "frontend_test_count": 56,
+  "package_check_count": 54,
+  "source_archive_sha256": "6222589ffa6bf9d0fdc64336dbf843055f04a29ce18be4ace1847b261f247766"
+}

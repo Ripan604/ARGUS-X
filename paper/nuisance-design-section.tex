@@ -5,6 +5,14 @@ information proxy with a numerically integrated information calculation for an
 explicit, approximate observation model. It is an opt-in research mode, not an
 efficacy claim. The established planner remains the default.
 
+The 80-run study below belongs to the pre-audit source version. The September
+revision added velocity--timing covariance to the arrival variance; October
+changes additionally altered evidence gating, support metadata, and numerical
+contracts. The older results must not be attributed to either changed model.
+The separate physical-loss controller and its historical September 24-run
+evaluation are described in the main text. The October source requires its own
+completed, source-fingerprinted evaluation artifact.
+
 \subsection{Prior Art and Scope}
 Nuisance-aware Bayesian experimental design is established: Bartuska et al.
 derive small-noise approximations for nuisance marginalization
@@ -38,9 +46,10 @@ $v$ for velocity, the approximate regional arrival distribution is
 Y\mid K=k,e &\sim \mathcal{N}(\mu_k,\sigma_k^2),\\
 \mu_k &=b+\E_k[L]/v,\\
 \sigma_k^2 &=\operatorname{Var}_k[L]/v^2+\sigma_{\rm meas}^2+\sigma_b^2\nonumber\\
- &\quad+\E_k[L^2]\sigma_v^2/v^4+\sigma_{{\rm pose},k}^2.
+ &\quad+\E_k[L^2]\sigma_v^2/v^4+\sigma_{{\rm pose},k}^2\nonumber\\
+ &\quad-2\E_k[L]\operatorname{Cov}(v,b)/v^2.
 \end{align}
-The last term propagates independent source/receiver placement second moments
+The pose term propagates independent source/receiver placement second moments
 through first-order path gradients, scaled by the actual panel dimensions.
 Coincident probe/cell geometry uses a conservative finite sensitivity rather
 than an undefined derivative. A scalar pose bias without a known direction is
@@ -79,12 +88,12 @@ nominal and marginalized information, with the signed change also retained.
 Region-dependent variances can themselves convey information, so arbitrary
 heteroscedastic nuisance changes do not imply monotonic information loss.
 
-\subsection{Frozen Paired Synthetic Evaluation}
-The protocol reserved seeds 41000--41019 before evaluation, distinct from
+\subsection{Historical Frozen Paired Synthetic Evaluation}
+The earlier protocol reserved seeds 41000--41019 before evaluation, distinct from
 pilot seeds 31000--31005. Each method receives exactly eight acquisitions and
 24 shared candidate opportunities per step, independent of truth and the
 method's posterior. Candidate and acquisition random streams are controlled
-separately. The production inference and calibration controller remain active;
+separately. The then-executed inference and calibration controller remained active;
 the planning horizon is one. A second context changes acquisition velocity by
 $+2\%$, attenuation by $+4\%$ and noise by $\times2$, without giving these
 changes to the inference model. All 80 runs completed, with no execution or
@@ -93,7 +102,7 @@ evaluation. Table~\ref{tab:nuisance-design} reports physical MAP error.
 
 \begin{table}[t]
 \centering
-\caption{Held-out fixed-candidate synthetic ablation. Errors in mm;
+\caption{Historical fixed-candidate synthetic ablation. Errors in mm;
 20 seeds per context and method, eight acquisitions per run.}
 \label{tab:nuisance-design}
 \setlength{\tabcolsep}{3pt}
@@ -121,7 +130,7 @@ No run crosses the predefined 0.70 false-confidence threshold, but stress
 abstention is only 1/20 versus 0/20. Low thresholded false confidence does not
 mean failures are recognized.
 
-The supported outcome is an auditable observation-level design calculation,
+The supported outcome of this historical study is an auditable observation-level design calculation,
 not proven localization improvement or sim-to-real transfer. The method remains
 explicitly experimental. The complete artifact preserves per-step actions,
 errors, nuisance diagnostics, configuration and code hashes in

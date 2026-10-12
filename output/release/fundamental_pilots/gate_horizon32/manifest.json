@@ -1,0 +1,23 @@
+﻿{
+    "schema_version":  1,
+    "purpose":  "Exact immutable horizon32 gate v1 source snapshot before healthy-only feasibility revision",
+    "source_version":  "trajectory_reference_gate_horizon32_v1",
+    "focused_test_pass_count":  53,
+    "entries":  [
+                    {
+                        "path":  "backend/app/evaluation/trajectory_reference_gate.py",
+                        "sha256":  "5bc9dcac7f55aeea4d502dc404e326426641fce1cc56537877d420a777efa759",
+                        "bytes":  12559
+                    },
+                    {
+                        "path":  "backend/tests/test_trajectory_reference_gate.py",
+                        "sha256":  "5c40a00922df3f5ea9fa2e7f34aebbb2e5df22da80dbad96c1d31e2b7490fc75",
+                        "bytes":  9909
+                    },
+                    {
+                        "path":  "docs/TRAJECTORY_REFERENCE_GATE_PROTOCOL.md",
+                        "sha256":  "dcd902bb7fece17868e2e04e37424aacae5a3380e0dc54d4f5d2a86ca9d67376",
+                        "bytes":  12684
+                    }
+                ]
+}

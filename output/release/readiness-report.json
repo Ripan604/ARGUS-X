@@ -1,0 +1,220 @@
+{
+  "date": "2026-10-07",
+  "backend": {
+    "passed": 294,
+    "skipped": 1,
+    "failures": 0,
+    "total": 295
+  },
+  "frontend": {
+    "tests_passed": 26,
+    "typecheck": "passed",
+    "lint": "passed",
+    "production_build": "passed"
+  },
+  "dependencies": {
+    "next": "16.3.8",
+    "torch": "2.6.0+cpu",
+    "python": "3.10.11"
+  },
+  "synthetic_validation": {
+    "attempted": 48,
+    "completed": 48,
+    "source_stable": true,
+    "seeds": [
+      64000,
+      64001,
+      64002,
+      64003,
+      64004,
+      64005,
+      64006,
+      64007
+    ],
+    "steps": 6,
+    "summary": {
+      "nominal": {
+        "legacy_proxy": {
+          "mean_error_mm": 16.03753125978227,
+          "success_20mm_rate": 0.75,
+          "failure_30mm_rate": 0.125,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 0.3282843000488356
+        },
+        "nuisance_aware": {
+          "mean_error_mm": 14.299188367782772,
+          "success_20mm_rate": 0.75,
+          "failure_30mm_rate": 0.0,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 0.4509285874373745
+        },
+        "risk_calibration": {
+          "mean_error_mm": 13.345011453828192,
+          "success_20mm_rate": 0.75,
+          "failure_30mm_rate": 0.125,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 20.842798387544462
+        }
+      },
+      "mismatch_noise": {
+        "legacy_proxy": {
+          "mean_error_mm": 189.95406997159506,
+          "success_20mm_rate": 0.0,
+          "failure_30mm_rate": 1.0,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 0.36554769999929704
+        },
+        "nuisance_aware": {
+          "mean_error_mm": 144.36498768236092,
+          "success_20mm_rate": 0.125,
+          "failure_30mm_rate": 0.875,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 0.5043921125179622
+        },
+        "risk_calibration": {
+          "mean_error_mm": 143.710972495984,
+          "success_20mm_rate": 0.125,
+          "failure_30mm_rate": 0.875,
+          "abstained_rate": 0.0,
+          "mean_computation_seconds": 20.86943088748376
+        }
+      }
+    },
+    "paired": {
+      "nominal": {
+        "complete_pairs": 8,
+        "seeds": [
+          64000,
+          64001,
+          64002,
+          64003,
+          64004,
+          64005,
+          64006,
+          64007
+        ],
+        "error_advantage_sign": "positive means nuisance-aware has lower error",
+        "mean_error_advantage_mm": 1.7383428919994968,
+        "bootstrap_95ci_mm": [
+          -6.775952940176654,
+          9.501302691663348
+        ],
+        "win_rate": 0.5,
+        "loss_rate": 0.25,
+        "tie_rate": 0.25,
+        "per_seed_error_advantage_mm": [
+          11.527530326284722,
+          8.769408850224371,
+          8.776385668790084,
+          0.0,
+          17.708184379912232,
+          -17.207740233525154,
+          -15.66702585569028,
+          0.0
+        ]
+      },
+      "mismatch_noise": {
+        "complete_pairs": 8,
+        "seeds": [
+          64000,
+          64001,
+          64002,
+          64003,
+          64004,
+          64005,
+          64006,
+          64007
+        ],
+        "error_advantage_sign": "positive means nuisance-aware has lower error",
+        "mean_error_advantage_mm": 45.58908228923413,
+        "bootstrap_95ci_mm": [
+          -22.851293179342917,
+          107.10324204701502
+        ],
+        "win_rate": 0.75,
+        "loss_rate": 0.25,
+        "tie_rate": 0.0,
+        "per_seed_error_advantage_mm": [
+          84.5707922866874,
+          154.64105855794173,
+          48.990463945511806,
+          54.24077427750572,
+          167.91551624110383,
+          -7.685648837837306,
+          -145.16674163287573,
+          7.206443475835641
+        ]
+      }
+    },
+    "risk_paired": {
+      "nominal": {
+        "complete_pairs": 8,
+        "seeds": [
+          64000,
+          64001,
+          64002,
+          64003,
+          64004,
+          64005,
+          64006,
+          64007
+        ],
+        "error_advantage_sign": "positive means risk-calibration has lower error",
+        "mean_error_advantage_mm": 2.692519805954074,
+        "bootstrap_95ci_mm": [
+          -0.779355026239247,
+          7.590368179333092
+        ],
+        "win_rate": 0.375,
+        "loss_rate": 0.125,
+        "tie_rate": 0.5,
+        "per_seed_error_advantage_mm": [
+          0.0,
+          0.0,
+          6.300396050426652,
+          1.2979962445013875,
+          17.708184379912232,
+          0.0,
+          0.0,
+          -3.766418227207682
+        ]
+      },
+      "mismatch_noise": {
+        "complete_pairs": 8,
+        "seeds": [
+          64000,
+          64001,
+          64002,
+          64003,
+          64004,
+          64005,
+          64006,
+          64007
+        ],
+        "error_advantage_sign": "positive means risk-calibration has lower error",
+        "mean_error_advantage_mm": 46.24309747561105,
+        "bootstrap_95ci_mm": [
+          -10.47691740144484,
+          112.26876369908013
+        ],
+        "win_rate": 0.875,
+        "loss_rate": 0.125,
+        "tie_rate": 0.0,
+        "per_seed_error_advantage_mm": [
+          31.062490497184513,
+          241.22303589536904,
+          30.902794982879016,
+          -96.43749811535886,
+          34.0245385880219,
+          98.22427809257093,
+          16.69604641166532,
+          14.249093452556536
+        ]
+      }
+    }
+  },
+  "online_dependency_audit": "blocked_pending_explicit_user_permission",
+  "physical_accuracy_validated": false,
+  "patent_filed": false,
+  "external_publication_performed": false
+}

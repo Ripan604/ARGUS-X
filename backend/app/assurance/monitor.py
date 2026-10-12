@@ -114,17 +114,6 @@ class RuntimeAssuranceMonitor:
         else:
             self.rejected_measurements += 1
 
-        if action_type != "calibration" and quality.accepted:
-            # Baseline residual SNR is used only as bounded screening evidence. The
-            # spatial posterior still carries the localization inference.
-            residual_snr_db = float(diagnostics.get("residual_snr_db", 0.0))
-            increment = float(np.clip((residual_snr_db - 2.5) / 5.0, -0.65, 1.05))
-            self.damage_log_odds = float(np.clip(
-                self.damage_log_odds + increment * quality.evidence_weight,
-                -5.0,
-                5.0,
-            ))
-
         self._update_environment(context)
         failure_type = self._classify_failure(quality, context)
         if failure_type:
@@ -144,7 +133,28 @@ class RuntimeAssuranceMonitor:
             "action_type": action_type,
             "failure_type": failure_type,
         }
+        self.incorporate_structural_evidence(quality, diagnostics, action_type=action_type)
         return self.to_dict()
+
+    def incorporate_structural_evidence(
+        self, quality: QualityEstimate, diagnostics: dict[str, Any], *, action_type: str = "diagnostic",
+    ) -> None:
+        """Use only evidence that passed the channel and model gates.
+
+        This remains an explicitly heuristic residual-screening index; it is
+        not a fitted healthy/defective likelihood or probability of detection.
+        """
+        if action_type == "calibration" or not quality.accepted or "residual_snr_db" not in diagnostics:
+            return
+        sensor = self.sensor_states.get(self.last_update.get("sensor_id", ""))
+        if sensor is not None and sensor.status == "UNRELIABLE":
+            return
+        weight = float(diagnostics.get("evidence_weight", quality.evidence_weight))
+        residual_snr_db = float(diagnostics["residual_snr_db"])
+        if not np.isfinite([weight, residual_snr_db]).all() or weight <= 0:
+            return
+        increment = float(np.clip((residual_snr_db - 2.5) / 5.0, -0.65, 1.05))
+        self.damage_log_odds = float(np.clip(self.damage_log_odds + increment * min(weight, 1), -5.0, 5.0))
 
     def _update_environment(self, context: dict[str, Any]) -> None:
         thresholds = {"temperature_c": 12.0, "humidity_pct": 25.0, "battery_voltage": 0.8}
@@ -176,6 +186,8 @@ class RuntimeAssuranceMonitor:
             return "data_corruption"
         if "placement_motion" in reasons:
             return "physical_execution_error"
+        if "invalid_placement_metadata" in reasons:
+            return "data_corruption"
         if context.get("timestamp_warning"):
             return "timing_error"
         if not quality.accepted:
@@ -228,8 +240,8 @@ class RuntimeAssuranceMonitor:
             action = "MARK_REGION_AND_VERIFY_WITH_REFERENCE_METHOD"
             basis = "Damage-screening evidence is elevated; the posterior region requires independent confirmation."
         elif healthy_probability >= 0.85 and self.accepted_measurements >= 3 and model_trust >= 0.70:
-            action = "NO_DAMAGE_EVIDENCE_UNDER_TESTED_CONDITIONS"
-            basis = "Accepted measurements support the healthy hypothesis only within the tested operating envelope."
+            action = "VERIFY_WITH_REFERENCE_METHOD"
+            basis = "A low residual index cannot establish absence of damage; an independently validated reference inspection is required."
         elif should_stop:
             action = "REVIEW_BEFORE_ENDING_RESEARCH_SESSION"
             basis = "A research stopping rule fired, but a human remains responsible for engineering disposition."
@@ -239,6 +251,11 @@ class RuntimeAssuranceMonitor:
 
         return {
             "scope": "research_screening_only",
+            "state_probability_method": "normalized_heuristic_screening_weights_not_calibrated_probabilities",
+            "defect_count_method": "single_scatterer_posterior_ambiguity_proxy_not_count_inference",
+            "defect_existence_inferred": False,
+            "healthy_release_supported": False,
+            "field_calibrated": False,
             "integrity_state": max(
                 {
                     "HEALTHY_OR_NO_DETECTABLE_DAMAGE": healthy_probability,
@@ -262,7 +279,7 @@ class RuntimeAssuranceMonitor:
             "decision_basis": basis,
             "human_authority_required": action != "CONTINUE_INSPECTION",
             "minimum_detectable_damage_size": "not_established_without_POD_campaign",
-            "characterization_status": "size/type/severity are unvalidated screening estimates",
+            "characterization_status": "size/type/severity remain unchanged priors; no measurement update is implemented",
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -272,6 +289,8 @@ class RuntimeAssuranceMonitor:
             "rejected_measurements": self.rejected_measurements,
             "damage_log_odds": self.damage_log_odds,
             "damage_screening_probability": self.damage_probability,
+            "damage_screening_method": "bounded_residual_log_odds_heuristic_not_defect_probability",
+            "sensor_reliability_method": "quality_weighted_health_score_not_calibrated_failure_probability",
             "sensors": {key: value.to_dict() for key, value in self.sensor_states.items()},
             "environment_baseline": self.environment_baseline,
             "environment_latest": self.environment_latest,

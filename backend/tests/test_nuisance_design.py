@@ -145,14 +145,14 @@ def test_api_opt_in_survives_database_restore(tmp_path):
     from backend.app.main import create_app
 
     database = tmp_path / "nuisance-design.db"
-    first = TestClient(create_app(database))
+    first = TestClient(create_app(database), base_url="http://localhost")
     response = first.post("/sessions", json={"seed": 672, "enable_nuisance_aware_design": True})
     assert response.status_code == 201
     created = response.json()
     assert created["config"]["enable_nuisance_aware_design"] is True
-    restored = TestClient(create_app(database)).get(f"/sessions/{created['id']}").json()
+    restored = TestClient(create_app(database), base_url="http://localhost").get(f"/sessions/{created['id']}").json()
     assert restored["config"]["enable_nuisance_aware_design"] is True
-    recommendation = TestClient(create_app(database)).get(f"/sessions/{created['id']}/recommendation").json()
+    recommendation = TestClient(create_app(database), base_url="http://localhost").get(f"/sessions/{created['id']}/recommendation").json()
     assert recommendation["structured_explanation"]["nuisance_design"]["enabled"] is True
 
 

@@ -1,0 +1,15 @@
+# These evidence files are verified by raw SHA-256. Preserve their exact bytes
+# when adding them and on checkout, including on Windows with core.autocrlf.
+research_results/** -text -diff
+output/research_sources/** -text
+output/release/fundamental_pilots/** -text
+output/release/measured_guided_wave_preflight_v1/** -text
+datasets/external/catalog_sources/** -text -diff
+
+# Rendered documents and images are binary artifacts, even when their headers
+# happen to contain only printable characters.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary

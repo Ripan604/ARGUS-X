@@ -220,7 +220,7 @@ def test_failed_calibration_cannot_increase_model_trust():
 
     assert result.calibration_result["accepted"] is False
     assert engine.joint_state.discrepancy_state["model_trust"] == trust_before
-    assert engine.joint_state.ood_state["status"] == "CAUTION"
+    assert engine.joint_state.ood_state["status"] == "ABSTAIN"
 
 
 def test_horizon_diagnostics_report_the_selected_future_route_cost():

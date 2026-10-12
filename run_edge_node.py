@@ -3,21 +3,40 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
+import re
 import socket
 import sys
 import time
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.parse import urlsplit
+from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 
-def request_json(server: str, path: str, method: str = "GET", payload: dict | None = None) -> dict:
+class NoRedirects(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise HTTPError(req.full_url, code, "Redirect refused to keep ARGUS credentials at the configured server", headers, fp)
+
+
+def request_json(server: str, path: str, method: str = "GET", payload: dict | None = None, token: str | None = None) -> dict:
+    parsed = urlsplit(server)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
+        raise ValueError("Server must be an HTTP(S) address without credentials, query, or fragment")
     body = json.dumps(payload).encode("utf-8") if payload is not None else None
+    headers = {"Content-Type": "application/json"} if body is not None else {}
+    if token:
+        if not re.fullmatch(r"[A-Za-z0-9._~-]{32,256}", token):
+            raise ValueError("ARGUS_API_TOKEN is not a valid launcher access key")
+        headers["Authorization"] = f"Bearer {token}"
     request = Request(
         f"{server.rstrip('/')}{path}", data=body, method=method,
-        headers={"Content-Type": "application/json"} if body is not None else {},
+        headers=headers,
     )
-    with urlopen(request, timeout=15) as response:
-        return json.loads(response.read().decode("utf-8"))
+    with build_opener(NoRedirects()).open(request, timeout=15) as response:
+        content = response.read(16*1024*1024 + 1)
+        if len(content) > 16*1024*1024:
+            raise ValueError("ARGUS server response exceeds the size limit")
+        return json.loads(content.decode("utf-8"), parse_constant=lambda _: (_ for _ in ()).throw(ValueError("Nonfinite server JSON")))
 
 
 def capture_microphone(duration: float, sample_rate: int) -> list[float]:
@@ -39,19 +58,25 @@ def main() -> None:
     parser.add_argument("--auto-capture", action="store_true", help="Capture once for each newly observed recommendation")
     parser.add_argument("--poll-seconds", type=float, default=2.0)
     args = parser.parse_args()
+    token = os.getenv("ARGUS_API_TOKEN")
+    if not args.server.startswith(("http://", "https://")):
+        parser.error("--server must be an HTTP(S) API address")
     capabilities = {
         "microphone": True, "sample_rate": args.sample_rate, "transport": "local_http",
         "automatic_acquisition": args.auto_capture, "platform": sys.platform,
     }
     last_experiment = -1
-    delay = max(0.5, args.poll_seconds)
+    registered = False
+    delay = max(1.0, args.poll_seconds)
     print(f"ARGUS edge node {args.node_id} connecting to {args.server}; Ctrl+C stops it.")
     while True:
         try:
-            request_json(args.server, "/api/probe/register", "POST", {
-                "node_id": args.node_id, "node_type": "edge_laptop", "capabilities": capabilities,
-            })
-            state = request_json(args.server, f"/sessions/{args.session}")
+            if not registered:
+                request_json(args.server, "/api/probe/register", "POST", {
+                    "node_id": args.node_id, "node_type": "edge_laptop", "capabilities": capabilities,
+                }, token=token)
+                registered = True
+            state = request_json(args.server, f"/sessions/{args.session}", token=token)
             count = int(state["status"]["experiment_count"])
             experiment = state["recommendation"]["experiment"]
             print(
@@ -67,13 +92,14 @@ def main() -> None:
                     "samples": samples, "experiment": experiment,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "sensor_metadata": {"node_type": "edge_laptop", "hostname": socket.gethostname()},
-                })
-                last_experiment = int(result["state"]["status"]["experiment_count"])
+                }, token=token)
+                last_experiment = count
                 print(f"measurement accepted | quality={json.dumps(result['quality'], sort_keys=True)}")
             else:
                 last_experiment = count
-            delay = max(0.5, args.poll_seconds)
+            delay = max(1.0, args.poll_seconds)
         except (HTTPError, URLError, TimeoutError, RuntimeError, KeyError, ValueError) as exc:
+            registered = False
             print(f"edge connection/acquisition warning: {exc}; retrying in {delay:.1f}s", file=sys.stderr)
             delay = min(20.0, delay * 1.7)
         try:

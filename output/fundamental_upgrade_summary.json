@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-09",
+  "evidence_scope": "measured_development_and_single_specimen_confirmation_not_field_validation",
+  "healthy_reference_diagnostic_mean_DI_before": 0.2708961474297316,
+  "healthy_reference_diagnostic_mean_DI_after": 0.06310186467128294,
+  "qualified_paths": 20,
+  "horizon": 16,
+  "development_location_comparison": [
+    {
+      "variant": "raw_global",
+      "policy": "adaptive",
+      "damage_conditions": 12,
+      "mean_conditional_location_error_mm": 159.4452201282254,
+      "descriptive_healthy_model_positive_rate": 0.6666666666666666,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 24,
+      "trajectories": 24
+    },
+    {
+      "variant": "transport_global",
+      "policy": "adaptive",
+      "damage_conditions": 12,
+      "mean_conditional_location_error_mm": 171.9240687465958,
+      "descriptive_healthy_model_positive_rate": 0.6666666666666666,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 24,
+      "trajectories": 24
+    },
+    {
+      "variant": "transport_heteroscedastic",
+      "policy": "adaptive",
+      "damage_conditions": 12,
+      "mean_conditional_location_error_mm": 170.0275853351097,
+      "descriptive_healthy_model_positive_rate": 0.6666666666666666,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 24,
+      "trajectories": 24
+    }
+  ],
+  "confirmation_location_comparison": [
+    {
+      "variant": "raw_global",
+      "policy": "adaptive",
+      "damage_conditions": 8,
+      "mean_conditional_location_error_mm": 161.20212870921046,
+      "descriptive_healthy_model_positive_rate": 1.0,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 0,
+      "trajectories": 16
+    },
+    {
+      "variant": "transport_global",
+      "policy": "adaptive",
+      "damage_conditions": 8,
+      "mean_conditional_location_error_mm": 206.4878418162621,
+      "descriptive_healthy_model_positive_rate": 0.5,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 0,
+      "trajectories": 16
+    },
+    {
+      "variant": "transport_heteroscedastic",
+      "policy": "adaptive",
+      "damage_conditions": 8,
+      "mean_conditional_location_error_mm": 215.3871547274504,
+      "descriptive_healthy_model_positive_rate": 0.5,
+      "gate_supported_anomaly_count": 0,
+      "gate_any_prefix_supported_anomaly_count": 0,
+      "gate_unsupported_count": 0,
+      "trajectories": 16
+    }
+  ],
+  "backend_passed": 662,
+  "confirmation_acquired": 29,
+  "confirmation_required": 29,
+  "confirmation_status": "completed",
+  "field_accuracy_established": false,
+  "patent_novelty_established": false,
+  "artifact_sha256": {
+    "healthy_reference_development_2026_10_08.json": "ee4253d8f59b9221929d505ffe9d32bce891b8a5f553e20df0d2cade860c96ec",
+    "reference_conditioned_development_2026_10_08.json": "d6a0500399a2df8fc90265081fe68f95ea21fc98ded48dea8574691373495a94",
+    "reference_conditioned_confirmation_2026_10_08.json": "3fa7265af7f37c1e116e4905ade3b19fe92d63c87e1fb33ce1578929708fcb1c"
+  }
+}

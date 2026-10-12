@@ -60,6 +60,9 @@ class ArgusConfig:
     enable_waveform_optimization: bool = True
     enable_multifidelity_controller: bool = True
     enable_nuisance_aware_design: bool = False
+    enable_risk_calibration_design: bool = False
+    enable_task_conditioned_calibration: bool = False
+    decision_cost_m2_per_unit: float = 0.0001
 
     def __post_init__(self) -> None:
         integer_fields = (
@@ -74,6 +77,8 @@ class ArgusConfig:
             self.enable_calibration_actions, self.enable_ood_layer,
             self.enable_waveform_optimization, self.enable_multifidelity_controller,
             self.enable_nuisance_aware_design,
+            self.enable_risk_calibration_design,
+            self.enable_task_conditioned_calibration,
         )
         if any(not isinstance(value, bool) for value in boolean_fields):
             raise ValueError("ARGUS feature flags must be booleans")
@@ -98,7 +103,7 @@ class ArgusConfig:
             raise ValueError("signal_duration must be between 5 ms and 10 s")
         if not 1 <= self.max_experiments <= 1_000:
             raise ValueError("max_experiments must be between 1 and 1000")
-        if not 1 <= self.candidate_count <= 2_000 or not 1 <= self.top_hypotheses <= 2_000:
+        if not 1 <= self.candidate_count <= 256 or not 1 <= self.top_hypotheses <= 400:
             raise ValueError("planner candidate and hypothesis counts are outside supported bounds")
         if self.likelihood_temperature <= 0:
             raise ValueError("likelihood_temperature must be positive")
@@ -116,14 +121,16 @@ class ArgusConfig:
             raise ValueError("OOD abstain threshold cannot be below the caution threshold")
         if self.maximum_frequency_hz <= 0 or self.maximum_frequency_hz >= self.sample_rate / 2:
             raise ValueError("maximum_frequency_hz must be positive and below Nyquist")
-        if not 0 < self.maximum_amplitude <= 1 or self.maximum_duration_s <= 0:
+        if not 0 < self.maximum_amplitude <= 1 or not 0 < self.maximum_duration_s <= 2:
             raise ValueError("actuator amplitude and duration limits must be positive")
+        if self.sample_rate * max(self.signal_duration, self.maximum_duration_s) > 384_000:
+            raise ValueError("configured acquisition window exceeds the 384,000-sample budget")
         if not 0 <= self.minimum_probe_spacing <= 2**0.5:
             raise ValueError("minimum_probe_spacing is outside the normalized panel")
-        if not 1 <= self.planner_horizon <= 3 or self.planner_beam_width < 1 or self.planner_rollout_samples < 1:
+        if not 1 <= self.planner_horizon <= 3 or not 1 <= self.planner_beam_width <= 32 or not 1 <= self.planner_rollout_samples <= 64:
             raise ValueError("planner horizon, beam width, and rollout count are invalid")
-        if self.forward_cache_size < 1:
-            raise ValueError("forward_cache_size must be positive")
+        if not 1 <= self.forward_cache_size <= 65_536:
+            raise ValueError("forward_cache_size must be between 1 and 65,536")
         planner_weights = (
             self.planner_information_weight, self.planner_disagreement_weight,
             self.planner_cost_weight, self.planner_repetition_weight,
@@ -134,6 +141,8 @@ class ArgusConfig:
             raise ValueError("planner weights must be non-negative")
         if self.dual_control_value_margin < 0 or self.bayes_risk_stop_threshold < 0:
             raise ValueError("control and Bayes-risk thresholds must be non-negative")
+        if self.decision_cost_m2_per_unit < 0:
+            raise ValueError("Physical decision-cost conversion must be nonnegative")
         if self.expected_value_stop_threshold < -1:
             raise ValueError("expected-value stop threshold must be at least -1")
 
@@ -158,4 +167,4 @@ def config_for_profile(profile: str, **overrides) -> ArgusConfig:
 
     if profile not in CONFIG_PROFILES:
         raise ValueError(f"Unknown ARGUS profile: {profile}")
-    return ArgusConfig(profile=profile, **CONFIG_PROFILES[profile], **overrides)
+    return ArgusConfig(**{"profile": profile, **CONFIG_PROFILES[profile], **overrides})

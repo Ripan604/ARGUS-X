@@ -23,7 +23,7 @@ from backend.app.main import create_app
 
 def test_ledger_detects_tampering_and_bundle_round_trip(tmp_path):
     repository = SessionRepository(tmp_path / "source.db")
-    app = TestClient(create_app(tmp_path / "api.db"))
+    app = TestClient(create_app(tmp_path / "api.db"), base_url="http://localhost")
     state = app.post("/sessions", json={"seed": 61, "max_experiments": 5}).json()
     app.post(f"/sessions/{state['id']}/experiments/run", json={})
     assert app.get(f"/api/ledger/{state['id']}/verify").json()["valid"]
@@ -42,7 +42,7 @@ def test_ledger_detects_tampering_and_bundle_round_trip(tmp_path):
 
 
 def test_bundle_collision_rebases_a_complete_reexportable_ledger(tmp_path):
-    client = TestClient(create_app(tmp_path / "collision-source.db"))
+    client = TestClient(create_app(tmp_path / "collision-source.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"seed": 611}).json()
     client.post(f"/sessions/{state['id']}/experiments/run", json={})
     bundle = client.get(f"/api/export/{state['id']}").content
@@ -67,7 +67,7 @@ def test_bundle_collision_rebases_a_complete_reexportable_ledger(tmp_path):
 
 
 def test_bundle_rejects_semantic_tampering_even_with_recomputed_manifest(tmp_path):
-    client = TestClient(create_app(tmp_path / "tamper-source.db"))
+    client = TestClient(create_app(tmp_path / "tamper-source.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"seed": 62}).json()
     client.post(f"/sessions/{state['id']}/experiments/run", json={})
     original = client.get(f"/api/export/{state['id']}").content
@@ -95,7 +95,7 @@ def test_bundle_rejects_semantic_tampering_even_with_recomputed_manifest(tmp_pat
 
 
 def test_physical_bundle_contains_no_synthetic_ground_truth(tmp_path):
-    client = TestClient(create_app(tmp_path / "physical-source.db"))
+    client = TestClient(create_app(tmp_path / "physical-source.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"mode": "physical", "seed": 64}).json()
 
     bundle = client.get(f"/api/export/{state['id']}").content
@@ -105,7 +105,7 @@ def test_physical_bundle_contains_no_synthetic_ground_truth(tmp_path):
     assert exported_session["state"]["truth"] is None
     destination = SessionRepository(tmp_path / "physical-destination.db")
     imported = import_research_bundle(destination, bundle)
-    restored = TestClient(create_app(tmp_path / "physical-destination.db")).get(
+    restored = TestClient(create_app(tmp_path / "physical-destination.db"), base_url="http://localhost").get(
         f"/sessions/{imported['session_id']}"
     )
     assert restored.status_code == 200
@@ -116,7 +116,7 @@ def test_replay_truth_is_sealed_and_only_available_after_execution():
     source = ArgusEngine(ArgusConfig(seed=71, candidate_count=12), seed=71)
     actions = source.planner.generate_candidates(source.belief.posterior, [], 6)
     observations = {action_key(item): source.simulator.simulate(source.truth, item) for item in actions}
-    dataset = InMemoryCounterfactualDataset(observations, [item.to_dict() for item in actions], source.truth.to_dict(), {"sample_rate": 16_000})
+    dataset = InMemoryCounterfactualDataset(observations, [item.to_dict() for item in actions], source.truth.to_dict(), {"sample_rate": 16_000, "evidence_source": "simulated"})
     with pytest.raises(PermissionError):
         dataset.get_hidden_truth()
     runner = AdaptiveReplayRunner(ArgusEngine(ArgusConfig(seed=72, candidate_count=12), seed=72), dataset)
@@ -157,7 +157,7 @@ def test_additive_migration_preserves_legacy_session(tmp_path):
 
 
 def test_neo_api_surfaces_and_constraints(tmp_path):
-    client = TestClient(create_app(tmp_path / "neo-api.db"))
+    client = TestClient(create_app(tmp_path / "neo-api.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"seed": 81, "material_profile": "cfrp_demo", "config_profile": "demo"}).json()
     session_id = state["id"]
     for path in ("planner/recommend", "planner/explain", "planner/alternatives", "inference/state", "inference/uncertainty", "calibration/status", "model/trust", "ood/status"):
@@ -188,7 +188,7 @@ def test_neo_api_surfaces_and_constraints(tmp_path):
 
 
 def test_impossible_no_go_update_is_rejected_without_mutating_session(tmp_path):
-    client = TestClient(create_app(tmp_path / "no-go-rollback.db"))
+    client = TestClient(create_app(tmp_path / "no-go-rollback.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"seed": 91, "config_profile": "demo"}).json()
     session_id = state["id"]
 
@@ -204,7 +204,7 @@ def test_impossible_no_go_update_is_rejected_without_mutating_session(tmp_path):
 
 
 def test_api_rejects_unbounded_research_work_and_invalid_seed(tmp_path):
-    client = TestClient(create_app(tmp_path / "bounded-work.db"))
+    client = TestClient(create_app(tmp_path / "bounded-work.db"), base_url="http://localhost")
 
     assert client.post("/sessions", json={"seed": -1}).status_code == 422
     oversized = client.post(

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getApiUrl, argusApi } from '@/services/api';
+import { getApiUrl, argusApi, getWebSocketProtocols } from '@/services/api';
+import { EngineAccess } from '@/components/EngineAccess';
 import type { SessionState } from '@/types/argus';
 
 type Point = { x: number; y: number };
@@ -38,8 +39,9 @@ export default function ProbePage() {
 
   useEffect(() => {
     const detected = {
-      microphone: Boolean(navigator.mediaDevices?.getUserMedia),
-      camera: Boolean(navigator.mediaDevices?.getUserMedia),
+      microphone: Boolean(window.isSecureContext && navigator.mediaDevices?.getUserMedia),
+      camera: Boolean(window.isSecureContext && navigator.mediaDevices?.getUserMedia),
+      secure_context: window.isSecureContext,
       motion: 'DeviceMotionEvent' in window,
       orientation: 'DeviceOrientationEvent' in window,
       touch: navigator.maxTouchPoints > 0,
@@ -63,7 +65,7 @@ export default function ProbePage() {
       await argusApi.registerProbe(nodeId, capabilities);
       const base = getApiUrl().replace(/^http/, 'ws');
       socket.current?.close();
-      const connection = new WebSocket(`${base}/ws/probe/${encodeURIComponent(nodeId)}`);
+      const connection = new WebSocket(`${base}/ws/probe/${encodeURIComponent(nodeId)}`, getWebSocketProtocols());
       socket.current = connection;
       connection.onopen = () => { connection.send(JSON.stringify({ type: 'hello', node_type: 'phone', capabilities, session_id: state.id })); setStreaming('connected'); };
       connection.onmessage = (event) => {
@@ -157,10 +159,12 @@ export default function ProbePage() {
 
   return <main className="probe-shell"><header><div><b>ARGUS</b><span>SMART PROBE · ZERO-INSTALL WEB CLIENT</span></div><strong className={`probe-state ${streaming}`}>{streaming.toUpperCase()}</strong></header>
     <section className="probe-intro"><p>Research commodity-sensor interface</p><h1>Turn this phone into an ARGUS observation node.</h1><span>{message}</span><small>Not a certified NDE instrument. Phone audio and motion values are quality proxies and must not be presented as ultrasonic validation.</small></section>
+    <EngineAccess />
+    {capabilities.secure_context === false && <p className="error-banner">This HTTP LAN page supports manual placement and engine connection. Microphone and camera capture require a trusted HTTPS address. Use the local laptop microphone/WAV path or configure TLS for phone capture.</p>}
     <section className="probe-connect"><label>SESSION ID<input value={sessionId} onChange={(event) => setSessionId(event.target.value)} placeholder="Paste from Laptop A" /></label><button onClick={connect} disabled={!sessionId.trim()}>CONNECT TO ARGUS</button><code>{nodeId}</code></section>
     <section className="capability-strip">{Object.entries(capabilities).map(([name, available]) => <div key={name}><i className={available ? 'available' : ''} /><b>{name.toUpperCase()}</b><span>{available ? permissions[name] ?? 'available' : 'unavailable'}</span></div>)}</section>
-    {session && <><section className="probe-command"><p>NEXT PHYSICAL ACTION · {session.recommendation.action_type.toUpperCase()}</p><div><article><small>SOURCE</small><strong>{session.recommendation.experiment.source_x.toFixed(3)}, {session.recommendation.experiment.source_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.source_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.source_y * session.panel.height_m * 1000)} mm</span></article><b>→</b><article><small>RECEIVER / PHONE</small><strong>{session.recommendation.experiment.receiver_x.toFixed(3)}, {session.recommendation.experiment.receiver_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.receiver_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.receiver_y * session.panel.height_m * 1000)} mm</span></article></div><p>{session.recommendation.explanation}</p><button onClick={captureAudio} disabled={streaming === 'recording'}>{streaming === 'recording' ? 'RECORDING MEASUREMENT…' : 'CAPTURE MICROPHONE RESPONSE'}</button></section>
-      <section className="probe-camera"><div className="probe-section-title"><div><p>CAMERA REGISTRATION</p><h2>Tap panel corners clockwise.</h2></div><div><button onClick={enableCamera}>ENABLE CAMERA</button><button onClick={requestMotionPermission}>ENABLE MOTION</button><button onClick={() => setCorners([])}>RESET CORNERS</button></div></div><div className="probe-video-stage" onClick={(event) => { if (corners.length >= 4) return; const rect = event.currentTarget.getBoundingClientRect(); setCorners((old) => [...old, { x: (event.clientX - rect.left) / rect.width, y: (event.clientY - rect.top) / rect.height }]); }}><video ref={videoRef} autoPlay playsInline muted />{corners.map((point, index) => <i key={index} className="corner-point" style={{ left: `${point.x * 100}%`, top: `${point.y * 100}%` }}>{index + 1}</i>)}{overlay.source && <i className="overlay-point source" style={{ left: `${overlay.source.x * 100}%`, top: `${overlay.source.y * 100}%` }}>S</i>}{overlay.receiver && <i className="overlay-point receiver" style={{ left: `${overlay.receiver.x * 100}%`, top: `${overlay.receiver.y * 100}%` }}>R</i>}{overlay.estimate && <i className="overlay-point estimate" style={{ left: `${overlay.estimate.x * 100}%`, top: `${overlay.estimate.y * 100}%` }}>?</i>}</div><div className="probe-telemetry"><span>CORNERS <b>{corners.length}/4</b></span><span>ORIENTATION <b>{orientation.beta.toFixed(1)}° / {orientation.gamma.toFixed(1)}°</b></span><span>MOTION <b>{motion.toFixed(2)} m/s² proxy</b></span><span>TIMESTAMP <b>{new Date().toLocaleTimeString()}</b></span></div></section>
+    {session && <><section className="probe-command"><p>NEXT PHYSICAL ACTION · {session.recommendation.action_type.toUpperCase()}</p><div><article><small>SOURCE</small><strong>{session.recommendation.experiment.source_x.toFixed(3)}, {session.recommendation.experiment.source_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.source_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.source_y * session.panel.height_m * 1000)} mm</span></article><b>→</b><article><small>RECEIVER / PHONE</small><strong>{session.recommendation.experiment.receiver_x.toFixed(3)}, {session.recommendation.experiment.receiver_y.toFixed(3)}</strong><span>{Math.round(session.recommendation.experiment.receiver_x * session.panel.width_m * 1000)} × {Math.round(session.recommendation.experiment.receiver_y * session.panel.height_m * 1000)} mm</span></article></div><p>{session.recommendation.explanation}</p><button onClick={captureAudio} disabled={!capabilities.microphone || streaming === 'recording' || session.safety.emergency_stop.latched}>{streaming === 'recording' ? 'RECORDING MEASUREMENT…' : 'CAPTURE MICROPHONE RESPONSE'}</button></section>
+      <section className="probe-camera"><div className="probe-section-title"><div><p>CAMERA REGISTRATION</p><h2>Tap panel corners clockwise.</h2></div><div><button onClick={enableCamera} disabled={!capabilities.camera}>ENABLE CAMERA</button><button onClick={requestMotionPermission}>ENABLE MOTION</button><button onClick={() => setCorners([])}>RESET CORNERS</button></div></div><div className="probe-video-stage" onClick={(event) => { if (corners.length >= 4) return; const rect = event.currentTarget.getBoundingClientRect(); setCorners((old) => [...old, { x: (event.clientX - rect.left) / rect.width, y: (event.clientY - rect.top) / rect.height }]); }}><video ref={videoRef} autoPlay playsInline muted />{corners.map((point, index) => <i key={index} className="corner-point" style={{ left: `${point.x * 100}%`, top: `${point.y * 100}%` }}>{index + 1}</i>)}{overlay.source && <i className="overlay-point source" style={{ left: `${overlay.source.x * 100}%`, top: `${overlay.source.y * 100}%` }}>S</i>}{overlay.receiver && <i className="overlay-point receiver" style={{ left: `${overlay.receiver.x * 100}%`, top: `${overlay.receiver.y * 100}%` }}>R</i>}{overlay.estimate && <i className="overlay-point estimate" style={{ left: `${overlay.estimate.x * 100}%`, top: `${overlay.estimate.y * 100}%` }}>?</i>}</div><div className="probe-telemetry"><span>CORNERS <b>{corners.length}/4</b></span><span>ORIENTATION <b>{orientation.beta.toFixed(1)}° / {orientation.gamma.toFixed(1)}°</b></span><span>MOTION <b>{motion.toFixed(2)} m/s² proxy</b></span><span>TIMESTAMP <b>{new Date().toLocaleTimeString()}</b></span></div></section>
       <section className="manual-position"><p>ACTUAL PHONE / RECEIVER POSITION · SENT WITH THE WAVEFORM</p><label>MANUAL X <input type="range" min="0" max="1" step="0.01" value={manual.x} onChange={(event) => setManual((old) => ({ ...old, x: Number(event.target.value) }))} /><b>{manual.x.toFixed(2)}</b></label><label>MANUAL Y <input type="range" min="0" max="1" step="0.01" value={manual.y} onChange={(event) => setManual((old) => ({ ...old, y: Number(event.target.value) }))} /><b>{manual.y.toFixed(2)}</b></label></section></>}
   </main>;
 }

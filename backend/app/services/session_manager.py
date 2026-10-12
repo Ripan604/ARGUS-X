@@ -19,6 +19,7 @@ from backend.app.evidence.ledger import EvidenceLedger
 from backend.app.inference.diagnostics import estimate_measurement_quality
 from backend.app.inference.joint_state import JointInferenceState
 from backend.app.inference.structural_posterior import StructuralPosterior
+from backend.app.hardware.timing_contract import assess_physical_timing
 from backend.app.models.domain import Defect, Experiment, Material, Panel
 from backend.app.schemas.api import CreateSessionRequest
 from backend.app.safety.constraints import ExperimentConstraintEngine
@@ -58,6 +59,8 @@ class SessionManager:
             request.config_profile, grid_size=request.grid_size,
             max_experiments=request.max_experiments, seed=seed,
             enable_nuisance_aware_design=request.enable_nuisance_aware_design,
+            enable_risk_calibration_design=request.enable_risk_calibration_design,
+            enable_task_conditioned_calibration=request.enable_task_conditioned_calibration,
         )
         profile = get_material_profile(request.material_profile)
         panel = Panel(request.panel_width_mm / 1_000, request.panel_height_mm / 1_000, request.material_profile)
@@ -94,24 +97,31 @@ class SessionManager:
                 raise RuntimeError("Automatic stop condition reached; submit a custom experiment to continue")
             if experiment is not None:
                 self._validate_experiment(runtime, experiment)
-            result = runtime.engine.run_experiment(experiment) if experiment else runtime.engine.run_recommended()
+            result = runtime.engine.run_experiment(experiment, plan_next=False) if experiment else runtime.engine.run_recommended(plan_next=False)
             self._persist_result(runtime, result, "simulation")
             return result
 
-    def process_wav(self, session_id: str, payload: bytes, experiment: Experiment | None = None):
+    def process_wav(self, session_id: str, payload: bytes, experiment: Experiment | None = None,
+                    sensor_metadata: dict | None = None):
         if len(payload) > 10 * 1024 * 1024:
             raise ValueError("WAV upload exceeds the 10 MB limit")
         try:
             source_rate, samples = wavfile.read(io.BytesIO(payload))
         except Exception as exc:
             raise ValueError("Invalid or unsupported WAV file") from exc
-        if samples.ndim == 2:
-            samples = np.mean(samples.astype(np.float64), axis=1)
         if np.issubdtype(samples.dtype, np.integer):
-            samples = samples.astype(np.float64) / max(abs(np.iinfo(samples.dtype).min), np.iinfo(samples.dtype).max)
+            info = np.iinfo(samples.dtype)
+            if info.min == 0:
+                midpoint = (info.max + 1) / 2
+                samples = (samples.astype(np.float64) - midpoint) / midpoint
+            else:
+                samples = samples.astype(np.float64) / max(abs(info.min), info.max)
         else:
             samples = samples.astype(np.float64)
-        return self.process_samples(session_id, samples, int(source_rate), experiment, acquisition_source="wav_upload")
+        if samples.ndim == 2:
+            samples = np.mean(samples, axis=1)
+        return self.process_samples(session_id, samples, int(source_rate), experiment,
+                                    acquisition_source="wav_upload", sensor_metadata=sensor_metadata)
 
     def process_samples(
         self,
@@ -121,12 +131,15 @@ class SessionManager:
         experiment: Experiment | None = None,
         acquisition_source: str = "external_samples",
         sensor_metadata: dict | None = None,
+        *, hardware_frame_checked: bool = False,
     ):
         runtime = self.get(session_id)
         if not 1_000 <= int(source_rate) <= 384_000:
             raise ValueError("Sampling rate is outside the supported 1 kHz to 384 kHz range")
         target_rate = runtime.engine.config.sample_rate
-        values = np.asarray(samples, dtype=np.float64).reshape(-1)
+        values = np.asarray(samples, dtype=np.float64)
+        if values.ndim != 1:
+            raise ValueError("Acquired signal must be a one-dimensional mono waveform")
         if values.size < 8 or not np.all(np.isfinite(values)):
             raise ValueError("Acquired signal is empty or contains invalid samples")
         if values.size > 384_000:
@@ -135,8 +148,24 @@ class SessionManager:
         units = str(sensor_metadata.get("units", "normalized")).lower()
         if units not in {"normalized", "pcm", "adc_counts", "pa", "g"}:
             raise ValueError(f"Unsupported or ambiguous measurement units: {units}")
+        conversion = None
+        if units != "normalized":
+            conversion = sensor_metadata.get("normalization")
+            if not isinstance(conversion, dict):
+                raise ValueError("Non-normalized measurements require an explicit affine normalization with a reference")
+            scale, offset = conversion.get("scale"), conversion.get("offset")
+            if (isinstance(scale, bool) or isinstance(offset, bool)
+                    or not isinstance(scale, (float, int)) or not isinstance(offset, (float, int))
+                    or not np.isfinite([scale, offset]).all() or scale <= 0
+                    or not isinstance(conversion.get("reference"), str) or not conversion["reference"].strip()):
+                raise ValueError("Normalization requires finite positive scale, finite offset, and a declared reference")
+            conversion = {"scale": float(scale), "offset": float(offset), "reference": conversion["reference"]}
         measurement_id = str(sensor_metadata.get("measurement_id", "")).strip()
         measurement_hash = hashlib.sha256(values.astype(np.float32).tobytes()).hexdigest()
+        if conversion:
+            values = (values - conversion["offset"]) * conversion["scale"]
+            if not np.isfinite(values).all():
+                raise ValueError("Normalized acquisition samples must be finite")
         sensor_metadata.setdefault("sensor_id", acquisition_source)
         with runtime.lock:
             self._assert_operable(runtime)
@@ -148,6 +177,12 @@ class SessionManager:
                 raise ValueError("Duplicate measurement payload rejected; label intentional repeats with newly acquired samples")
             selected = experiment or runtime.engine.current_recommendation.selected.experiment
             self._validate_experiment(runtime, selected)
+            if source_rate / 2 <= selected.frequency_end_hz:
+                raise ValueError("Original acquisition sample rate cannot support the declared excitation band; resampling cannot recover aliased measurements")
+            timing_assessment = assess_physical_timing(
+                sensor_metadata, selected, int(source_rate), int(np.asarray(samples).size),
+                hardware_frame_checked=hardware_frame_checked,
+            )
             if source_rate != target_rate:
                 divisor = int(np.gcd(source_rate, target_rate))
                 values = resample_poly(values, target_rate // divisor, source_rate // divisor)
@@ -155,9 +190,30 @@ class SessionManager:
             # default here silently truncated longer, otherwise valid physical
             # acquisitions and made their metadata disagree with the signal.
             target_length = max(8, int(round(selected.duration_s * target_rate)))
-            normalized = np.zeros(target_length, dtype=np.float32)
-            normalized[: min(target_length, len(values))] = values[:target_length]
-            result = runtime.engine.process_signal(normalized, selected, quality_context=sensor_metadata)
+            if len(values) < target_length:
+                raise ValueError("Acquired signal is shorter than the declared experiment window; reacquire rather than padding missing evidence")
+            normalized = values[:target_length].astype(np.float32)
+            result = runtime.engine.process_signal(
+                normalized, selected, quality_context=sensor_metadata, plan_next=False,
+                physical_acquisition=True, physical_timing=timing_assessment,
+            )
+            if "acquisition_timing" in sensor_metadata:
+                # Bind the original frame/declaration to the evidence ledger,
+                # before storage. The serial parser bounds all original arrays;
+                # public metadata retains its separate, much smaller budget.
+                result.diagnostics["hardware_acquisition"] = sensor_metadata["acquisition_timing"]
+            result.diagnostics["acquisition_window"] = {
+                "source_sample_rate_hz": int(source_rate),
+                "source_sample_count": int(np.asarray(samples).size),
+                "target_sample_rate_hz": target_rate,
+                "resampled_sample_count": int(len(values)),
+                "used_sample_count": target_length,
+                "cropped_sample_count": max(0, len(values) - target_length),
+                "padded_sample_count": 0,
+                "input_units": units,
+                "normalization": conversion,
+                "normalization_is_declared_not_field_validated": bool(conversion),
+            }
             runtime.measurement_hashes.add(measurement_hash)
             if measurement_id:
                 runtime.measurement_ids.add(measurement_id)
@@ -216,7 +272,16 @@ class SessionManager:
         self.repository.add_experiment(runtime.id, result)
         self.ledger.append(runtime.id, result, runtime.engine, acquisition_source)
         if len(runtime.engine.experiments) < runtime.engine.config.max_experiments:
-            self.refresh_recommendation(runtime)
+            try:
+                self.refresh_recommendation(runtime)
+            except RuntimeError as exc:
+                # Preserve the completed measurement even when a subsequent
+                # action cannot be planned. Report an explicit stopped state.
+                runtime.engine.joint_state.ood_state = {
+                    **runtime.engine.joint_state.ood_state, "status": "ABSTAIN", "score": 1.0,
+                    "decision_confidence_cap": 0.0, "planning_blocked": True,
+                    "recommendation": str(exc),
+                }
         self.repository.update_session(runtime.id, self._serialize(runtime))
 
     def refresh_recommendation(self, runtime: SessionRuntime) -> None:
@@ -398,6 +463,12 @@ class SessionManager:
         engine.prior_signals = {
             json.dumps(item["parameters"], sort_keys=True, separators=(",", ":")): np.asarray(item["signal"], dtype=np.float32)
             for item in persisted_experiments
+            if item.get("diagnostics", {}).get("quality", {}).get("accepted", False)
+            and item.get("diagnostics", {}).get("sensor_status_before_fusion") != "UNRELIABLE"
+            and (
+                item.get("diagnostics", {}).get("evidence_weight", 0) > 0
+                or (item.get("diagnostics", {}).get("calibration_result") or {}).get("accepted", False)
+            )
         }
         if "rng_state" in state:
             engine.simulator.rng.bit_generator.state = state["rng_state"]

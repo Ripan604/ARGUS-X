@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "captured_utc": "2026-10-12T09:28:37.198457+00:00",
+  "mode": "explicit_checkpoint_snapshot",
+  "account_usage": {
+    "observable": false,
+    "automatic_reset_resume": false
+  },
+  "git": {
+    "available": true,
+    "entries": 359,
+    "staged": 0,
+    "unstaged": 82,
+    "untracked": 277,
+    "conflicts": 0,
+    "renamed_or_copied": 0
+  },
+  "services": {
+    "frontend": {
+      "url": "http://127.0.0.1:5173/",
+      "responding": true,
+      "http_status": 200,
+      "successful_response": true
+    },
+    "api": {
+      "url": "http://127.0.0.1:8001/health",
+      "responding": true,
+      "http_status": 200,
+      "successful_response": true
+    }
+  },
+  "frontend_checks": {
+    "path": "output/release/frontend-checks.json",
+    "present": true,
+    "bytes": 9873,
+    "modified_utc": "2026-10-12T09:12:50.406226+00:00",
+    "status": "current_pass",
+    "recorded_all_passed": true,
+    "source_matches": true,
+    "added_sources": 0,
+    "removed_sources": 0,
+    "changed_sources": 0,
+    "recorded_test_count": 88
+  },
+  "board_build_record": {
+    "path": "output/release/probe-v2-board-build.json",
+    "present": true,
+    "bytes": 2918,
+    "modified_utc": "2026-10-07T16:49:46.356812+00:00",
+    "recorded_core_installed": false,
+    "recorded_compile_executed": false
+  },
+  "evidence_files": [
+    {
+      "path": "docs/CURRENT_INVENTION_DISCLOSURE.md",
+      "present": true,
+      "bytes": 8296,
+      "modified_utc": "2026-10-07T15:34:51.073848+00:00"
+    },
+    {
+      "path": "docs/PATENT_STRENGTHENING_ASSESSMENT.md",
+      "present": true,
+      "bytes": 20402,
+      "modified_utc": "2026-10-07T16:49:44.456456+00:00"
+    },
+    {
+      "path": "docs/FUNDAMENTAL_UPGRADE_RESULTS_2026_10_08.md",
+      "present": true,
+      "bytes": 11973,
+      "modified_utc": "2026-10-08T18:37:17.155778+00:00"
+    },
+    {
+      "path": "docs/PROBE_V2_RELEASE_REVIEW.md",
+      "present": true,
+      "bytes": 16806,
+      "modified_utc": "2026-10-07T20:26:30.121729+00:00"
+    },
+    {
+      "path": "docs/VISUALIZATION_UPGRADE_2026_10_11.md",
+      "present": true,
+      "bytes": 7308,
+      "modified_utc": "2026-10-12T09:18:28.746148+00:00"
+    },
+    {
+      "path": "docs/WAVE_PACKET_DEVELOPMENT_RESULTS_2026_10_12.md",
+      "present": true,
+      "bytes": 6149,
+      "modified_utc": "2026-10-12T09:28:36.818089+00:00"
+    },
+    {
+      "path": "research_results/wave_packet_imaging_development_2026_10_12.json",
+      "present": true,
+      "bytes": 5954028,
+      "modified_utc": "2026-10-12T09:12:25.344633+00:00"
+    },
+    {
+      "path": "research_results/qualified_wave_packet_imaging_development_2026_10_12.json",
+      "present": true,
+      "bytes": 6162588,
+      "modified_utc": "2026-10-12T09:21:21.410021+00:00"
+    },
+    {
+      "path": "research_results/reference_conditioned_confirmation_2026_10_08.json",
+      "present": true,
+      "bytes": 15426914,
+      "modified_utc": "2026-10-08T18:23:46.872947+00:00"
+    },
+    {
+      "path": "output/release/fundamental-backend-tests.xml",
+      "present": true,
+      "bytes": 118626,
+      "modified_utc": "2026-10-08T17:40:15.315519+00:00"
+    }
+  ],
+  "evidence_scope": "File presence is not verification of scientific results or physical apparatus performance.",
+  "manual_continuation_document": "docs/DEVELOPMENT_CONTINUITY.md",
+  "checkpoint": {
+    "path": "output/development/checkpoint.json",
+    "present": true,
+    "written": true
+  }
+}

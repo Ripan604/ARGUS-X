@@ -7,7 +7,7 @@ from backend.app.models.domain import Panel
 
 
 class StructuralPosterior(BeliefState):
-    """Spatial structural belief plus lightweight size/type/severity moments."""
+    """Updated spatial belief with fixed, explicitly unlearned attribute priors."""
 
     def __init__(
         self,
@@ -21,6 +21,10 @@ class StructuralPosterior(BeliefState):
         type_probabilities: dict[str, float] | None = None,
     ) -> None:
         super().__init__(grid_size, posterior)
+        if not np.isfinite([radius_mean, radius_std, severity_mean, severity_std]).all():
+            raise ValueError("Structural attribute priors must be finite")
+        if radius_mean <= 0 or radius_std <= 0 or severity_std <= 0 or not 0 <= severity_mean <= 1:
+            raise ValueError("Structural attribute priors require positive radius/uncertainties and severity in [0, 1]")
         self.radius_mean = float(radius_mean)
         self.radius_std = float(max(radius_std, 1e-4))
         self.severity_mean = float(severity_mean)
@@ -34,12 +38,15 @@ class StructuralPosterior(BeliefState):
         self._normalize_types()
 
     def _normalize_types(self) -> None:
-        total = sum(max(0.0, float(value)) for value in self.type_probabilities.values())
-        if total <= 1e-12:
+        if not self.type_probabilities or any(not np.isfinite(value) or value < 0 for value in self.type_probabilities.values()):
+            raise ValueError("Type priors must have finite nonnegative support")
+        scale = max(self.type_probabilities.values())
+        if scale == 0:
             count = max(1, len(self.type_probabilities))
             self.type_probabilities = {key: 1.0 / count for key in self.type_probabilities}
         else:
-            self.type_probabilities = {key: max(0.0, float(value)) / total for key, value in self.type_probabilities.items()}
+            total = sum(value / scale for value in self.type_probabilities.values())
+            self.type_probabilities = {key: float(value / scale / total) for key, value in self.type_probabilities.items()}
 
     def top_hypotheses(self, count: int = 5, minimum_separation_cells: int = 2) -> list[dict]:
         values = normalize_probability_grid(self.posterior)
@@ -54,6 +61,8 @@ class StructuralPosterior(BeliefState):
                     "radius_mean": self.radius_mean,
                     "severity_mean": self.severity_mean,
                     "dominant_type": max(self.type_probabilities, key=self.type_probabilities.get),
+                    "attribute_support": "unchanged_priors_not_measurement_inference",
+                    "location_support": "conditional_on_one_dominant_scatterer",
                 }
             )
         return result
@@ -140,10 +149,9 @@ class StructuralPosterior(BeliefState):
         credible = self.credible_region(0.90)
         combined = float(
             np.clip(
-                0.50 * estimate["normalized_entropy"]
+                (0.50 * estimate["normalized_entropy"]
                 + 0.25 * credible["area_fraction"]
-                + 0.20 * self.ambiguity()
-                + 0.05 * min(1.0, self.severity_std / 0.35),
+                + 0.20 * self.ambiguity()) / 0.95,
                 0,
                 1,
             )
@@ -153,18 +161,25 @@ class StructuralPosterior(BeliefState):
             "credible_region_90_area_fraction": credible["area_fraction"],
             "competing_hypothesis_ambiguity": self.ambiguity(),
             "severity_relative_std": float(np.clip(self.severity_std / max(self.severity_mean, 0.05), 0, 1)),
+            "severity_uncertainty_support": "unchanged_prior",
+            "combined_method": "location_entropy_area_ambiguity_proxy_not_calibrated_uncertainty",
+            "inference_scope": "location_conditional_on_one_dominant_scatterer",
             "combined": combined,
         }
 
     def to_state(self) -> dict:
         return {
             "grid_size": self.grid_size,
-            "posterior": self.to_list(),
+            # Persistence must retain small supported hypotheses. UI rounding
+            # can turn them into exact zeros and prevent recovery after reload.
+            "posterior": self.posterior.tolist(),
             "radius_mean": self.radius_mean,
             "radius_std": self.radius_std,
             "severity_mean": self.severity_mean,
             "severity_std": self.severity_std,
             "type_probabilities": self.type_probabilities,
+            "attribute_support": "unchanged_priors_not_measurement_inference",
+            "defect_existence_inferred": False,
         }
 
     @classmethod

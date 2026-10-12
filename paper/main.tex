@@ -48,7 +48,7 @@ Adaptive Acoustic Structural Interrogation}
 \raggedbottom
 
 \begin{abstract}
-Most data-driven nondestructive-evaluation systems classify a fixed measurement or reconstruct a predetermined scan. This paper presents ARGUS NEO (Adaptive Recursive Guided Uncertainty Sensing---Next Experiment Optimization), a working research prototype centered on a narrower algorithmic contribution termed trust-gated counterfactual dual-control interrogation (TG-CDI). TG-CDI maintains a joint belief over structural state and nuisance/metrology variables; extracts the live rival structural modes; predicts action-conditioned observation distributions; and arbitrates among diagnostic, calibration, verification, and abstention actions. A diagnostic action jointly specifies source, receiver, waveform, and model fidelity and is rewarded for reducing Bayes decision risk and separating the hardest remaining rival, while physical cost, repetition, safety, model discrepancy, sensor reliability, and out-of-distribution (OOD) evidence reduce utility. The acquired likelihood is raised to a trust-dependent evidence exponent before posterior fusion, preventing low-trust data from producing an ordinary full-strength update. The ARGUS-X assurance layer adds explicit healthy, damage-candidate, and unsupported states; accumulated channel reliability; environmental-envelope warnings; duplicate acquisition rejection; a persisted emergency-stop latch; and conservative human escalation. In the earlier 30-case matched-model baseline, normalized entropy ended at 0.419 versus 0.498 for random probing and 0.621 for a uniform grid; localization-error intervals crossed zero. New NEO smoke studies are engineering diagnostics rather than efficacy claims: a two-case, five-measurement nine-policy matrix did not meet the stopping criterion or demonstrate compression, four quick simulated calibration cases produced empirical coverage 1.0 but poor expected calibration error (0.715), and one controlled model-mismatch case improved substantially while identifying OOD/caution. The implementation establishes an inspectable active-measurement architecture and a testable differentiation from fixed-network, raster-scan, passive-emission, and fixed-reconstruction products; it does not establish field superiority or legal patentability.
+ARGUS NEO is an inspectable research prototype for sequential acoustic interrogation of a panel with one dominant scatterer. It maintains a spatial posterior and separate metrology uncertainty, including correlated velocity and timing estimates; selects finite source--receiver--waveform candidates; and supports diagnosis, direct-reference calibration, verification, and abstention. The default controller uses labelled heuristic utilities. An optional controller compares calibration and diagnosis using expected squared localization error plus acquisition cost in square metres, with Gaussian observation branches over at most two measurements. Quality, accumulated channel reliability, and out-of-distribution checks precede structural fusion. Evidence exports support integrity verification against an independently retained checkpoint, not measurement authentication. In a historical September synthetic check of six paired seeds per condition and six measurements per case, nominal mean errors were 43.90 mm for the legacy controller and 12.58 mm for the optional controller; under velocity, attenuation, and noise mismatch they were 150.22 and 203.78 mm. Both paired bootstrap advantage intervals included zero. These results do not validate the changed October source. The optional controller remains off by default. The October revision adds bounded acquisition/import contracts, network controls, and scientific regression cases. The implementation does not establish physical accuracy, a general joint posterior, commercial superiority, or legal patentability.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -66,7 +66,7 @@ ARGUS addresses the sequential question
 \end{equation}
 where $e$ is a physically executable experiment and $\mathcal{E}_{t}$ is a state-dependent candidate set. After observing response $y_{t+1}$, ARGUS performs a recursive Bayesian update, regenerates candidates from the new posterior, and repeats. This is related to Bayesian experimental design and active data selection \cite{chaloner1995,mackay1992}, but instantiated as a live, spatial, source--receiver interrogation loop.
 
-The prototype targets an opaque rectangular panel with one dominant hidden anomaly (cavity, loose region, delamination, or dense inclusion). Its central distinction from a one-shot classifier is summarized in Table~\ref{tab:comparison}. It is designed to run without hardware through a seeded physics-inspired simulator, while the same session engine accepts a microphone, validated WAV upload, or serial-connected probe.
+The prototype targets an opaque rectangular panel with one dominant hidden anomaly (cavity, loose region, delamination, or dense inclusion). Its central distinction from a one-shot classifier is summarized in Table~\ref{tab:comparison}. It is designed to run without hardware through a seeded physics-inspired simulator. Physical recordings are accepted for history and analysis, but arrival inference additionally requires supported excitation-relative timing and a declared validated arrival adapter.
 
 \begin{table}[t]
 \caption{Passive Detection Versus ARGUS Active Interrogation}
@@ -89,15 +89,40 @@ Efficiency & Scan or fixed network & Information--cost tradeoff \\
 
 The contributions of this implementation are:
 \begin{enumerate}
-    \item TG-CDI, a complete observe--infer--plan--act loop joining simulation or acquisition to a joint structural, material, sensor, and placement posterior;
+    \item an observe--infer--plan--act loop joining simulation or acquisition to block-structured spatial and metrology estimates, retaining velocity--timing covariance rather than claiming a general joint posterior;
     \item a dual-control policy that switches among diagnostic, calibration, verification, and abstention actions and evaluates counterfactual observation distributions using risk, worst-rival separation, information, movement, energy, redundancy, trust, and safety terms;
-    \item bounded co-design across nine waveform families, multiple source--receiver geometries and fidelity levels, with short receding-horizon lookahead;
-    \item robust likelihood tempering, online model-discrepancy correction, ensemble/conformal OOD indicators, calibrated-decision interfaces, and explicit verify/abstain states;
+    \item selection among waveform families and source--receiver geometries, with two live analytical/physics-signature fidelity levels; the legacy route lookahead is a geometric proxy, while the optional risk controller branches on observations;
+    \item likelihood tempering, online model-discrepancy correction, OOD indicators, calibration diagnostics, and explicit verify/abstain states, without claiming field-calibrated probabilities;
     \item an auditable research stack comprising resumable jobs, paired benchmarks, ablations, fault injection, truth-sealed replay, hash-chained evidence export, phone-camera guidance, and a reconnecting edge node;
-    \item backward-compatible endpoints, 41 passing backend tests, four passing frontend utility/configuration tests, and a production frontend build that make every implemented mechanism independently inspectable.
+    \item tested endpoints, numerical and safety regression tests, and a production frontend build; the dated audit report records the current verification evidence.
 \end{enumerate}
 
-The novelty claim is deliberately narrow. Guided-wave NDE, Bayesian localization, Bayesian sensor placement, active learning, dual control, matched filtering, and active digital-twin calibration all predate this work \cite{rose2014,flynn2010,cantero2019,turin1960,fei2025patent}. The research contribution proposed for examination is the executable coupling of live rival-mode discrimination, structural--metrology action arbitration, constrained source--receiver--waveform co-design, trust-tempered physical evidence, and verifiable decision history. Legal patentability is not established by this manuscript and requires a professional claim-specific prior-art search.
+\subsection{Revision Scope: 7 October 2026}
+The following architectural equations describe modelling intent unless explicitly identified as executed. The runtime is block-structured, not a fully coupled structural--metrology posterior. Learned-surrogate and imported-response-bank fidelity levels are not validated live-controller implementations. Multimodal sensing, robotics, multi-defect localization, and reliable defect type, depth, or severity inference are outside the demonstrated scope. The terms ``dual control'' and ``Bayes risk'' in the legacy formulation denote engineered proxies; the distinct, optional physical-loss controller below is the implemented finite-horizon Bayesian design approximation. Healthy/damage/unknown scores and trust values are also heuristic, not certified probabilities.
+
+A direct-path observation satisfies $y=d/v+b+\epsilon$, with propagation state $\theta=(v,b)$ and covariance $C$. Its Jacobian is $h=(-d/v^2,1)$. The Gaussian covariance update is implemented in Joseph form,
+\begin{align}
+ C^+&=(I-Kh)C(I-Kh)^T+KRK^T,\\
+ K&=Ch^T(hCh^T+R)^{-1}.
+\end{align}
+A single delay supplies rank-one information; different reference path lengths are necessary to separate velocity from timing. Absolute pose requires independently measured pose errors and uncertainty. Waveform quality alone is not treated as separate evidence for both transmitter and receiver coupling.
+
+For spatial regions with probabilities $p_j$, centres $x_j$ in metres and unresolved within-region variances $s_j^2$, the optional controller uses
+\begin{equation}
+ r(p)=\sum_jp_j(\|x_j\|^2+s_j^2)-\left\|\sum_jp_jx_j\right\|^2.
+\end{equation}
+All posterior mass contributes. Calibration and diagnosis share this loss and a declared cost conversion. Within a finite beam of candidate actions, the two-step objective is
+\begin{equation}
+\begin{split}
+ Q(a)=c(a)+\E_{y\mid a}\min\big\{r(p_y),\\
+ \min_b[c(b\mid a)+\E_{z\mid y,a,b}r(p_{y,z})]\big\}.
+\end{split}
+\end{equation}
+Conditioning the second observation includes the shared velocity--timing cross-covariance. The second-step options are diagnostics or stopping; this is not unrestricted multi-step optimal control. Independent measurement and pose noise, linearized propagation, region coarsening, and conditional within-region position independence remain assumptions. Gauss--Hermite orders 16 and 32 provide a reported numerical sensitivity diagnostic, not a rigorous integration error bound. Planning's arrival model and inference's generalized matched-filter likelihood remain different approximations.
+
+OOD assessment now precedes fusion. Rejected or stale verification labels cannot satisfy the stopping gate. A successful direct reference validates neither the scattered-wave model nor field coverage, and fitted calibration residuals no longer populate the structural conformal reference pool. Integrity verification checks stored acquisition content; a separately retained ledger head and count are needed to detect whole-history replacement. Checksums alone do not establish acquisition authenticity.
+
+The candidate technical contribution is deliberately narrow. Guided-wave NDE, Bayesian localization, Bayesian sensor placement, active learning, dual control, matched filtering, and active digital-twin calibration all predate this work \cite{rose2014,flynn2010,cantero2019,turin1960,fei2025patent}. The implementation proposed for examination couples live rival-mode discrimination, structural--metrology action arbitration, constrained candidate selection, gated evidence, and verifiable decision history. Neither technical novelty nor legal patentability is established by this manuscript.
 
 \section{Related Work and Design Position}
 \subsection{Guided-Wave and Vibration-Based Inspection}
@@ -108,7 +133,7 @@ ARGUS does not claim that its compact simulator is a high-fidelity Lamb-wave or 
 \subsection{Bayesian Design and Active Measurement}
 Bayesian experimental design selects an experiment according to expected utility under current uncertainty \cite{chaloner1995}; information-based active selection chooses data expected to be informative about hypotheses or predictions \cite{mackay1992}. In structural health monitoring, Flynn and Todd formulated optimal actuator/sensor placement using Bayes risk and demonstrated active guided-wave examples \cite{flynn2010}. Much of that literature optimizes a fixed network or configuration. ARGUS instead replans a single next, executable experiment after every observation and incorporates movement, excitation, and redundancy costs.
 
-Exact expected information gain would marginalize over all possible future observations for every candidate. That calculation is expensive and only as reliable as the generative model. ARGUS therefore uses a bounded counterfactual-disagreement proxy. Throughout this paper, ``expected information gain'' means this implemented proxy, not an exact mutual-information calculation or a guarantee of global optimality.
+Exact expected information gain marginalizes future observations for each candidate and depends on the generative model. The default fast path uses a bounded counterfactual-disagreement proxy under its legacy ``expected information gain'' name. The optional nuisance-arrival extension instead numerically integrates information for a declared regional scalar model; neither calculation guarantees global optimality or information gain under real wavefields.
 
 \subsection{Open Experimental Evidence}
 The LMSD 2021 dataset contains measured frequency-response functions (FRFs) from a $600\times600\times4$ mm cross-ply CFRP plate, a $12\times12$ coordinate grid, seven accelerometer/hammer nodes, a healthy baseline, and six added-mass scenarios \cite{dwek2024dataset}. It supplies real multistatic responses and known mass locations, but not cavities, delaminations, or adaptively selected trials. ARGUS uses it to test data ingestion and feature transfer, not to imply physical validation of every supported defect type.
@@ -128,8 +153,8 @@ Table~\ref{tab:market} compares public product descriptions, not confidential im
 \toprule
 Platform & Acquisition pattern & Publicly described strength & TG-CDI distinction from reviewed material & ARGUS disadvantage \\
 \midrule
-Gecko Cantilever \cite{gecko2026} & Dense robotic ultrasonic/camera acquisition & Large-scale high-fidelity asset data, digital representation, analytics, repair planning & Optimizes the next information-bearing physical interrogation from the live posterior rather than assuming dense coverage as the acquisition product & No industrial robot fleet, deployment history, or proven inspection throughput \\
-Evident OmniScan X3 \cite{evident2026} & Phased-array FMC/TFM/PCI with electronic focusing & High-resolution imaging, large apertures, fast TFM, qualified field instrument & Selects among movable bistatic geometry, waveform family, calibration, verification, and abstention under joint structural--metrology uncertainty & Far lower acoustic fidelity, channel count, resolution, and certification maturity \\
+Gecko Cantilever \cite{gecko2026} & Dense robotic ultrasonic/camera acquisition & Large-scale high-fidelity asset data, digital representation, analytics, repair planning & Scores finite next-interrogation candidates from the live posterior in a sparse-acquisition research workflow & No industrial robot fleet, deployment history, or proven inspection throughput \\
+Evident OmniScan X3 \cite{evident2026} & Phased-array FMC/TFM/PCI with electronic focusing & High-resolution imaging, large apertures, fast TFM, qualified field instrument & Selects movable bistatic/waveform candidates with separate location/metrology state, calibration, and stop rules & Far lower acoustic fidelity, channel count, resolution, and certification maturity \\
 Eddyfi Sonyks/Teletest \cite{eddyfi2021} & Long-range guided-wave pipe screening from a deployed ring/tool & Rapid long-distance corrosion screening with established procedure and training & Posterior-conditioned sequential experiment design targets unresolved competing hypotheses on a bounded surface & Does not match pipe-specific range, tooling, standards, or field credibility \\
 Acellent SMART Layer \cite{acellent2026} & Permanently bonded distributed PZT network; active or passive operation & Repeatable sensor geometry and integrated lifecycle SHM & Treats source/receiver placement and excitation as reconfigurable decision variables and explicitly arbitrates calibration versus diagnosis & Lacks permanent-network repeatability, ruggedization, and long-duration evidence \\
 MISTRAS AEScout \cite{mistras2026} & Passive acoustic-emission monitoring, up to four localized channels & Detects and locates active damage mechanisms during operation & Actively creates the next discriminating wave experiment and can request verification when passive evidence is unsupported & Cannot replace continuous AE monitoring or expert interpretation of active cracking \\
@@ -148,26 +173,26 @@ where the default width and height are $W=0.60$ m and $H=0.40$ m. The latent def
 \begin{equation}
  z=(x,y,r_x,r_y,q,T),
 \end{equation}
-containing center, elliptical radii, severity $q\in[0,1]$, and type $T$. The current prototype explicitly infers only location $(x,y)$ on an $G\times G$ grid; size, severity, and type are nuisance variables captured by simulator randomization and likelihood robustness.
+containing center, elliptical radii, severity $q\in[0,1]$, and type $T$. The current prototype updates only location $(x,y)$ on a $G\times G$ grid, conditional on one dominant scatterer. Simulator randomization varies the other attributes, but the displayed size, severity, and type values remain unchanged priors; there is no measured attribute likelihood or defect-existence model.
 
 An experiment is
 \begin{equation}
  e=(\vect{s},\vect{r},f_0,f_1,a,d,w),
 \end{equation}
-where $\vect{s}$ and $\vect{r}$ are normalized source and receiver coordinates, $f_0,f_1$ are band endpoints, $a$ is normalized amplitude, $d$ is duration, and $w\in\{\text{impulse,sine,chirp}\}$. Given observation history $\mathcal{D}_t=\{(e_i,y_i)\}_{i=1}^{t}$, the belief grid is
+where $\vect{s}$ and $\vect{r}$ are normalized source and receiver coordinates, $f_0,f_1$ are band endpoints, $a$ is normalized amplitude, $d$ is duration, and $w$ is a member of the finite waveform library. The historical baseline used impulse, sine, and chirp families. Given observation history $\mathcal{D}_t=\{(e_i,y_i)\}_{i=1}^{t}$, the belief grid is
 \begin{equation}
  P_t(j)=P(z_{xy}=j\mid\mathcal{D}_t),\qquad
  \sum_{j=1}^{G^2}P_t(j)=1.
 \end{equation}
 The initial belief is uniform. Each observation supplies a likelihood $L_{t+1}(j)$ and
 \begin{equation}
- P_{t+1}(j)=\frac{P_t(j)\max[L_{t+1}(j),\eps]}
- {\sum_kP_t(k)\max[L_{t+1}(k),\eps]},\quad \eps=10^{-12}.
+ P_{t+1}(j)=\frac{P_t(j)\max[L_{t+1}(j),\eps]^{\beta_t}}
+ {\sum_kP_t(k)\max[L_{t+1}(k),\eps]^{\beta_t}},\quad \eps=10^{-12}.
  \label{eq:bayes}
 \end{equation}
-The normalized uncertainty is
+Here $\beta_t\in[0,1]$ is the executed evidence gate, with zero for rejected, unreliable, OOD-blocked, or calibration-only structural evidence. Probability normalization uses scaled/log weights and preserves supported zero/nonzero distinctions. The normalized entropy is
 \begin{equation}
- \Hn(P)=-\frac{\sum_jP(j)\log_2(P(j)+\eps)}{\log_2(G^2)}\in[0,1].
+ \Hn(P)=-\frac{\sum_{j:P(j)>0}P(j)\log_2(P(j))}{\log_2(G^2)}\in[0,1].
  \label{eq:entropy}
 \end{equation}
 
@@ -250,7 +275,7 @@ where $\rho_T=1.00,0.72,0.86,-0.64$ for cavity, loose region, delamination, and 
 \end{equation}
 where $f_r=f_z$ except for dense inclusions, for which $f_r=1.12f_z$. Noise $n(t)$ is Gaussian; $b(t)$ is a cumulative low-frequency random drift. The default material values are $c=180$ m/s, $\alpha=1.65$ m$^{-1}$, $f_{\mathrm{mat}}=3100$ Hz, $\beta=95$ s$^{-1}$, $t_0=0.8$ ms, and noise standard deviation 0.007.
 
-This model is intentionally identifiable and fast enough for interactive candidate evaluation. It omits dispersion branches, anisotropic stiffness, boundary-mode conversion, transducer electromechanics, and spatially varying coupling. Consequently, simulation accuracy must not be confused with field accuracy.
+This model creates a fast, interpretable inverse problem for candidate evaluation. It omits dispersion branches, anisotropic stiffness, boundary-mode conversion, transducer electromechanics, and spatially varying coupling. Geometry can remain ambiguous, and simulation accuracy must not be confused with field accuracy.
 
 \section{Signal Interpretation and Recursive Belief}
 \subsection{Preprocessing and Features}
@@ -299,14 +324,14 @@ ARGUS reports both the maximum-a-posteriori (MAP) grid center and posterior mean
  Q=\mathrm{clip}\{0.55m_{\mathrm{local}}+0.45[1-\Hn(P)],0,1\}.
  \label{eq:confidence}
 \end{equation}
-The default controller stops when $Q\ge0.72$, $\Hn(P)\le0.38$, or 12 experiments have been executed. A benchmark may impose a different budget; the reported study used ten.
+The current stopping engine distinguishes budget exhaustion, OOD abstention, low modeled value, and a verified concentration stop. The latter requires the latest accepted verification to pass channel, OOD, diversity, and prior-location consistency checks, together with a configured concentration/area, entropy/value, or heuristic-risk criterion. Confidence or entropy alone cannot authorize a confident stop. A budget stop establishes no correctness. The historical baseline study used a ten-measurement budget; the default runtime budget is twelve.
 
 \section{Adaptive Physical Experiment Planner}
 \subsection{Candidate Construction}
-The generator mixes eight perimeter locations with the eight highest-posterior cells as candidate sources. Receivers are the four perimeter corners plus the center. It cycles through bands 1.2--3.0, 2.2--4.4, and 3.4--6.2 kHz, with chirp, impulse, and chirp waveforms, amplitudes 0.42, 0.48, or 0.54, and 0.12 s duration. Near-coincident source--receiver pairs are redirected. Duplicate parameter tuples are removed until the default pool contains 48 candidates.
+The baseline generator mixes eight perimeter locations with up to eight probability-aware, spatially separated cell representatives as candidate sources. Receivers are the four perimeter corners plus the center. It cycles through bands 1.2--3.0, 2.2--4.4, and 3.4--6.2 kHz, with chirp, impulse, and chirp waveforms, amplitudes 0.42, 0.48, or 0.54, and 0.12 s duration. Near-coincident pairs are redirected and parameter duplicates removed, targeting the default pool of 48 candidates. The fast NEO path expands this baseline with finite waveform variants before applying constraints.
 
 \subsection{Counterfactual Hypothesis Disagreement}
-Let $\mathcal{K}$ contain the top $K=24$ grid hypotheses, with represented posterior mass $M=\sum_{i\in\mathcal{K}}P(i)$ and normalized weights $w_i=P(i)/M$. For candidate $e$, the fast forward signature is
+Let $\mathcal{K}$ contain up to $K=24$ probability-aware spatial representatives in the baseline scorer, with represented posterior mass $M=\sum_{i\in\mathcal{K}}P(i)$ and normalized weights $w_i=P(i)/M$. The fast NEO feature path uses up to five representatives; regional arrival modes preserve all mass through regional assignments. For candidate $e$, the baseline forward signature is
 \begin{equation}
  \vect{g}_i(e)=\left[\tau_i,\log(A_i+10^{-8}),\sin\varphi_i,\cos\varphi_i\right],
  \quad \varphi_i=2\pi f_c\tau_i,
@@ -367,9 +392,9 @@ The highest-scoring candidate is selected. The interface exposes all terms for t
 11: & \quad \textbf{end for}\\
 12: & \quad Set $e_{t+1}\gets\arg\max_eS(e)$ and execute it.\\
 13: & \quad Acquire $y_{t+1}$ and construct $L_{t+1}$.\\
-14: & \quad $P_{t+1}\gets\mathrm{normalize}(P_t\odot L_{t+1})$.\\
+14: & \quad Gate quality/channel/OOD; fuse $P_t\odot L_{t+1}^{\beta_t}$.\\
 15: & \quad Persist signal, features, scores, and posterior.\\
-16: & \quad \textbf{break if} confidence or entropy threshold holds.\\
+16: & \quad Evaluate verified, OOD, value, and budget stopping.\\
 17: & \textbf{end for}\\
 18: & \textbf{Return:} MAP, mean, covariance, confidence, history.\\
 \end{tabular}
@@ -383,21 +408,21 @@ The highest-scoring candidate is selected. The interface exposes all terms for t
 The selected recommendation receives a deterministic rationale. High disagreement produces a competing-regions explanation; broad entropy produces a coverage explanation; otherwise the system describes local ambiguity resolution. If repetition is below 0.25 after prior measurements, the explanation notes that the geometry and frequency avoid recent experiments. No language model is required, and every statement traces to planner state.
 
 \section{Trust-Gated Counterfactual Dual Control}
-\subsection{Joint Structural--Metrology State}
-The original spatial grid is retained as the structural marginal so earlier clients remain compatible, but NEO augments it with nuisance and metrology variables. The sequential state is
+\subsection{Block-Structured Spatial and Metrology State}
+The original spatial grid is retained for location inference, while NEO stores a separate metrology block. The executed state can be written as
 \begin{equation}
- p_t(\vect z,\vect\eta)=p_t(x,y,r,q,k,\vect\eta\mid\mathcal D_t),
+ B_t=\{P_t(x,y),\hat{\vect\eta}_t,C_t,\rho_t,o_t\},
  \label{eq:joint-state}
 \end{equation}
-where $(x,y)$ is location, $r$ is effective size, $q$ severity, $k$ defect family, and $\vect\eta$ contains wave velocity, attenuation, timing offset, noise scale, gain, source/receiver coupling, and source/receiver pose error. The implemented compact approximation stores a normalized structural grid plus bounded Gaussian nuisance marginals and particles. It is therefore a factorized engineering approximation to Eq.~\eqref{eq:joint-state}, not an exact high-dimensional posterior.
+where $\vect\eta$ contains wave velocity, attenuation, timing offset, noise scale, gain, source/receiver coupling, and source/receiver pose error. $C_t$ retains velocity--timing covariance; other metrology quantities remain approximate marginal moments. This is not a stored hierarchical joint structural--metrology posterior. A seeded correlated particle-sampling helper exists and is tested, but the live controller does not call it. Size, severity, and type remain fixed priors.
 
-Each valid observation updates the structural likelihood and the nuisance sufficient statistics. Estimated velocity and timing are synchronized back into inference so calibration actions alter subsequent predictions. Signal quality produces evidence weight $0\leq w_t\leq1$ from SNR, clipping, silence, acceleration deviation, and visual pose error. The recursive update is tempered as
+Accepted diagnostic evidence updates location and may update a passive noise estimate. Reference calibration updates only supported metrology parameters; it never supplies structural evidence. Estimated velocity, timing, and noise means are synchronized into inference without changing hidden acquisition physics. Signal quality uses amplitude, clipping, finite-sample validity, repeat consistency, and placement proxies to produce $w_t\in[0,1]$. The recursive structural update is
 \begin{equation}
- p_{t+1}(\vect z)\propto p_t(\vect z)
- L(y_{t+1}\mid\vect z,e_{t+1},\hat{\vect\eta}_t)^{w_t/T_t},
+ P_{t+1}(j)\propto P_t(j)
+ \max\{L(y_{t+1}\mid j,e_{t+1},\hat{\vect\eta}_t),\eps\}^{\beta_t},
  \label{eq:tempered-update}
 \end{equation}
-where $T_t$ also increases under mismatch. Silence or unusable acquisition cannot sharpen belief because its evidence weight approaches zero.
+where accepted quality has base weight $\max(w_t,w_{\min})$. A degraded channel and an OOD caution each multiply that weight by 0.35; an unreliable channel, rejected waveform, OOD abstention, or reference-only action sets the structural exponent to zero. There is no additional executed $\rho_t/T_t$ multiplier. Model trust affects diagnostics, planning, and reported confidence. Rejected or unsupported observations cannot sharpen belief.
 
 \subsection{Dual Control: Diagnose or Calibrate}
 An action may interrogate the object or reduce uncertainty in the measuring process itself. Let $U_s$ denote structural uncertainty, $U_m$ combined metrology uncertainty, $\rho$ model trust, and $o$ the OOD score. NEO compares
@@ -409,13 +434,13 @@ An action may interrogate the object or reduce uncertainty in the measuring proc
 with diminishing-return factor $d_n=(1+0.65n_{\mathrm{cal}})^{-1}$. Calibration is selected when $V_{\mathrm{cal}}-V_{\mathrm{diag}}>0.05$, or when an explicit threshold/OOD rule requires it. The dominant nuisance term maps to an executable direct-path, coupling-repeat, phone-pose, microphone-level, or frequency-sweep action. Otherwise NEO selects diagnostic, exploration, or pre-stop verification. This is a transparent heuristic dual controller whose components and switching margin are returned by the API.
 
 \subsection{Counterfactual Observation Distributions and Bayes Risk}
-For the leading hypotheses $h_i$, a candidate action $e$ produces compact predicted distributions $q(y\mid h_i,e,\vect\eta)$ rather than only a point score. The implementation combines standardized mean separation and predictive variance into average and worst-pair separation. Decision risk is explicitly parameterized:
+For the leading hypotheses $h_i$, the fast controller supplies compact feature predictions and assumed variances. Standardized mean separation and predictive variance yield average and worst-pair proxies. The legacy risk index is explicitly parameterized:
 \begin{equation}
  R_t=12p_{\mathrm{miss}}+3p_{\mathrm{false\ alarm}},
  \quad p_{\mathrm{miss}}=\mathrm{clip}(1-c_t+0.45o_t),
  \label{eq:risk}
 \end{equation}
-and expected risk reduction is bounded by predicted information, separation, and model trust. The default multiobjective utility is
+The symbols $p_{\mathrm{miss}}$ and $p_{\mathrm{false\ alarm}}$ are heuristic indices, not fitted event probabilities. Predicted reduction is a bounded function of information, separation, and trust. The default multiobjective utility is
 \begin{align}
  J(e)=&\,I(e)+0.35D(e)+0.55\Delta R(e)\nonumber\\
  &+0.65V_{\mathrm{cal}}(e)+0.30\rho+\beta U(e)\nonumber\\
@@ -425,38 +450,37 @@ and expected risk reduction is bounded by predicted information, separation, and
 where $\beta$ depends on exploration state. Alternative objectives expose information gain, Bayes risk, worst-case ambiguity, and information per physical cost. False-negative, false-positive, escalation, abstention, movement, time, and excitation losses are configuration values; they are research utilities, not certified maintenance economics.
 
 \subsection{Formal TG-CDI Policy}
-The compact implementation above is summarized by the following policy abstraction. Let $b_t(\vect z,\vect\eta)=p(\vect z,\vect\eta\mid\mathcal D_t)$, and let $\mathcal H_t=\{h_1,\ldots,h_K\}$ contain spatially separated posterior modes rather than a fixed list of preselected defects. At model fidelity $\ell$, the observation distribution predicted for rival $h_i$ and executable action $e$ is
+The compact implementation above is summarized by the following policy abstraction. Let $\mathcal H_t=\{h_1,\ldots,h_K\}$ contain spatially separated posterior representatives. At either live model level $\ell\in\{0,1\}$, the fast controller uses a compact Gaussian feature approximation
 \begin{equation}
- q^{(\ell)}_{i,e}(y)=\int p_{\ell}(y\mid\vect z,\vect\eta,e)
- b_t(\vect z,\vect\eta\mid h_i)\,d\vect z\,d\vect\eta .
+ q^{(\ell)}_{i,e}(y)\approx
+ \mathcal N\!\left(\mu^{(\ell)}_{i,e},\Sigma^{(\ell)}_{i,e}\right),
  \label{eq:rival-predictive}
 \end{equation}
-ARGUS approximates these distributions with forward-feature means and nuisance-dependent variances. Their weighted average separation $S_{\mathrm{avg}}(e)$ combines Jensen--Shannon, Bhattacharyya, symmetric-KL, and predictive-variance terms. The hard-rival term
+whose moments depend on geometry, frequency, and selected metrology moments. Amplitude, duration, and code effects enter separate waveform/cost heuristics rather than a validated full-waveform predictive distribution. Separation combines a bounded symmetric-KL transform, Bhattacharyya separation, and predictive-variance proxies. The legacy-named ``Jensen--Shannon'' score is $1-\exp(-\mathrm{SKL}/4)$, not actual JS divergence. The hard-rival term
 \begin{equation}
  S_{\min}(e)=\min_{i\ne j}S\!\left(q^{(\ell)}_{i,e},q^{(\ell)}_{j,e}\right)
  \label{eq:hard-rival}
 \end{equation}
-prevents a high average score from hiding a pair of hypotheses that the proposed experiment cannot distinguish.
+penalizes a candidate whose weakest represented pair has low predicted separation; it does not guarantee identification of all true rival locations.
 
-For a diagnostic action, let $G_z(e)=R_t-\E_y[R_{t+1}\mid e]$ be expected Bayes-risk reduction. For a calibration action, let $G_\eta(e)=H(\vect\eta\mid\mathcal D_t)-\E_y[H(\vect\eta\mid\mathcal D_t,y,e)]$. With trust $\rho_t\in[0,1]$, the conceptual action utilities are
+A more general prospective policy could compare diagnostic expected loss reduction $G_z$ with metrology information gain $G_\eta$ using
 \begin{align}
  U_D(e)&=\rho_t\!\left[w_zG_z+w_aS_{\mathrm{avg}}+w_mS_{\min}\right]-C(e),\nonumber\\
  U_C(e)&=w_\eta G_\eta+w_\rho\E[\Delta\rho_t\mid e]-C(e),
  \label{eq:tgcdi-utility}
 \end{align}
-where $C(e)$ includes movement, time, excitation, repetition, constraint, and safety costs. Verification actions favor repeatability or an orthogonal high-trust check; exploration actions favor broad coverage. The controller selects
+These prospective utilities are not the executed fast-controller calculation. The fast controller first chooses an action class by Eq.~\eqref{eq:dual-control}, then ranks feasible candidates using Eq.~\eqref{eq:neo-utility}. An unrestricted common-value competition across all action classes would instead be
 \begin{equation}
  (a_t,e_t)^*=\arg\max_{(a,e)\in\mathcal A_{\mathrm{safe}}}
  \{U_D,U_C,U_V,U_E,U_{\mathrm{abstain}}\}.
  \label{eq:tgcdi-policy}
 \end{equation}
-When no safe candidate has positive supported value, or OOD/model-trust rules fire, abstention dominates. After execution, $\beta_t=\mathrm{clip}(w_t\rho_t/T_t,0,1)$ gives the trust-gated update
+This unrestricted optimization is not implemented. The optional physical-loss controller compares calibration and diagnosis within its finite beam and observation horizon; a diagnostic can be labelled verification when configured concentration conditions hold. Unsupported planning enters abstention. Actual structural fusion uses
 \begin{equation}
- b_{t+1}(\vect z,\vect\eta)\propto b_t(\vect z,\vect\eta)
- p(y_t\mid\vect z,\vect\eta,e_t)^{\beta_t}.
+ P_{t+1}(j)\propto P_t(j)\max\{L_t(j),\eps\}^{\beta_t},
  \label{eq:tgcdi-update}
 \end{equation}
-Calibration-only actions set the structural exponent to zero while updating nuisance state. Thus an accepted packet is not automatically treated as full-strength structural evidence. Equations~\eqref{eq:rival-predictive}--\eqref{eq:tgcdi-update} identify the TG-CDI coupling; Eqs.~\eqref{eq:dual-control} and \eqref{eq:neo-utility} give the present executable approximations.
+with the explicit quality/channel/OOD gate described above, rather than a joint-posterior or direct trust-exponent update. Calibration-only actions set the structural exponent to zero while updating supported metrology state. An accepted packet is therefore not automatically structural evidence.
 
 \begin{figure}[t]
 \centering
@@ -466,14 +490,14 @@ Calibration-only actions set the structural exponent to zero while updating nuis
 \noindent\textbf{Algorithm 2: TG-CDI interrogation cycle}\par
 \small
 \begin{tabular}{@{}r p{0.88\columnwidth}@{}}
-1: & Infer joint structural--metrology belief and trust.\\
+1: & Maintain location belief, metrology block, and trust.\\
 2: & Extract separated live rival modes $\mathcal H_t$.\\
-3: & Generate safe geometry--waveform--fidelity actions.\\
+3: & Generate finite feasible geometry/waveform candidates.\\
 4: & Predict $q_{i,e}^{(\ell)}$ for every rival and action.\\
 5: & Score average and hardest-rival separation and risk.\\
 6: & Score calibration, verification, exploration, and cost.\\
 7: & Execute the highest-supported safe action or abstain.\\
-8: & Validate quality/OOD; compute evidence exponent $\beta_t$.\\
+8: & Gate waveform/channel/OOD before evidence fusion.\\
 9: & Temper the belief update; update calibration/trust state.\\
 10: & Bind raw-data hash, model, rationale, and transition.\\
 11: & Stop, verify, escalate, or repeat under decision loss.\\
@@ -481,12 +505,12 @@ Calibration-only actions set the structural exponent to zero while updating nuis
 \vspace{1mm}
 \hrule
 \end{minipage}
-\caption{The proposed TG-CDI sequence. Every decision is conditioned on the current belief, not a predetermined scan order.}
+\caption{Implemented TG-CDI research sequence at a high level. The fast and optional physical-loss controllers use different declared approximations.}
 \label{alg:tgcdi}
 \end{figure}
 
 \subsection{Joint Geometry--Waveform and Horizon Search}
-Source position, receiver position, band, amplitude, duration, and waveform are optimized under hard limits. The candidate library supports impulse, sine, chirp, tone burst, Ricker, multisine, phase-coded, complementary-coded, and spectrally notched excitation. Every generated waveform is peak-normalized after modulation/coding, and actions exceeding frequency, amplitude, duration, minimum-spacing, no-go-region, or device-availability constraints are rejected with machine-readable reasons. A cached analytical level and physics-signature level are selected according to uncertainty, ambiguity, frequency, and trust. A beam-limited receding-horizon reranker evaluates one or two steps depending on the execution profile; this is short lookahead, not a global policy solution.
+Source position, receiver position, band, amplitude, duration, and waveform are selected from finite candidates under hard limits. The library supports impulse, sine, chirp, tone burst, Ricker, multisine, phase-coded, complementary-coded, and spectrally notched excitation. Generated waveforms are bounded after modulation/coding. Frequency, amplitude, duration, spacing, no-go, and availability violations receive machine-readable reasons. Only cached analytical level 0 and physics-signature level 1 are live; neither is a validated FE or learned-surrogate adapter. The fast beam reranker scores geometric routes without observation or belief rollouts, with a configured nominal horizon of up to three. Actual observation branching belongs to the optional physical-loss controller and has horizon at most two. Neither search is globally optimal.
 
 \subsection{Discrepancy, OOD, and Decision Gating}
 An online ridge discrepancy model learns residual feature correction between predicted and observed responses and converts residual error to model trust $\rho\in[0,1]$. Robust residual distance, an ensemble disagreement score, and a conformal tail score are combined for OOD monitoring; the conformal component remains withheld until ten reference scores exist. Reported decision confidence is capped by OOD evidence. The stopping controller considers confidence, normalized entropy, credible-region area, Bayes risk, expected value of another measurement, budget, and model trust. It may continue, verify, escalate to a reference method, or abstain. These mechanisms reduce unsupported certainty but do not guarantee statistical calibration under physical domain shift.
@@ -494,7 +518,7 @@ An online ridge discrepancy model learns residual feature correction between pre
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[node distance=4.5mm, every node/.style={font=\scriptsize}, box/.style={draw,rounded corners,align=center,minimum width=.78\columnwidth,minimum height=6mm}]
-\node[box,fill=argusblue!9] (joint) {Joint structural--metrology posterior};
+\node[box,fill=argusblue!9] (joint) {Location posterior and separate metrology block};
 \node[box,below=of joint,fill=argusorange!9] (dual) {Dual control: calibrate, diagnose, explore, or verify};
 \node[box,below=of dual,fill=arguscyan!9] (cf) {Counterfactual geometry--waveform--fidelity search};
 \node[box,below=of cf,fill=argusgreen!9] (gate) {Safety constraints, discrepancy/OOD gate, Bayes stopping};
@@ -513,17 +537,17 @@ An online ridge discrepancy model learns residual feature correction between pre
 Every state-changing event can be recorded as canonical JSON with timestamp, prior hash, and SHA-256 entry hash. Exported ZIP bundles contain a manifest, session state, ledger, responses, planner explanations, configuration, versions, and checksums; import verifies integrity before accepting the bundle. Replay readers support NPZ, CSV, and WAV response banks, while hidden truth remains sealed until the policy has stopped. SQLite-backed research jobs provide progress, cancellation, and interrupted-job recovery for counterfactual-bank generation, calibration, benchmarks, ablations, and surrogate studies. A phone progressive web application supplies camera overlay, inertial-quality metadata, and microphone acquisition; a reconnecting laptop edge client can register, heartbeat, poll, and return microphone measurements over a private LAN. These paths remain operator-supervised research tooling.
 
 \subsection{ARGUS-X Runtime Assurance and Failure Disposition}
-The extended system reports a normalized screening distribution over healthy/no-detectable-damage, known-damage-candidate, and unknown/unsupported states. Let $p_d=\sigma(\ell_d)$ summarize accepted residual-SNR evidence, $o$ the OOD score, and $\rho$ model trust; unsupported mass uses $\max(o,1-\rho)$ before renormalization. This transparent rule is not a calibrated correctness or POD claim. Separated posterior modes expose zero, one, or multiple candidate regions; interacting multi-scatterer inference remains open.
+The extended interface retains normalized heuristic screening weights under legacy healthy/no-detectable-damage, known-damage-candidate, and unknown/unsupported labels. Let $p_d=\sigma(\ell_d)$ summarize residual-SNR evidence that passed structural gates; unsupported weight uses $\max(o,1-\rho)$ before renormalization. These values are not fitted class probabilities, defect-existence inference, or POD estimates. Spatial modes are competing single-scatterer explanations. The legacy defect-count display is an ambiguity proxy, not inference of zero, one, or several actual defects.
 
-Each sensor channel maintains beta-binomial reliability
+Each sensor channel maintains a beta-form quality-weighted health score
 \begin{equation}
 \hat r_j=\frac{\alpha_j}{\alpha_j+\beta_j},
 \end{equation}
-where accepted observations add quality-weighted evidence and rejections add failure evidence. Degraded channels cap confidence and request redundancy; unreliable channels force abstention. Session-baseline environment metadata provides drift warnings. Duplicate payloads/identifiers, invalid units or rates, non-finite samples, timestamp skew, clipping, silence, and infeasible actions are rejected before inference.
+where accepted observations add soft quality evidence and rejections add failure evidence. This score is not a calibrated sensor-failure probability. Channel health is evaluated before structural or calibration updates; an accepted waveform from a still-unreliable channel cannot update either state. Degraded channels temper evidence and request redundancy; unreliable channels force abstention. Environment metadata provides drift warnings. Duplicate identifiers/payloads, unsupported units/bandwidth, invalid samples/windows, clipping, silence, and infeasible actions are rejected. Timestamp skew is a warning rather than independently measured synchronization evidence.
 
-A persisted emergency latch blocks every acquisition path until a human supplies an acknowledgment and reason; both transitions are audited. Actions never include ``structure safe'': ARGUS may continue, reacquire/repair, mark a region for reference inspection, require a human, or report no damage evidence only under tested conditions.
+A persisted emergency latch blocks acquisition until a human supplies an acknowledgment and reason; both transitions are audited. ARGUS may continue, reacquire/repair, mark a candidate region for reference inspection, or require a human. It cannot release a structure as healthy: a low residual-screening index instead requests independent reference verification.
 
-The 1,331-item ARGUS-X inventory is converted deterministically into a register: 277 narrow controls are tested, 588 partially mitigated, 244 require physical validation, 45 require literature/legal review, and 177 are bounded. These are dispositions, not 1,331 solved claims.
+The earlier 1,331-item ARGUS-X register recorded 277 narrow controls as tested, 588 partially mitigated, 244 requiring physical validation, 45 requiring literature/legal review, and 177 as bounded. These historical dispositions are not 1,331 solved claims or current-suite verification counts; the dated release report records the October checks.
 
 \section{Learned Forward Surrogate and Data}
 \subsection{Domain-Randomized Synthetic Set}
@@ -533,7 +557,7 @@ The PyTorch \cite{paszke2019} network is
 \begin{equation}
  24\rightarrow96\rightarrow96\rightarrow15,
 \end{equation}
-with SiLU activations and LayerNorm after the first hidden layer. Inputs and targets are standardized on training statistics. Training uses Smooth L1 loss, AdamW at learning rate $1.8\times10^{-3}$ and weight decay $10^{-4}$, batch size 128, a seeded 70/15/15 split, and early stopping. The physics predictor remains the default planner model because it is interpretable and the surrogate has uneven feature accuracy.
+with SiLU activations and LayerNorm after the first hidden layer. Inputs and targets are standardized on training statistics. The historical training used Smooth L1 loss, AdamW at learning rate $1.8\times10^{-3}$ and weight decay $10^{-4}$, batch size 128, a seeded 70/15/15 split, and early stopping. Not all randomized damping, noise, and system-delay quantities appear in the 24 inputs, so the predictor must average over unobserved variability. The surrogate remains outside the live planner.
 
 \subsection{Measured LMSD Adapter}
 The downloader queries the official Zenodo record, downloads declared NPZ files, and verifies each published MD5 checksum. The adapter converts each complex 0--1600 Hz FRF to a 0.12 s impulse response, normalizes known node coordinates, encodes the added mass as a dense inclusion, and extracts the same feature contract. Six scenarios times seven sources times seven receivers yield 294 channels. To prevent leakage, splitting is by entire damage scenario: 196 training, 49 validation, and 49 test channels. These channels are correlated views of six physical damage configurations, not 294 independent defects.
@@ -547,21 +571,21 @@ The Bologna acoustic-emission record \cite{zonzini2024dataset} adds 1,000 ray-tr
 \subsection{Acquisition Abstraction}
 All devices implement connect, disconnect, acquire, and status operations. \code{SimulationDevice} executes Eq.~\eqref{eq:forward}; \code{MicrophoneDevice} records through the local audio stack; \code{UploadedSignalDevice} accepts WAV files; and \code{SerialProbeDevice} performs a line-framed transaction with an ESP32. Missing audio or serial hardware is reported without disabling simulation.
 
-Uploads are limited to 10 MB, checked for allowed media types, decoded in memory, downmixed to mono, resampled by polyphase filtering, checked for finite values, and padded or truncated to the configured duration. The API never accepts arbitrary filesystem paths. Simulation ground truth is omitted from ordinary session payloads until reveal.
+Uploads are limited to 10 MB, checked for allowed media types, decoded in memory, and explicitly downmixed to mono. Finite recordings must cover the declared experiment window and support the excitation band at their original sampling rate before polyphase resampling. Longer windows are cropped with recorded provenance; shorter recordings are rejected without padding missing evidence. Physical-unit inputs require declared conversion to the normalized inference contract. The upload API does not accept arbitrary filesystem paths. Simulation truth is omitted from ordinary payloads until reveal.
 
 \subsection{Calibration and Coordinates}
-The startup routine executes three chirps across distinct geometries and estimates noise standard deviation, effective propagation velocity, baseline RMS, and resonance. During a session, the dual controller can additionally request direct-path timing, repeated coupling, phone-pose, microphone-level, or frequency-sweep calibration. Values update the nuisance posterior and are persisted in the panel's calibration profile. Normalized coordinates keep the planner independent of physical dimensions, while the UI presents millimeters using Eq.~\eqref{eq:physical-map}.
+The simulation calibration routine generates three healthy-reference acquisitions and records supported timing/velocity, noise, gain, and baseline-RMS diagnostics; it does not estimate resonance. Physical calibration requires acquired reference evidence. The session controller may request direct-path, coupling-repeat, phone-pose, microphone-level, or frequency-sweep actions. Each update requires its measured diagnostics; absolute pose requires an external pose reference, and waveform quality does not identify separate transmitter/receiver coupling. Supported metrology changes are persisted. Normalized coordinates provide a common interface, while predictions and reported millimetres use actual panel dimensions through Eq.~\eqref{eq:physical-map}.
 
 A camera-guidance mode asks the operator to click the four panel corners in top-left, top-right, bottom-right, bottom-left order. Eight homography parameters are solved from the four point correspondences \cite{hartley2004}. The browser overlays source, receiver, propagation path, posterior field, suspected region, and a 90\% covariance ellipse. Visual-position error and inertial deviation are sent as quality metadata and reduce evidence weight; this remains approximate operator guidance, not certified optical metrology.
 
 \subsection{ESP32 Probe}
-The reference firmware uses GPIO25 for an exciter-driver control, GPIO34 for a conditioned analog sensor, GPIO2 for status, and 115200 baud serial. It accepts \code{PING} and an \code{EXPERIMENT} command containing frequency, amplitude, duration, waveform, and sample rate, then returns \code{BEGIN}, framed \code{DATA}, and \code{END}. An exciter must be driven through a MOSFET/transistor or amplifier; it must not be powered directly from a GPIO. A piezo input requires current limiting, clamping, biasing, and conditioning so the ADC never sees negative voltage or an overvoltage transient.
+The current classic-ESP32 reference uses DAC GPIO25, conditioned ADC GPIO34, GPIO26 as an excitation timing marker, and serial at at least 115200 baud for supported acquisition. Its version-2 experiment-bound protocol retains concurrent drive/capture, pretrigger samples, actual call timestamps, DAC codes and complete-frame status, as specified in the later acquisition section. Legacy excite-then-record firmware is refused by arrival inference. The DAC must feed an appropriate AC-coupled amplifier rather than power the exciter directly. The receiver needs input protection, bias, buffering and antialias conditioning. Electrical timing and transfer remain unmeasured.
 
 \subsection{Persistence and Reproducibility}
-Additive SQLite migrations preserve legacy sessions while storing joint state, probes, events, research jobs, model records, and hash-linked ledger entries in addition to session configuration, calibration, compressed responses, features, candidate scores, and posterior history. NumPy/SciPy provide vectorized numerics and signal processing \cite{harris2020,virtanen2020}. Fixed seeds cover defect generation, observation noise, dataset splitting, training, and paired policy comparison. The API schema and saved JSON/CSV/SVG outputs allow an independent run to inspect reported metrics.
+Additive SQLite migrations preserve legacy sessions while storing separate inference blocks, probes, events, jobs, model records, and hash-linked ledger entries, alongside configuration, calibration, compressed responses, features, scores, and posterior history. NumPy/SciPy provide vectorized numerics and signal processing \cite{harris2020,virtanen2020}. Fixed seeds cover defect generation, observation noise, splits, training, and paired policy comparison. Full-precision structural state retains small supported hypotheses; rejected observations do not become accepted repeat references after hydration. Source fingerprints and saved outputs permit checks against the actual changed source, rather than only a repository commit identifier.
 
 \section{Evaluation Protocol}
-The evaluation addresses four questions:
+The evaluation addresses five questions:
 \begin{itemize}
     \item \textbf{RQ1:} Does active planning concentrate spatial belief faster than random or uniform probing?
     \item \textbf{RQ2:} Does lower uncertainty translate into lower localization error under the same budget?
@@ -649,8 +673,9 @@ vs. grid & 0.928 $[-1.021,2.757]$ & 0.202 $[0.180,0.224]$ & 0.30 / 1.00 \\
 \end{tabular}}
 \end{table}
 
-\subsection{NEO Engineering Diagnostics}
-Table~\ref{tab:neo-diagnostics} reports newly executed, seeded checks of the expanded implementation. They are deliberately separated from the 30-case baseline because the quick NEO matrix contains only two cases and a five-measurement budget. None of nine policies met the joint stopping criterion, all used five measurements, and therefore observed inspection compression was $1.0\times$. Full NEO mean error was 21.70 mm and success within the configured radius was 0.50; uniform, Bayes-risk-only, dual-control-only, and one-step horizon variants were 15.95 mm and 1.00 in these two cases. This is a pipeline smoke test and supplies no basis for a superiority claim.
+\subsection{Historical NEO Engineering Diagnostics}
+The following saved diagnostics precede the 20 September audit corrections. They are retained for provenance, not current-version validation. The historical ECE value below compared a heuristic score with a different 20 mm event and is not a valid probability-calibration certificate. Current reliability evaluation compares posterior mass within 20 mm with the corresponding localization event.
+Table~\ref{tab:neo-diagnostics} preserves earlier seeded engineering checks. They are separated from the 30-case baseline because the quick NEO matrix contains only two cases and a five-measurement budget. None of nine policies met the then-configured joint stopping criterion, all used five measurements, and therefore observed inspection compression was $1.0\times$. Full NEO mean error was 21.70 mm and success within the configured radius was 0.50; uniform, Bayes-risk-only, dual-control-only, and one-step horizon variants were 15.95 mm and 1.00 in these two cases. This historical pipeline smoke test supplies no basis for a superiority claim.
 
 \begin{table}[t]
 \caption{Observed ARGUS NEO Diagnostic Runs}
@@ -663,16 +688,36 @@ Table~\ref{tab:neo-diagnostics} reports newly executed, seeded checks of the exp
 Run & Cases & Key error & Key uncertainty & Interpretation \\
 \midrule
 Nine-policy quick matrix & 2 & NEO 21.70 mm & $\Hn=0.909$ & No criterion/compression \\
-Quick calibration & 4 & ECE 0.715 & Coverage 1.0 & Too small; poorly calibrated \\
+Quick calibration & 4 & Old score 0.715 & Coverage 1.0 & Event mismatch; deprecated \\
 Mismatch, seed 17 & 1 paired & 14.65 vs. 157.54 mm & NEO caution/OOD & Mechanism demo only \\
 Active surrogate & 180 & MAE 94.10$\to$89.01 & 5.41\% decrease & Synthetic oracle only \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-The controlled mismatch demonstration altered effective velocity by 2\% and attenuation by 4\% under the same hidden truth, seed, and budget. NEO used eight diagnostic, three calibration, and six verification actions, ended at 14.65 mm error, model trust 0.517, and a caution state. The deliberately naive controller used 15 diagnostic and no calibration actions, ended at 157.54 mm with confidence 0.735, and triggered the false-confidence diagnostic. This one paired case illustrates the intended failure-handling mechanism; it is neither an estimated effect size nor evidence of physical generalization. In four calibration smoke cases, nominal 50--95\% region coverages were all 1.0 but expected calibration error was 0.715, showing why tiny-sample apparent coverage must not be advertised as calibration.
+The historical mismatch demonstration altered effective velocity by 2\% and attenuation by 4\% under the same hidden truth, seed, and budget. NEO used eight diagnostic, three calibration, and six verification actions, ended at 14.65 mm error, model trust 0.517, and a caution state. The deliberately naive controller used 15 diagnostic and no calibration actions, ended at 157.54 mm with confidence 0.735, and triggered the false-confidence diagnostic. This one paired case illustrates the intended mechanism in that earlier implementation; it is neither an estimated effect size nor evidence of physical generalization. In four calibration smoke cases, nominal 50--95\% region coverages were all 1.0. The accompanying 0.715 proxy-event mismatch score is deprecated, not a valid ECE estimate. Tiny-sample apparent coverage must not be advertised as calibration.
 
-\subsection{Forward-Surrogate Results}
+\subsection{Historical September Synthetic Audit Evaluation}
+The September source version compared the optional physical-loss controller with the legacy proxy using six separate seeds (53000--53005), six measurements per run, twelve shared diagnostic candidate opportunities per step, and two acquisition contexts. All 24 runs completed without an execution failure; source fingerprints did not change during that run. The mismatched context used effective velocity multiplied by 1.02, attenuation by 1.04, and noise by 2. Truth was used for scoring, not action selection. Table~\ref{tab:current-risk} retains both outcomes without discarding unfavourable cases. Subsequent October evidence and uncertainty changes prevent these values from serving as current-source validation.
+
+\begin{table}[t]
+\caption{Historical September Check: Six Paired Seeds per Context}
+\label{tab:current-risk}
+\centering\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Context & Legacy mean error & Risk mean error \\
+\midrule
+Nominal & 43.90 mm & 12.58 mm \\
+Mismatch + noise & 150.22 mm & 203.78 mm \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mean error advantage of the risk controller was 31.32 mm with a paired bootstrap 95\% interval of $[-2.71,93.38]$ mm in nominal conditions, and $-53.56$ mm with interval $[-174.99,17.82]$ mm under mismatch. Both intervals cross zero. One legacy outlier strongly affects the nominal mean; success within 20 mm was 5/6 for both controllers nominally and 0/6 for both under mismatch. Computation averaged about 21 seconds per six-measurement case for the risk controller versus 0.35--0.39 seconds for legacy on this machine. The risk controller remains disabled by default. This small study establishes neither superiority, calibration benefit, measurement compression nor acceptable real-world accuracy. The full artifact is \path{research_results/audit_risk_validation.json}.
+
+\subsection{Historical Forward-Surrogate Results}
+The following table records the earlier 3,000-sample checkpoint. A separate retained 15,000-sample checkpoint records validation loss 0.18470, test loss 0.19815, standardized MAE 0.45690, and mean feature $R^2=0.47567$. An additional 50,000-sample candidate and paired feature comparison are reported separately in \path{docs/SURROGATE_TRAINING_2026_09_20.md}; it does not replace a live-controller model. These response-feature results do not establish defect-localization accuracy or a validated runtime surrogate.
 The synthetic surrogate stopped at epoch 27. Table~\ref{tab:ml} shows that amplitude, decay, and SNR-related features are learnable under domain randomization, while dominant frequency and envelope timing are poorly captured. Mean feature $R^2=0.409$ is useful as an engineering diagnostic but not sufficient justification to replace the physics signature in safety-relevant planning.
 
 The measured LMSD scenario-held-out result is much weaker: mean $R^2=0.001$ and standardized MAE 0.449. High-band energy alone achieved $R^2=0.875$; many other features were negative out of sample. The adapter therefore demonstrates an honest data path and exposes domain shift rather than validating physical generalization. In particular, test Smooth L1 0.190 should not be interpreted as better than the synthetic 0.225 because the standardized targets and held-out units differ.
@@ -719,21 +764,28 @@ Al impact, measured few-shot & held-out position & Mean error 0.141 m & eight ca
 \end{table}
 
 \subsection{Software Verification}
-The executed verification suite contains 45 passing backend tests. Besides the legacy deterministic simulation, posterior, planning, signal, API, persistence, surrogate, and data-contract tests, it covers dual-control switching, silence evidence, likelihood tempering, constraints, waveform bounds, discrepancy/OOD behavior, measured-reference gating, sim-to-real transport, acoustic dataset parsing, confidence gating, ledger tamper detection, bundle import, truth-sealed NPZ/CSV/WAV replay, additive migration, paired mismatch, injected faults, WebSockets, normalized healthy/damage/unknown state, accumulated sensor unreliability, duplicate-payload rejection, persisted emergency stop, and database hydration of assurance state. Eight frontend utility/configuration tests pass; lint and the production build pass. The only observed backend warning is an upstream HTTP-test-client deprecation notice, not a runtime failure.
+The dated \path{docs/RELEASE_READINESS_REPORT.md} records final executed test counts, commands, frontend checks, and any outstanding failures. Historical audit checks include rank-one calibration information, different-distance identifiability, preservation of unobserved coupling uncertainty, OOD-before-fusion, stale-verification rejection, anchored detection of rehashed history, and stereo/unsigned PCM normalization. HTTP/API checks do not substitute for visual browser inspection or physical-device validation. A nonfatal test-client deprecation warning is not an execution failure.
+
+\subsection{October Security and Scientific Reproducibility Hardening}
+The 7 October revision adds regression cases for accepted waveforms from unreliable channels, calibration without measured support, rejected repeat references, finite mono recordings, declared acquisition windows, original recording Nyquist support, and normalization of declared physical units before inference. Server-owned acquisition provenance selects physical reference checks; a client sensor name cannot disable them. Stable probability updates reject invalid support, retain small supported hypotheses across persistence, and keep unlearned attribute priors out of location-uncertainty scoring. Amplitude/duration changes or reciprocal source--receiver order alone do not count as diverse verification.
+
+Network regression cases exercise loopback-only defaults, explicit authenticated LAN mode, host/origin checks, bounded requests/WebSocket frames, work/concurrency limits, and emergency-stop access. Artifact regressions exercise bounded archive/array inspection, escaping paths, compressed payload limits, metadata validation, planner/ledger consistency, truth-sealed replay, and source fingerprints that include dirty and untracked code. These controls reduce specified software failure paths; they are not a complete security proof, acquisition authentication, or physical-performance evidence.
+
+\input{release-validation-section.tex}
 
 \section{Technical Differentiation and Candidate Protectable Nucleus}
-The system-level research hypothesis is that hidden-state inference becomes more reliable and measurement-efficient when the controller may improve both the object estimate and the instrument estimate. Seven coupled aspects distinguish the implemented prototype:
+The system-level research hypothesis is that a controller able to improve both object and instrument estimates may use a measurement budget more effectively. This effect remains unproven. Seven implemented aspects are relevant to testing that hypothesis:
 \begin{enumerate}
     \item \textbf{Live rival construction:} separated modes are extracted from the current posterior, so the next experiment targets the ambiguity that actually remains.
     \item \textbf{Joint actionable uncertainty:} structural and metrology marginals determine the next action, rather than being passive confidence displays.
-    \item \textbf{Dual control:} the same policy selects calibration, diagnosis, exploration, verification, or abstention using explicit switching value.
-    \item \textbf{Counterfactual physical co-design:} geometry, frequency, amplitude, duration, waveform code, and fidelity are scored by the observation distributions expected under each live rival, including the hardest pair.
+    \item \textbf{Action arbitration:} the fast policy uses declared switching heuristics; the optional physical-loss policy compares reference calibration and diagnosis under one modeled localization loss.
+    \item \textbf{Finite candidate selection:} geometry/frequency predictions discriminate represented rivals, while waveform, amplitude, duration, and costs also influence heuristic ranking. The two live feature-model levels and the optional scalar-arrival planner have separate approximation boundaries.
     \item \textbf{Trust-gated evidence:} quality, channel reliability, model discrepancy, and OOD evidence control the strength of the physical likelihood instead of merely changing a displayed confidence score.
     \item \textbf{Constraint-aware execution:} infeasible frequency, amplitude, spacing, no-go, and unavailable-device actions are rejected and explained before execution.
     \item \textbf{End-to-end auditability:} decomposed alternatives, deterministic explanations, raw-response checksums, posterior evolution, model identity, and decisions form a verifiable evidence chain.
 \end{enumerate}
 
-The potentially protectable technical nucleus, subject to legal review, is not ``AI for defect detection,'' a generic digital twin, Bayesian localization, sensor placement, self-calibration, information gain, waveform selection, or hashing in isolation. A narrower candidate nucleus is the hardware-anchored TG-CDI sequence that (i) maintains coupled structural and measurement-system uncertainty, (ii) forms current rival structural modes and their action-conditioned acoustic-response distributions, (iii) decides whether the next physical act should calibrate the instrument or discriminate the hardest structural rivals, (iv) co-designs an executable source--receiver--waveform--fidelity action under decision loss, discrepancy, and safety constraints, (v) uses reliability and model-domain evidence to temper or suppress the structural likelihood and to trigger verification or abstention, and (vi) binds the executed action, observation, rationale, posterior transition, and model identity into a replayable integrity chain.
+The candidate subject for professional examination is an apparatus-limited acoustic sequence that maintains a location belief and correlated timing/velocity metrology block, compares direct-path calibration with diagnostic bistatic actions under a common modeled localization loss including a subsequent diagnostic observation, executes one feasible finite-bank action, gates measured evidence before structural fusion, and requires fresh consistent verification for a confident stop. It also records action, observation, rationale, posterior transition, and model identity. This supported sequence is narrower than a general joint posterior, hardest-rival optimal policy, arbitrary waveform design, or multi-fidelity physical solver. Neither the established mathematical components nor their combination are presumed patentable.
 
 Table~\ref{tab:claim-map} is a technical differentiation map, not a legal claim chart. It shows why the argument must rest on the ordered interaction among elements rather than ownership of established components.
 
@@ -747,10 +799,10 @@ Table~\ref{tab:claim-map} is a technical differentiation map, not a legal claim 
 \toprule
 Element & Crowded category & TG-CDI-specific coupling proposed for examination & Intended technical effect / evidence still required \\
 \midrule
-Joint belief & Bayesian localization and nuisance estimation \cite{cantero2019} & Both structural and metrology uncertainty are actionable inputs to one physical-action controller & Avoid diagnosing an instrument error as damage; prove on calibration-shift specimens \\
+Separate belief blocks & Bayesian localization and nuisance estimation \cite{cantero2019} & Location and metrology moments are actionable; timing/velocity covariance is retained & Avoid diagnosing an instrument error as damage; prove on calibration-shift specimens \\
 Live rivals & Multi-path prediction and guided-wave localization \cite{hall2018patent} & Posterior modes generate candidate-specific response distributions; score both average and worst-pair separation & Direct the next shot at the unresolved ambiguity; prove fewer shots at fixed decision risk \\
-Action arbitration & Bayesian placement, active calibration, digital twins \cite{flynn2010,fei2025patent,nist2025sams} & A single safe action set competes across diagnose, calibrate, verify, explore, and abstain using state-dependent value & Spend a scarce measurement on the object or the instrument as warranted; ablate each branch \\
-Physical co-design & Phased arrays, fixed networks, waveform imaging \cite{giurgiutiu2005patent,boeing2025patent} & Movable bistatic coordinates, waveform, and fidelity are jointly chosen for the live rivals under access/cost limits & Reduce required placements for constrained inspection; prove against raster, fixed-grid, and entropy-only policies \\
+Action arbitration & Bayesian placement, active calibration, digital twins \cite{flynn2010,fei2025patent,nist2025sams} & Optional common-loss reference/diagnostic comparison; other action classes use declared heuristics and stop rules & Spend a scarce measurement on object or instrument as warranted; ablate each branch \\
+Finite physical selection & Phased arrays, fixed networks, waveform imaging \cite{giurgiutiu2005patent,boeing2025patent} & Finite bistatic/waveform candidates under access/cost limits; live analytical feature levels only & Reduce placements for constrained inspection; prove against raster, fixed-grid, and entropy-only policies \\
 Trust-tempered update & Robust inference and OOD detection & Quality, accumulated channel reliability, model discrepancy, and OOD determine a likelihood exponent, including zero & Prevent unsupported posterior sharpening; prove false-stop and coverage behavior under shift \\
 Evidence binding & Industrial traceability and integrity logging & Alternative scores, executed physical settings, raw-response hash, model identity, and posterior transition share one causal record & Reproduce why a measurement was selected and how it changed belief; perform independent replay/tamper audit \\
 \bottomrule
@@ -763,9 +815,9 @@ Commercially, TG-CDI is best positioned as adaptive inspection-orchestration mid
 
 \section{Limitations and Threats to Validity}
 \subsection{Model and Inference Limits}
-The simulator is nondispersive and uses a single effective velocity. A real composite plate supports multiple dispersive, anisotropic modes and boundary reflections. The public structural marginal remains a one-dominant-anomaly location grid; size, severity, and type support in the joint interface is compact and not a validated multi-defect reconstruction. Baseline subtraction assumes the nominal digital twin is sufficiently calibrated. Multiplying successive likelihoods assumes conditional independence after approximate nuisance correction, while shared error can still make confidence over-sharp.
+The simulator is nondispersive and uses one effective velocity. A real composite plate supports multiple dispersive, anisotropic modes and boundary reflections. The location grid is conditional on one dominant scatterer; size, severity, and type remain unchanged priors, and healthy/existence/count reconstruction is absent. Baseline subtraction assumes sufficient nominal-twin calibration. Successive generalized likelihood multiplication approximates conditional independence; shared error can still over-concentrate the belief. The correlated particle helper is not a deployed hierarchical inference engine.
 
-Confidence in Eq.~\eqref{eq:confidence} is a heuristic mixture, not a calibrated posterior coverage probability. NEO implements calibration diagnostics, discrepancy variables, likelihood tempering, OOD detection, and abstention, but the quick ECE of 0.715 demonstrates that implementation is not validation. The planner utilities and losses were engineered rather than elicited from a certified maintenance process. The conformal tail is withheld before ten scores and is only meaningful if future calibration scores are exchangeable with deployment. The Gaussian nuisance marginals, compact counterfactual features, online ridge correction, and short-horizon rollout are deliberate approximations.
+Confidence in Eq.~\eqref{eq:confidence} is a heuristic mixture, not a calibrated posterior coverage probability. The historical ECE compared that proxy with a different event and has been deprecated; a corrected event-matched reliability calculation still requires independent physical validation. The planner utilities and cost conversion were engineered rather than elicited from a certified maintenance process. The conformal tail is withheld before ten scores and is only meaningful if future calibration scores are exchangeable with deployment. The block-structured state, locally Gaussian propagation covariance, compact counterfactual features, online ridge correction, and bounded lookahead are deliberate approximations.
 
 \subsection{Evaluation Limits}
 Thirty baseline synthetic cases provide a useful paired study, not population-scale validation. The baseline mean-error intervals cross zero; no claim of superior physical localization is warranted. The expanded NEO matrix has only two cases and is exclusively a software/research smoke test. Baselines do not include every advanced tomography, Gaussian-process design, reinforcement-learning, or optimal-array method. Hyperparameters were not evaluated in a nested holdout, and most studies share simulator assumptions with inference.
@@ -773,7 +825,7 @@ Thirty baseline synthetic cases provide a useful paired study, not population-sc
 The LMSD experiment has only six independent damage scenarios, several with multiple masses. Hammer/accelerometer FRFs at 0--1600 Hz differ from the prototype's 1.2--6.2 kHz chirp interrogation. Added masses are scattering surrogates, not cavities or delaminations. Scenario-held-out performance correctly reveals that correlated channel count cannot replace independent physical diversity.
 
 \subsection{Operational Limits}
-Microphone measurements are vulnerable to airborne sound and ambient noise. Probe remounting changes coupling. Camera homography assumes a planar stationary panel and accurate clicks; inertial/visual metadata are quality proxies, not traceable metrology. Clock-skew checks, heartbeats, and reconnect logic do not provide hard real-time synchronization. ESP32 analog acquisition needs safe conditioning and synchronized excitation. The prototype is not certified NDE equipment and must not be used as the sole basis for safety-critical maintenance decisions.
+Microphone measurements are vulnerable to airborne sound and ambient noise. Probe remounting changes coupling. Camera homography assumes a planar stationary panel and accurate clicks; inertial/visual metadata are quality proxies, not traceable metrology. Clock-skew checks, heartbeats and reconnect logic do not provide hard real-time synchronization. The v2 ESP32 scheduling marker and ADC call timestamps require external electrical timing/transfer validation; analog conditioning and physical power limits are still apparatus requirements. Unaligned physical recordings carry zero inference weight. The prototype is not certified NDE equipment and must not be used as the sole basis for safety-critical maintenance decisions.
 
 \section{Physical Validation and Data-Collection Plan}
 \label{sec:physical-validation}
@@ -815,8 +867,12 @@ The externally downloaded data are intentionally excluded from version control; 
 
 \input{nuisance-design-section}
 
+\input{probe-v2-section}
+
+\input{measured-data-section}
+
 \section{Conclusion}
-ARGUS NEO demonstrates how an NDE research prototype can be organized around the next experiment and the reliability of the measuring process, rather than only the next prediction. Its candidate contribution, TG-CDI, couples live-rival response prediction, diagnose/calibrate/verify/explore/abstain arbitration, hardest-rival geometry--waveform--fidelity design, and trust-tempered evidence in one executable physical loop. ARGUS-X adds explicit healthy and unsupported states, rejects duplicate or infeasible evidence, exposes spatial rivalry without claiming confirmed multi-defect inference, and preserves a human-controlled emergency latch and replayable record. The earlier matched-model baseline supports faster uncertainty concentration versus simple policies, while localization-error superiority remains unproven. The quick NEO studies verify mechanisms and expose poor small-sample calibration, not inspection efficacy. The defensible market wedge is inspection-orchestration software for constrained, sparse, or movable sensing, not replacement of mature robots, phased-array systems, long-range guided-wave tools, permanent SHM networks, or passive AE services. The decisive technical, commercial, and patent-support milestone is a preregistered, specimen-held-out, blind physical campaign with a complete counterfactual bank, independent truth, calibrated coverage, predefined decision losses, and component ablations. Until then TG-CDI is a concrete, falsifiable candidate invention---not proven field superiority, certified inspection equipment, or a patentability conclusion.
+ARGUS NEO demonstrates an inspectable software loop for selecting the next acoustic experiment and checking the reliability of its evidence. It combines location and metrology blocks, finite diagnostic/reference selection, declared verification/abstention rules, and gated structural fusion. The optional controller evaluates reference calibration and diagnosis using at most two arrival-observation branches and a common physical localization loss. ARGUS-X preserves heuristic unsupported-state indicators, rejects duplicate or infeasible evidence, and provides a human-controlled emergency latch and replayable integrity record; it does not establish a healthy structural release. Historical matched-model results support faster modeled uncertainty concentration than simple policies, while localization-error superiority remains unproven. October controls improve specified software invariants without establishing inspection efficacy. A candidate practical use is orchestration for constrained or sparse sensing, contingent on measured benefit. The required next evidence is a preregistered, specimen-held-out blind physical campaign with complete counterfactual coverage, independent truth, calibrated coverage, predefined losses, and component ablations. Technical novelty, human inventorship, ownership, and filing eligibility require separate professional review.
 
 \section*{Acknowledgment}
 The authors acknowledge the LMSD group at KU Leuven for releasing the LMSD 2021 plate-damage dataset under CC BY 4.0. Dataset use in ARGUS retains the published DOI and provenance.
@@ -870,8 +926,9 @@ Reproducibility & default seed & 7 \\
 \section{Interpretation Guide for Demonstrations}
 An entropy decrease means probability mass has concentrated, not necessarily that the mode is correct. Confidence combines concentration and local mass and is OOD-capped, but it is not a certified probability of correctness. Ground truth must remain hidden until the controller stops. Reveal physical error using panel dimensions, not normalized distance. If entropy falls while revealed error remains high, diagnose mismatch or overconfidence rather than calling the run successful. Never describe a two-case matrix, one controlled mismatch case, or simulated calibration coverage as general performance.
 
-The strongest concise description for a judge is: ``ARGUS NEO is an AI-guided scientific instrument that decides whether to calibrate itself or which safe physical measurement to take next. It predicts how rival defect hypotheses would respond to different probe geometries and waveforms, trades decision risk against time, movement, energy, and model trust, then explains and cryptographically records each update.'' The strongest defensible evidence statement is: ``The 41-test implementation is complete and the earlier 30-case simulator baseline concentrated uncertainty more consistently than random or grid probing; the new NEO studies expose both a promising controlled mismatch mechanism and the need for blind physical calibration.''
+A concise description for a judge is: ``ARGUS is a research prototype that uses predicted responses of competing location hypotheses to select the next acoustic experiment, and can request calibration or withhold an unsupported decision. It records the action, measurement and posterior update for inspection.'' A defensible evidence statement is: ``The dated release-readiness report records the completed software checks. Historical synthetic risk-controller results are mixed, and the controller remains optional. Physical accuracy and patentability remain unestablished.''
 
+\IEEEtriggeratref{27}
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 

@@ -1,7 +1,13 @@
-# Pre-counsel patent specification draft
+# Historical broad patent specification draft — superseded for current scope
+
+**20 September 2026 audit:** use [Current technical disclosure](CURRENT_INVENTION_DISCLOSURE.md)
+and [remediation/support matrix](AUDIT_REMEDIATION.md) for present implementation
+and unresolved restrictions. The broad claims below are preserved for provenance;
+they are not filing-ready. Multimodal, robotic, general multi-defect and full
+joint-posterior embodiments below are proposed scope, not demonstrated capability.
 
 **Working title:** Posterior-conditioned control of physical interrogation experiments for hidden-state localization  
-**Status:** confidential drafting input; not filed, not “patent pending,” and not a patentability or freedom-to-operate opinion  
+**Status:** historical drafting input; confidentiality must not be assumed for material in a public repository; not filed, not “patent pending,” and not a patentability or freedom-to-operate opinion
 **Human inventor(s), conception dates, assignee, related applications, and disclosures:** **must be completed from real records**
 
 This document is written to preserve the implemented technical embodiment and meaningful alternatives. Counsel should revise terminology and claims after a professional claim search, inventorship interview, and jurisdiction-specific review.

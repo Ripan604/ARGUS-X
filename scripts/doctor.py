@@ -29,6 +29,10 @@ def main() -> None:
         try:
             loaded = importlib.import_module(module)
             record(f"import:{module}", True, str(getattr(loaded, "__version__", "available")))
+            if module == "torch":
+                release = str(loaded.__version__).split("+", 1)[0].split(".")
+                patched = tuple(int(part) for part in release[:2]) >= (2, 6)
+                record("torch_security_floor", patched, "PyTorch 2.6+ required; use the project .venv interpreter")
         except Exception as exc:
             record(f"import:{module}", False, str(exc))
 

@@ -179,7 +179,7 @@ This differs from a fixed optimal sensor network, an uncertainty-selected inspec
 ## Important adjacent art
 
 - [EP2214009A2](https://patents.google.com/patent/EP2214009A2/en): Bayesian/probabilistic wave-based defect localization using source/sensor responses and a reference.
-- [US6981417B1](https://patents.google.com/patent/US6981417B1/en): adaptive acoustic micro-imaging in which processed inspection information can affect subsequent scanning.
+- [US6981417B1](https://patents.google.com/patent/US6981417B1/en): *Scanning acoustic micro imaging method and apparatus for non-rectangular bounded files*. Its description discusses adaptive inspection; the actual independent claims need a claim-by-claim comparison. A short functional summary is not a novelty finding.
 - [US9964468B1](https://patents.google.com/patent/US9964468B1/en): optimized structural-health sensor placement based on simulated damage scenarios.
 - [US20230401694A1 / US12548141B2](https://patents.google.com/patent/US20230401694A1/en): active-learning selection of semiconductor substrate locations to inspect and use for model training.
 - [Flynn and Todd, 2010](https://doi.org/10.1117/12.847744): Bayesian probabilistic structural modeling for ultrasonic guided-wave sensor placement.

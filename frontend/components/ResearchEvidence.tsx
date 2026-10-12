@@ -50,7 +50,7 @@ export function ResearchEvidence() {
     return () => controller.abort();
   }, []);
   return <section className="research-evidence" aria-labelledby="evidence-study-title">
-    <div className="research-evidence-heading"><div><p className="eyebrow accent">MEASURED, NOT ASSUMED / SYNTHETIC ABLATION</p><h2 id="evidence-study-title">Let the evidence disagree.</h2></div><a className="text-link" href="/research/nuisance-design-summary.json" download>Download recorded results ↗</a></div>
+    <div className="research-evidence-heading"><div><p className="eyebrow accent">RECORDED SIMULATION / HISTORICAL ABLATION</p><h2 id="evidence-study-title">Let the evidence disagree.</h2></div><a className="text-link" href="/research/nuisance-design-summary.json" download>Download recorded results ↗</a></div>
     <p>Can uncertainty about the instrument change which measurement is worth taking? We compared the established planner with the experimental arrival-time information method using the same candidate opportunities and acquisition noise streams.</p>
     {error && <p className="error-banner" role="alert">{error}</p>}
     {!report && !error && <p role="status">Loading recorded study…</p>}

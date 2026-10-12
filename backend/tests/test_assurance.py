@@ -49,7 +49,7 @@ def test_repeated_bad_sensor_evidence_lowers_reliability():
 
 def test_emergency_stop_is_latched_audited_and_requires_acknowledgement(tmp_path):
     database = tmp_path / "stop.db"
-    client = TestClient(create_app(database))
+    client = TestClient(create_app(database), base_url="http://localhost")
     state = client.post("/sessions", json={"mode": "simulation", "seed": 22}).json()
     session_id = state["id"]
     stopped = client.post(
@@ -58,7 +58,7 @@ def test_emergency_stop_is_latched_audited_and_requires_acknowledgement(tmp_path
     assert stopped.status_code == 200
     assert stopped.json()["safety"]["emergency_stop"]["latched"] is True
     assert client.post(f"/sessions/{session_id}/experiments/run", json={}).status_code == 409
-    client = TestClient(create_app(database))
+    client = TestClient(create_app(database), base_url="http://localhost")
     assert client.get(f"/sessions/{session_id}").json()["safety"]["emergency_stop"]["latched"] is True
     assert client.post(f"/sessions/{session_id}/experiments/run", json={}).status_code == 409
     refused = client.post(
@@ -77,7 +77,7 @@ def test_emergency_stop_is_latched_audited_and_requires_acknowledgement(tmp_path
 
 
 def test_duplicate_physical_payload_and_unsafe_custom_action_are_rejected(tmp_path):
-    client = TestClient(create_app(tmp_path / "integrity.db"))
+    client = TestClient(create_app(tmp_path / "integrity.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"mode": "physical", "seed": 7}).json()
     session_id = state["id"]
     payload = _wav_payload()
@@ -106,11 +106,11 @@ def test_duplicate_physical_payload_and_unsafe_custom_action_are_rejected(tmp_pa
 
 def test_assurance_survives_database_hydration(tmp_path):
     database = tmp_path / "assurance-persistence.db"
-    first = TestClient(create_app(database))
+    first = TestClient(create_app(database), base_url="http://localhost")
     state = first.post("/sessions", json={"seed": 31}).json()
     state = first.post(f"/sessions/{state['id']}/experiments/run", json={}).json()["state"]
     assert state["assurance"]["accepted_measurements"] == 1
-    second = TestClient(create_app(database))
+    second = TestClient(create_app(database), base_url="http://localhost")
     restored = second.get(f"/sessions/{state['id']}").json()
     assert restored["assurance"]["accepted_measurements"] == 1
     assert restored["status"]["integrity_assessment"]["scope"] == "research_screening_only"

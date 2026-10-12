@@ -1,0 +1,52 @@
+{
+  "result": "research_results/qualified_wave_packet_imaging_development_2026_10_12.json",
+  "source_snapshot_verified": true,
+  "files": [
+    {
+      "original_path": "scripts/validate_qualified_wave_packet_imaging.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/scripts/validate_qualified_wave_packet_imaging.py",
+      "sha256": "6ffb47d049918403932b8ada3a50af9487de2f0092488d2c10f97a21e4200b32"
+    },
+    {
+      "original_path": "docs/QUALIFIED_WAVE_PACKET_PROTOCOL.md",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/docs/QUALIFIED_WAVE_PACKET_PROTOCOL.md",
+      "sha256": "5ec84bcb8473b5d550ef0d9d77e4320862ee93baa804095f6e9b75f5bb74c588"
+    },
+    {
+      "original_path": "backend/app/evaluation/wave_packet_qualification.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/backend/app/evaluation/wave_packet_qualification.py",
+      "sha256": "f3521380cf2de5dc6bf4e65de14b5269e84e7265d7840bead30b10a085817160"
+    },
+    {
+      "original_path": "backend/app/evaluation/wave_packet_imaging.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/backend/app/evaluation/wave_packet_imaging.py",
+      "sha256": "251c118ddbf9ec1d89821cbb7973d66447f75a508fb36e8d24486a7aae7b9645"
+    },
+    {
+      "original_path": "backend/app/evaluation/measured_guided_waves.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/backend/app/evaluation/measured_guided_waves.py",
+      "sha256": "cb3de3b44a6cd890a452082a34a361ea3a67894a7324e4d136bd8a26b7562a67"
+    },
+    {
+      "original_path": "scripts/validate_wave_packet_imaging.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/scripts/validate_wave_packet_imaging.py",
+      "sha256": "b93d22dcbc49e25d03ce5f50b8dd8b05a107bc2d278364a13b856a8ae3a86937"
+    },
+    {
+      "original_path": "scripts/validate_measured_guided_waves.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/scripts/validate_measured_guided_waves.py",
+      "sha256": "263150e04ca5da5646dc40a59cb819629f4c5dc2bcbb83df07022d0a16bd27f8"
+    },
+    {
+      "original_path": "backend/tests/test_wave_packet_qualification.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/backend/tests/test_wave_packet_qualification.py",
+      "sha256": "a43ccd8fe1bc8183bc938bda5ae05e4b26b7931a40b5f504a37e132afb426f19"
+    },
+    {
+      "original_path": "backend/tests/test_wave_packet_imaging.py",
+      "archive_path": "output/research_sources/qualified_wave_packet_imaging_2026_10_12_v1/backend/tests/test_wave_packet_imaging.py",
+      "sha256": "fcc645618cfe44054e1498010af8672bfcd2c2e424f92f3b9aa3dc5ca808df05"
+    }
+  ],
+  "reason": "Preserve frozen measured experiment before calibration-index contract hardening; valid measured calibrations unchanged."
+}

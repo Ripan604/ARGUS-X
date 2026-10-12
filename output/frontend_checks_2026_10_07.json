@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "task": "test",
+      "exit_code": 0,
+      "seconds": 0.6369480001740158,
+      "output_sha256": "fc3c4b3b7f4d0973ceac9abd34860e591a5af8010f64507ac2a10131aebd4dc5",
+      "tests": 26
+    },
+    {
+      "task": "typecheck",
+      "exit_code": 0,
+      "seconds": 1.8511462998576462,
+      "output_sha256": "5a769efcc3a432820d9412f7ac70fbd24c3f55737bc1a2a3babd093d43488a78"
+    },
+    {
+      "task": "lint",
+      "exit_code": 0,
+      "seconds": 6.907772599952295,
+      "output_sha256": "cae1340eacd3552aa0dd3fcc6d6531ba38f2cb55c3cc9149716415bbca7c3c06"
+    },
+    {
+      "task": "build",
+      "exit_code": 0,
+      "seconds": 3.8226385000161827,
+      "output_sha256": "8717d92dc7721ebf89c5d37d301ec97207c4aa85b4a52080dc4c78775042d374"
+    }
+  ],
+  "source_sha256": {
+    "frontend/app/globals.css": "c5ad3e576c26b05643339f349b06033c4966bc6f51baad899a2d569d8f11fc47",
+    "frontend/app/layout.tsx": "d24b38e949fad0d471b0d9f32ab3192c3c3b570d1d7335780ca8dc93c652ed14",
+    "frontend/app/manifest.ts": "7e9525d2addbc14912e97fbeacb056ac59d002753836c82106da9bc8610cd3c0",
+    "frontend/app/page.tsx": "ef3ed41d82b76326b9a92ff6de1ce26e02ed71ab6868afd973f7cfe6e2371ac2",
+    "frontend/app/probe/page.tsx": "6cf9579dd85fbe500dfe418b04acf26dac0b215413dbdb9fb6574d98e7b6dfa7",
+    "frontend/app/research/page.tsx": "0a94f24ccc698c32d1c36151eb49f64a4eca1077300b2ce6218bedc2e17b4a0d",
+    "frontend/app/setup/layout.tsx": "5657babcc56fcc3f995dd10862ce7e8965651f138389520331148f84bfa46019",
+    "frontend/app/setup/page.tsx": "16e08ed24be8f9ebeecc84f91e009aa213d185f262d63b257b7ef8294c48be2d",
+    "frontend/app/simulator/layout.tsx": "3aff62010f45752776f78f5228eea85ce8143b34dcc4354f448225bcc01864d4",
+    "frontend/app/simulator/page.tsx": "1b4b0946f9d5e41e57b26947a8d29667843e6f723874d6f000ca76f5a2597ce0",
+    "frontend/components/ArgusBrain.tsx": "31ea8c0dfa4b379efdbaa82cdf0c686438e398cd381b7f8a3bb96f5278e7b7d0",
+    "frontend/components/AssurancePanel.tsx": "865feffdeb7caf7677134251d1e985098751aa60f3e37e9eb50e4b6dcb3d3d6e",
+    "frontend/components/BeliefEvolution.tsx": "3323408e04e66aa22c244aa7c441fbc2846de29db2e6dab40b8fa82bd41ae620",
+    "frontend/components/BenchmarkPanel.tsx": "6b1082c96642292c5472673fdd4c734037cd4bb5da70342d1ce720cf7a32ffc3",
+    "frontend/components/CameraOverlay.tsx": "ba174e6e19915bded95513b78cf60fe52e0dfcbde583fbf589ade736edfed6df",
+    "frontend/components/EngineAccess.tsx": "a250a91281c730f7ba1efcc0de8c5de8ad46564f40c596adb40b3f2c821d3ada",
+    "frontend/components/EvidenceLedger.tsx": "e7a168216bf8ffe049f5ba735bf7ffff7ea238b32c44de0bb3416c3ab31b43a1",
+    "frontend/components/HeatmapCanvas.tsx": "454dd9d9bebd01df23518908bcfb65b7027bcd4474a6eb531bad2adbc9f0284d",
+    "frontend/components/NarrativeTwin.tsx": "742c40c629e2c18bb6d74d2f6d96108cfcb266a12cc169c74f23436bb99e968c",
+    "frontend/components/ResearchEvidence.tsx": "4350aaac4b499d6cc66368c1a153a419ed35b8e435f54d080045207068ac60bc",
+    "frontend/components/ResearchLab.tsx": "2789eec47e46e2ef385fa72ef5cc33878faa43a247bbf378e6c5517de4c523e8",
+    "frontend/components/SignalPlots.tsx": "340607b46d5b2406dce4427653af9a691dedb095e67342b6fd16120645369e00",
+    "frontend/components/spatialGeometry.ts": "797e8e6bafa374d6ebb847de2a1a4921edc65019bcece14d5b05db9bb9793992",
+    "frontend/components/SpatialWorld.tsx": "e83dcace4e0cc67436a3fea1024dee9d61d6472762bf79ce303e630c413b0e9e",
+    "frontend/hooks/useArgusSession.ts": "0e80226b0e4cdbbf5713f9580d252ea29aa3a0bf9c81b7a3a5050811d370e070",
+    "frontend/services/api.ts": "d49455de36b9763e6387d6cdbc8f26d593ca8f228895bd38ca5468306adc666e",
+    "frontend/utils/audio.ts": "58ddfb8478b5bca21e78fc83c2607174da8c02be4a0e74f7c7f39272611b9fd8",
+    "frontend/utils/neo.ts": "443e7443a9c8f542dbfb18061a7ff4f0c42a0e200473d64a489d100e1650cc9f",
+    "frontend/utils/posteriorDisplay.ts": "79008c45403402a7ff2c750b08639b1553d053bec2a24ef4ab03ec8c862b0098",
+    "frontend/utils/researchDesign.ts": "ee29e64f10ad389ed933791d89a40b9e8feb2dcc96cb286e437afbaaef9a7c5d",
+    "frontend/utils/virtualAcoustics.ts": "c2ca2a50a41e2f3dd882b02cea6965bad38f27e52fcb8c2a135455ee7c4c6150",
+    "frontend/tests/api.test.ts": "cd4828ea31506143090062a8713cdf74accdc8b28cfc0ade2cfd5f7fd1377a85",
+    "frontend/tests/neo.test.ts": "3ce40afe5121207a510303f1a4cb59b5c55a16aec013a9a9f3686e8b672783ba",
+    "frontend/tests/posteriorDisplay.test.ts": "f9e10e73dcab5de6de0669734bd0de405511c32ddcd9971a3e92b680a7f3d93c",
+    "frontend/tests/researchDesign.test.ts": "f4af0af06f7bed801ebaa34a1e8b70a81a5e4d01a4f84fd9f789f8a29741ca10",
+    "frontend/tests/spatialGeometry.test.ts": "7bd5b10ba76c6bb18b565988ad1b0502bfa75d01d075c7c2e0d72e5eaa507322",
+    "frontend/tests/virtual-acoustics.test.ts": "9784807cd3dc71cee77d1d990253ca9354befe26e0a240c2985032329489d4e5",
+    "frontend/package.json": "b1a459ff919e6ca422f8e29ce796f3da8c62c0a7126c6dbf7b5285d80e8c532e",
+    "frontend/package-lock.json": "3b8012c1c4e55a8a15d10cea6200b6b5a8e32b04647384f8c12af68e87fb8a38",
+    "frontend/vite.config.ts": "a7703e54209d86725658965f2f620d6b0b5ba1d91b18935b0713d63a4fe78cd5",
+    "frontend/tsconfig.json": "0518b5a613caaff145f0cdda356b16e8b0032c0b8fdfdd01c11e58b39e609f5d"
+  },
+  "source_changed_during_run": false,
+  "all_passed": true
+}

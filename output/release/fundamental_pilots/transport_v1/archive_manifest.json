@@ -1,0 +1,18 @@
+{
+  "backend/app/evaluation/healthy_wave_transport.py": {
+    "sha256": "94532c07f63357564f3e204f268e9e29258d246f994b2aceee1d2ee971997ed5",
+    "bytes": 18202
+  },
+  "backend/tests/test_healthy_wave_transport.py": {
+    "sha256": "2b949b8620e525252f56f953dfcd51d85ba607d3e2c29d4d4c9d2ffb1ef87804",
+    "bytes": 7867
+  },
+  "docs/HEALTHY_WAVE_TRANSPORT_PROTOCOL.md": {
+    "sha256": "1574966b732b994d86b3b664699236bbfde8b7a6743f76f35940e8abd75129f6",
+    "bytes": 6246
+  },
+  "research_results/healthy_reference_development_2026_10_08.json": {
+    "sha256": "c03651d6ce0ad245a582d422490bb700625106bb620542da4d3bbd499b13d5fa",
+    "bytes": 120166
+  }
+}

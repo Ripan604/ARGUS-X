@@ -1,0 +1,140 @@
+{
+  "baseline": {
+    "standardized_mae_common_baseline_scale": 0.44659149646759033,
+    "mean_feature_r2": 0.46490800380706787,
+    "per_feature_mae": {
+      "rms": 0.003217317396774888,
+      "peak_amplitude": 0.02120412513613701,
+      "crest_factor": 1.2332795858383179,
+      "zero_crossing_rate": 0.008415316231548786,
+      "spectral_centroid_hz": 87.42803955078125,
+      "spectral_bandwidth_hz": 49.78169631958008,
+      "spectral_rolloff_hz": 118.63824462890625,
+      "dominant_frequency_hz": 1149.8267822265625,
+      "spectral_entropy": 0.0050101447850465775,
+      "band_energy_low": 0.018593814224004745,
+      "band_energy_mid": 0.0293307825922966,
+      "band_energy_high": 0.029503710567951202,
+      "envelope_peak_time_s": 0.0015485348412767053,
+      "decay_time_s": 0.0011096203234046698,
+      "snr_db": 0.881858766078949
+    },
+    "per_feature_r2": {
+      "rms": 0.9263471364974976,
+      "peak_amplitude": 0.9081996083259583,
+      "crest_factor": 0.779113233089447,
+      "zero_crossing_rate": 0.40192633867263794,
+      "spectral_centroid_hz": 0.36776143312454224,
+      "spectral_bandwidth_hz": 0.32198357582092285,
+      "spectral_rolloff_hz": 0.1819692850112915,
+      "dominant_frequency_hz": 0.0911216139793396,
+      "spectral_entropy": 0.2169681191444397,
+      "band_energy_low": 0.30024582147598267,
+      "band_energy_mid": 0.44159919023513794,
+      "band_energy_high": 0.4404093623161316,
+      "envelope_peak_time_s": 0.04480111598968506,
+      "decay_time_s": 0.6237121224403381,
+      "snr_db": 0.9274621605873108
+    }
+  },
+  "candidate": {
+    "standardized_mae_common_baseline_scale": 0.4362996816635132,
+    "mean_feature_r2": 0.48902302980422974,
+    "per_feature_mae": {
+      "rms": 0.002673910465091467,
+      "peak_amplitude": 0.01710864156484604,
+      "crest_factor": 1.1411969661712646,
+      "zero_crossing_rate": 0.008371843956410885,
+      "spectral_centroid_hz": 86.61659240722656,
+      "spectral_bandwidth_hz": 49.728424072265625,
+      "spectral_rolloff_hz": 117.93631744384766,
+      "dominant_frequency_hz": 1138.337890625,
+      "spectral_entropy": 0.005108124576508999,
+      "band_energy_low": 0.018338417634367943,
+      "band_energy_mid": 0.028620004653930664,
+      "band_energy_high": 0.029009992256760597,
+      "envelope_peak_time_s": 0.001521378755569458,
+      "decay_time_s": 0.0011060571996495128,
+      "snr_db": 0.8229480981826782
+    },
+    "per_feature_r2": {
+      "rms": 0.9489867687225342,
+      "peak_amplitude": 0.9367645978927612,
+      "crest_factor": 0.7934697866439819,
+      "zero_crossing_rate": 0.41353172063827515,
+      "spectral_centroid_hz": 0.3927595019340515,
+      "spectral_bandwidth_hz": 0.32921648025512695,
+      "spectral_rolloff_hz": 0.21012908220291138,
+      "dominant_frequency_hz": 0.09438002109527588,
+      "spectral_entropy": 0.2630167007446289,
+      "band_energy_low": 0.356258749961853,
+      "band_energy_mid": 0.4893995523452759,
+      "band_energy_high": 0.4814256429672241,
+      "envelope_peak_time_s": 0.05702197551727295,
+      "decay_time_s": 0.6332628726959229,
+      "snr_db": 0.9357215762138367
+    }
+  },
+  "paired_mae_advantage": {
+    "positive_favours": "candidate",
+    "mean": 0.010291805490851402,
+    "bootstrap_95ci": [
+      0.008368069585412741,
+      0.012235987046733498
+    ],
+    "bootstrap_seed": 73125,
+    "resamples": 2000
+  },
+  "features_with_over_10_percent_mae_regression": [],
+  "protocol": {
+    "samples": 4000,
+    "test_metadata": {
+      "seed": 73124,
+      "samples": 4000,
+      "input_size": 24,
+      "output_size": 15,
+      "feature_names": [
+        "rms",
+        "peak_amplitude",
+        "crest_factor",
+        "zero_crossing_rate",
+        "spectral_centroid_hz",
+        "spectral_bandwidth_hz",
+        "spectral_rolloff_hz",
+        "dominant_frequency_hz",
+        "spectral_entropy",
+        "band_energy_low",
+        "band_energy_mid",
+        "band_energy_high",
+        "envelope_peak_time_s",
+        "decay_time_s",
+        "snr_db"
+      ],
+      "defect_types": [
+        "cavity",
+        "loose_region",
+        "delamination",
+        "dense_inclusion"
+      ],
+      "description": "Domain-randomized physics simulator data for the learned forward-response surrogate."
+    },
+    "scale": "baseline training target standard deviation for both models",
+    "selection": "candidate selected only by internal validation loss",
+    "input_overlap_with_supplied_training_banks": 0,
+    "data_source": "synthetic",
+    "runtime_model_replaced": false,
+    "limitations": [
+      "IID simulator holdout, not measured physical evidence",
+      "No defect-localization or field-calibration accuracy established",
+      "Intervals condition on these two fitted checkpoints"
+    ],
+    "sha256": {
+      "models/forward_surrogate.pt": "a7441ec9aaef91a6e9be4641bc7339ca8fa49cff1b781692f66a165843768e98",
+      "models/forward_surrogate_50000_73123.pt": "953a4ebb5f9b1279cd567a31bb84d1f65dc274be8a941fbd5673299f091ac435",
+      "datasets/generated/argus_forward_holdout_73124.npz": "f9c56721688ab4c956e7597cd2d8d0e8444ad4b3194a08fad61c5a9f97b2e15d",
+      "datasets/generated/argus_forward_15000.npz": "b0ee943440f13537792c9c40960d1c49f4b30f83df6447d9b5429f85e91a63d4",
+      "datasets/generated/argus_forward_50000_73123.npz": "1a27db98be78fd586339a32f59de3bf5378781f8861d553313466ee216fcc322",
+      "C:\\Users\\ripan\\Hackathon_proj\\scripts\\compare_surrogates.py": "80fe2351d89e59f5ed3ac172547d9af8137eb7b0e912e057b4f5cdae361f2f87"
+    }
+  }
+}

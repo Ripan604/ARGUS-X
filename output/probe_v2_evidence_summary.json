@@ -1,0 +1,1343 @@
+{
+  "revision": "probe-v2",
+  "evidence_scope": "synthetic_scalar_reference_not_physical_localization",
+  "backend": {
+    "passed": 470,
+    "skipped": 1,
+    "failures": 0,
+    "junit_sha256": "26e207f8ed7c83b8c8428ee171c5bd57cf965e0e8fb587bea4708633dad4d38e"
+  },
+  "frontend": [
+    {
+      "task": "test",
+      "exit_code": 0,
+      "seconds": 1.1077149000484496,
+      "output_sha256": "2bf8b7237406405bac845fa03b37bd5ad4c6d051bae83db23aaeba50389563ac",
+      "tests": 30
+    },
+    {
+      "task": "typecheck",
+      "exit_code": 0,
+      "seconds": 3.0311525999568403,
+      "output_sha256": "5a769efcc3a432820d9412f7ac70fbd24c3f55737bc1a2a3babd093d43488a78"
+    },
+    {
+      "task": "lint",
+      "exit_code": 0,
+      "seconds": 11.146435200003907,
+      "output_sha256": "cae1340eacd3552aa0dd3fcc6d6531ba38f2cb55c3cc9149716415bbca7c3c06"
+    },
+    {
+      "task": "build",
+      "exit_code": 0,
+      "seconds": 9.17993459990248,
+      "output_sha256": "6fa18ac892741b6cca19fe0bb995e103a2321fbac00353b2803d7bc70bac1859"
+    }
+  ],
+  "study": {
+    "file": "research_results/extended_reference_design_2026_10_07.json",
+    "sha256": "c5fabd3d51df27150f5005cdf9720fb29313860567499a70425abd3cc59e73af",
+    "attempted_runs": 1920,
+    "completed_runs": 1909,
+    "failed_opportunities": 11,
+    "seed_clusters": 48,
+    "source_hashes_current": true,
+    "failure_reasons": {
+      "Direct-path observation is outside propagation-model support": 11
+    },
+    "summary": {
+      "nominal_prior_noise": {
+        "cyclic": {
+          "attempted_runs": 192,
+          "completed_runs": 192,
+          "failed_updates_or_selections": 0,
+          "mean_target_arrival_rmse_us": 229.81608637363965,
+          "mean_realized_path_prediction_plus_cost_m2": 0.0029995867025317037,
+          "mean_actual_acquisition_cost_m2": 0.0001678483228416185,
+          "mean_velocity_absolute_error_m_s": 15.460407508064568,
+          "mean_timing_absolute_error_us": 168.23414119227093,
+          "mean_posterior_weighted_95_interval_coverage": 0.9311430940452495,
+          "mean_case_elapsed_ms": 1.6857942719070707,
+          "selection_latency_p95_ms": 0.004699977580457926,
+          "mean_failed_opportunity_latency_ms": null
+        },
+        "random": {
+          "attempted_runs": 192,
+          "completed_runs": 192,
+          "failed_updates_or_selections": 0,
+          "mean_target_arrival_rmse_us": 232.30120419113246,
+          "mean_realized_path_prediction_plus_cost_m2": 0.002820215455096798,
+          "mean_actual_acquisition_cost_m2": 0.00015207287780936445,
+          "mean_velocity_absolute_error_m_s": 15.443334275355676,
+          "mean_timing_absolute_error_us": 168.93353282925332,
+          "mean_posterior_weighted_95_interval_coverage": 0.949608473765668,
+          "mean_case_elapsed_ms": 1.6192989545137,
+          "selection_latency_p95_ms": 0.003800028935074806,
+          "mean_failed_opportunity_latency_ms": null
+        },
+        "scaled_a_optimal": {
+          "attempted_runs": 192,
+          "completed_runs": 192,
+          "failed_updates_or_selections": 0,
+          "mean_target_arrival_rmse_us": 200.232312513452,
+          "mean_realized_path_prediction_plus_cost_m2": 0.0021954417300224507,
+          "mean_actual_acquisition_cost_m2": 0.00012999903443140922,
+          "mean_velocity_absolute_error_m_s": 13.140222105206364,
+          "mean_timing_absolute_error_us": 172.35817035139527,
+          "mean_posterior_weighted_95_interval_coverage": 0.9213215092653444,
+          "mean_case_elapsed_ms": 3.298065622705811,
+          "selection_latency_p95_ms": 0.7776000420562923,
+          "mean_failed_opportunity_latency_ms": null
+        },
+        "scaled_d_optimal": {
+          "attempted_runs": 192,
+          "completed_runs": 192,
+          "failed_updates_or_selections": 0,
+          "mean_target_arrival_rmse_us": 190.8465423521127,
+          "mean_realized_path_prediction_plus_cost_m2": 0.001984652030751462,
+          "mean_actual_acquisition_cost_m2": 0.0001057389281860383,
+          "mean_velocity_absolute_error_m_s": 13.082245811167477,
+          "mean_timing_absolute_error_us": 178.8392543699858,
+          "mean_posterior_weighted_95_interval_coverage": 0.9172389492564093,
+          "mean_case_elapsed_ms": 3.346371349228624,
+          "selection_latency_p95_ms": 0.8599749417044222,
+          "mean_failed_opportunity_latency_ms": null
+        },
+        "task_conditioned": {
+          "attempted_runs": 192,
+          "completed_runs": 192,
+          "failed_updates_or_selections": 0,
+          "mean_target_arrival_rmse_us": 189.08746436175986,
+          "mean_realized_path_prediction_plus_cost_m2": 0.001906094141727944,
+          "mean_actual_acquisition_cost_m2": 9.720640655562435e-05,
+          "mean_velocity_absolute_error_m_s": 13.164096855314336,
+          "mean_timing_absolute_error_us": 186.22780418495623,
+          "mean_posterior_weighted_95_interval_coverage": 0.9182725148194599,
+          "mean_case_elapsed_ms": 6.183963544269015,
+          "selection_latency_p95_ms": 2.1450999192893505,
+          "mean_failed_opportunity_latency_ms": null
+        }
+      },
+      "double_acquisition_noise": {
+        "cyclic": {
+          "attempted_runs": 192,
+          "completed_runs": 191,
+          "failed_updates_or_selections": 1,
+          "mean_target_arrival_rmse_us": 419.26158662044867,
+          "mean_realized_path_prediction_plus_cost_m2": 0.010637594259849933,
+          "mean_actual_acquisition_cost_m2": 0.0001678483228416185,
+          "mean_velocity_absolute_error_m_s": 22.13712459038506,
+          "mean_timing_absolute_error_us": 234.89600000538812,
+          "mean_posterior_weighted_95_interval_coverage": 0.7124960665756633,
+          "mean_case_elapsed_ms": 1.6597083219191215,
+          "selection_latency_p95_ms": 0.004699977580457926,
+          "mean_failed_opportunity_latency_ms": 0.202300027012825
+        },
+        "random": {
+          "attempted_runs": 192,
+          "completed_runs": 191,
+          "failed_updates_or_selections": 1,
+          "mean_target_arrival_rmse_us": 396.96089918062165,
+          "mean_realized_path_prediction_plus_cost_m2": 0.008265095277165652,
+          "mean_actual_acquisition_cost_m2": 0.00015207287780936445,
+          "mean_velocity_absolute_error_m_s": 21.61366364034784,
+          "mean_timing_absolute_error_us": 223.93749313659455,
+          "mean_posterior_weighted_95_interval_coverage": 0.6916512058171346,
+          "mean_case_elapsed_ms": 1.6901713582531859,
+          "selection_latency_p95_ms": 0.0036999699659645557,
+          "mean_failed_opportunity_latency_ms": 0.20190002396702766
+        },
+        "scaled_a_optimal": {
+          "attempted_runs": 192,
+          "completed_runs": 189,
+          "failed_updates_or_selections": 3,
+          "mean_target_arrival_rmse_us": 363.06347785969757,
+          "mean_realized_path_prediction_plus_cost_m2": 0.007447306144943439,
+          "mean_actual_acquisition_cost_m2": 0.00012795122924010987,
+          "mean_velocity_absolute_error_m_s": 19.867341539205352,
+          "mean_timing_absolute_error_us": 216.90479449569685,
+          "mean_posterior_weighted_95_interval_coverage": 0.6586427745156257,
+          "mean_case_elapsed_ms": 3.454816142038908,
+          "selection_latency_p95_ms": 0.7241499260999262,
+          "mean_failed_opportunity_latency_ms": 0.8072666047761837
+        },
+        "scaled_d_optimal": {
+          "attempted_runs": 192,
+          "completed_runs": 189,
+          "failed_updates_or_selections": 3,
+          "mean_target_arrival_rmse_us": 342.63246795854656,
+          "mean_realized_path_prediction_plus_cost_m2": 0.0068487049264468304,
+          "mean_actual_acquisition_cost_m2": 0.00010778673337733765,
+          "mean_velocity_absolute_error_m_s": 18.972626955255844,
+          "mean_timing_absolute_error_us": 206.34641689047496,
+          "mean_posterior_weighted_95_interval_coverage": 0.6741019445099452,
+          "mean_case_elapsed_ms": 3.346958323769892,
+          "selection_latency_p95_ms": 0.8398249628953636,
+          "mean_failed_opportunity_latency_ms": 0.728366586069266
+        },
+        "task_conditioned": {
+          "attempted_runs": 192,
+          "completed_runs": 189,
+          "failed_updates_or_selections": 3,
+          "mean_target_arrival_rmse_us": 343.4689392244084,
+          "mean_realized_path_prediction_plus_cost_m2": 0.006505316281600764,
+          "mean_actual_acquisition_cost_m2": 9.84009595838823e-05,
+          "mean_velocity_absolute_error_m_s": 18.67551566829791,
+          "mean_timing_absolute_error_us": 210.8116640769508,
+          "mean_posterior_weighted_95_interval_coverage": 0.6619038502480664,
+          "mean_case_elapsed_ms": 6.195028126967372,
+          "selection_latency_p95_ms": 2.0161999855190516,
+          "mean_failed_opportunity_latency_ms": 1.6713999211788177
+        }
+      }
+    },
+    "paired": [
+      {
+        "regime_group": "all_regimes",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 58.260634703960015,
+        "seed_cluster_bootstrap_95ci": [
+          35.126727484425885,
+          82.51996526333106
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.002612885269526464,
+        "seed_cluster_bootstrap_95ci": [
+          0.0010897242049680408,
+          0.004791627545166555
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 48.352849892792925,
+        "seed_cluster_bootstrap_95ci": [
+          26.694445000723686,
+          70.9110067927508
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0013369501544668704,
+        "seed_cluster_bootstrap_95ci": [
+          0.0006098419818946731,
+          0.0021456036146333146
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 15.369693393490676,
+        "seed_cluster_bootstrap_95ci": [
+          4.7867717322182655,
+          26.57163395673321
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0006156687258185907,
+        "seed_cluster_bootstrap_95ci": [
+          0.0001962702295404559,
+          0.001154836793827243
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 0.46130336224544993,
+        "seed_cluster_bootstrap_95ci": [
+          -5.698690059535394,
+          6.902672412178439
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "all_regimes",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.00021097326693479224,
+        "seed_cluster_bootstrap_95ci": [
+          -5.447131345169106e-05,
+          0.0006071662641049165
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 40.72862201187983,
+        "seed_cluster_bootstrap_95ci": [
+          23.926114722015495,
+          57.41203975723773
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0010934925608037593,
+        "seed_cluster_bootstrap_95ci": [
+          0.0006038023820293173,
+          0.0016568022118333618
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 43.21373982937263,
+        "seed_cluster_bootstrap_95ci": [
+          26.70366374777917,
+          59.81014018779465
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0009141213133688542,
+        "seed_cluster_bootstrap_95ci": [
+          0.0005436875453330301,
+          0.0013191714166237174
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 11.144848151692168,
+        "seed_cluster_bootstrap_95ci": [
+          3.488007978069975,
+          19.310251343280168
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0002893475882945067,
+        "seed_cluster_bootstrap_95ci": [
+          0.00010071071619716481,
+          0.0005140357874780208
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 1.7590779903528315,
+        "seed_cluster_bootstrap_95ci": [
+          -2.9018953102231007,
+          6.778913883396752
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 7.8557889023518e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -1.9791936118035205e-05,
+          0.0002107145821528066
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 75.79264739604018,
+        "seed_cluster_bootstrap_95ci": [
+          45.92698262112544,
+          108.29962171233629
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0041322779782491685,
+        "seed_cluster_bootstrap_95ci": [
+          0.0015359302531178572,
+          0.007963916043336183
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 53.491959956213215,
+        "seed_cluster_bootstrap_95ci": [
+          24.30808821893424,
+          83.52527079163809
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0017597789955648875,
+        "seed_cluster_bootstrap_95ci": [
+          0.0006052741039162934,
+          0.0030147260405990767
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 19.59453863528918,
+        "seed_cluster_bootstrap_95ci": [
+          5.271851690505133,
+          35.158069873764546
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0009419898633426745,
+        "seed_cluster_bootstrap_95ci": [
+          0.00025799547071288426,
+          0.0018141613547355843
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": -0.8364712658619299,
+        "seed_cluster_bootstrap_95ci": [
+          -11.118467698748033,
+          9.834541022290505
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0003433886448460664,
+        "seed_cluster_bootstrap_95ci": [
+          -0.000181839084170355,
+          0.001125456737395617
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 43.85973250443116,
+        "seed_cluster_bootstrap_95ci": [
+          14.459868941216694,
+          73.55612433533985
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.001102528001468374,
+        "seed_cluster_bootstrap_95ci": [
+          0.0004093955469062605,
+          0.0018177857686754876
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 39.14467917753334,
+        "seed_cluster_bootstrap_95ci": [
+          11.883130843605285,
+          66.48802367399368
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.000949565601042829,
+        "seed_cluster_bootstrap_95ci": [
+          0.000352249355270327,
+          0.0015883632901878045
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 7.624683193611184,
+        "seed_cluster_bootstrap_95ci": [
+          -8.225815422765775,
+          26.227709729085795
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.00041477922708139394,
+        "seed_cluster_bootstrap_95ci": [
+          -8.78463538645007e-05,
+          0.0011671385986683543
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 3.2419753187547378,
+        "seed_cluster_bootstrap_95ci": [
+          -8.636770242888714,
+          17.3027347569708
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.000192907041523302,
+        "seed_cluster_bootstrap_95ci": [
+          -0.00011073633004988215,
+          0.0006765261216285505
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 62.94282931323852,
+        "seed_cluster_bootstrap_95ci": [
+          -1.3360023766512028,
+          124.2795216394693
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0018799508860428305,
+        "seed_cluster_bootstrap_95ci": [
+          -0.0007079528312738071,
+          0.004087035126528535
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 48.028337033761524,
+        "seed_cluster_bootstrap_95ci": [
+          3.317088122168951,
+          93.68572625108534
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0020032766163185626,
+        "seed_cluster_bootstrap_95ci": [
+          0.00021294415622663668,
+          0.004116081071921599
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 29.594788802184393,
+        "seed_cluster_bootstrap_95ci": [
+          -8.1812872148846,
+          69.22920228060072
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0022194314735681513,
+        "seed_cluster_bootstrap_95ci": [
+          -9.936744611944226e-06,
+          0.00522667940240023
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": -5.730849252300061,
+        "seed_cluster_bootstrap_95ci": [
+          -38.280151789011356,
+          27.816923257511203
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_0_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0008353849040481858,
+        "seed_cluster_bootstrap_95ci": [
+          -0.0009580916470576866,
+          0.003699216840329733
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 47.02311921763319,
+        "seed_cluster_bootstrap_95ci": [
+          -0.915256316798205,
+          92.6316968266586
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.00190879461143708,
+        "seed_cluster_bootstrap_95ci": [
+          0.0003230322582870704,
+          0.0038268229815118585
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 60.72179118293541,
+        "seed_cluster_bootstrap_95ci": [
+          18.652692249444947,
+          105.43432294330084
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0014191775419854856,
+        "seed_cluster_bootstrap_95ci": [
+          0.0004286243189220747,
+          0.002523795044538984
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 34.89835386791756,
+        "seed_cluster_bootstrap_95ci": [
+          13.414427628803713,
+          60.67655549056046
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0006171164105268845,
+        "seed_cluster_bootstrap_95ci": [
+          0.00018575708570734955,
+          0.0011575106891642283
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 9.024904841655186,
+        "seed_cluster_bootstrap_95ci": [
+          0.7894992348425512,
+          21.455182499454462
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.00016034806931075008,
+        "seed_cluster_bootstrap_95ci": [
+          1.6039833897308563e-05,
+          0.00037092883709899507
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 116.7777765615178,
+        "seed_cluster_bootstrap_95ci": [
+          28.031142260919996,
+          221.6654223949322
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.010677773493145706,
+        "seed_cluster_bootstrap_95ci": [
+          0.001306265941766388,
+          0.0257347329356077
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 61.05913030665828,
+        "seed_cluster_bootstrap_95ci": [
+          -13.324327992828959,
+          133.48751119695538
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0016841223955835916,
+        "seed_cluster_bootstrap_95ci": [
+          -0.0015076170875320686,
+          0.004777863761362302
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 41.10547728745783,
+        "seed_cluster_bootstrap_95ci": [
+          10.02844414250085,
+          80.61645809457428
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.001345196838921125,
+        "seed_cluster_bootstrap_95ci": [
+          0.00029378042679044554,
+          0.0028531781144322645
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 15.989092952497677,
+        "seed_cluster_bootstrap_95ci": [
+          -1.8709327298874379,
+          40.56002522918877
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_1_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0007140643527167742,
+        "seed_cluster_bootstrap_95ci": [
+          4.038410553187672e-05,
+          0.0017788839902183843
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 34.07922338265863,
+        "seed_cluster_bootstrap_95ci": [
+          9.22902360241375,
+          59.461836626341906
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0006180250857029615,
+        "seed_cluster_bootstrap_95ci": [
+          0.00026340708886078923,
+          0.001003254126356427
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 26.528560318026177,
+        "seed_cluster_bootstrap_95ci": [
+          6.189058240393864,
+          47.274936258179935
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.000547124662558894,
+        "seed_cluster_bootstrap_95ci": [
+          0.00024262930855044852,
+          0.0008756720973969631
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 1.851365722486799,
+        "seed_cluster_bootstrap_95ci": [
+          -9.143198279423451,
+          13.65261642613634
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 8.80477783107166e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -5.817257014590613e-05,
+          0.00024040309560230597
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": -6.409110874295621,
+        "seed_cluster_bootstrap_95ci": [
+          -13.283643986879406,
+          -1.0134022746198197
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": -4.443153823197995e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -9.850444503612165e-05,
+          -1.0647144585824086e-07
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 50.22570402577341,
+        "seed_cluster_bootstrap_95ci": [
+          5.104366373924068,
+          95.41821436252394
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0015352083030838572,
+        "seed_cluster_bootstrap_95ci": [
+          0.0004236719786180548,
+          0.0027052042422006342
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 25.010975754012495,
+        "seed_cluster_bootstrap_95ci": [
+          -13.681899959990833,
+          66.33166211092902
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.001153304463703115,
+        "seed_cluster_bootstrap_95ci": [
+          0.00021122886968429465,
+          0.002207170390211412
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 7.029207578522029,
+        "seed_cluster_bootstrap_95ci": [
+          -12.487602526281872,
+          27.40534965934291
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0001803357436064996,
+        "seed_cluster_bootstrap_95ci": [
+          -0.00025025693022057415,
+          0.0006275510228780177
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": -15.797160380007904,
+        "seed_cluster_bootstrap_95ci": [
+          -29.41845742453945,
+          -4.162007285601868
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_2_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": -0.00022497333139367872,
+        "seed_cluster_bootstrap_95ci": [
+          -0.00044031319839638267,
+          -5.1121591405254745e-05
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 37.95241294279635,
+        "seed_cluster_bootstrap_95ci": [
+          17.77663429214032,
+          59.01929723657066
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0007446225446066222,
+        "seed_cluster_bootstrap_95ci": [
+          0.00035623994651659443,
+          0.0011559363053399308
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 46.459928638995564,
+        "seed_cluster_bootstrap_95ci": [
+          26.078541138585383,
+          66.61052416492825
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.0007406174478882078,
+        "seed_cluster_bootstrap_95ci": [
+          0.0003827226749785103,
+          0.001113764445137339
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 0.20498982275312505,
+        "seed_cluster_bootstrap_95ci": [
+          -9.24613478770106,
+          9.470040566357579
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 3.744693725903182e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -7.711278819497012e-05,
+          0.00015517083653838706
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 1.1785426752970238,
+        "seed_cluster_bootstrap_95ci": [
+          -4.919304883810855,
+          7.573106936553155
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_nominal_prior_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 5.407983491999923e-06,
+        "seed_cluster_bootstrap_95ci": [
+          -8.336550756106128e-05,
+          8.161735882481195e-05
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 73.224279683631,
+        "seed_cluster_bootstrap_95ci": [
+          35.47591669424366,
+          115.99381917099232
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "cyclic",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.002436179230724281,
+        "seed_cluster_bootstrap_95ci": [
+          0.0011855432340735635,
+          0.0038923651253839004
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 79.86939673042055,
+        "seed_cluster_bootstrap_95ci": [
+          47.494220899728035,
+          113.91455668029215
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "random",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 0.002198412506654281,
+        "seed_cluster_bootstrap_95ci": [
+          0.0011536104258989155,
+          0.0033783298562795696
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 0.6486808729924783,
+        "seed_cluster_bootstrap_95ci": [
+          -12.943042748306308,
+          13.128521392620646
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "scaled_a_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 2.2995397274921774e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -0.000257561381009044,
+          0.0002742175892994985
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "target_arrival_rmse_us",
+        "mean_advantage_for_task_conditioned": 2.193031616362573,
+        "seed_cluster_bootstrap_95ci": [
+          -3.2508386026764486,
+          10.136764989343376
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      },
+      {
+        "regime_group": "geometry_3_double_acquisition_noise",
+        "baseline": "scaled_d_optimal",
+        "metric": "realized_path_prediction_plus_cost_m2",
+        "mean_advantage_for_task_conditioned": 4.9078654012984353e-05,
+        "seed_cluster_bootstrap_95ci": [
+          -5.310689898980554e-05,
+          0.00019662822078683092
+        ],
+        "seed_clusters": 48,
+        "failure_policy": "all_attempted_cases_retained",
+        "interpretation": "positive_favors_task_conditioned; exploratory_intervals_no_multiplicity_correction"
+      }
+    ]
+  },
+  "physical_measurements_performed": false,
+  "publication_or_grant_probability_established": false
+}

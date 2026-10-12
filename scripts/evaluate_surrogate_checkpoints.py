@@ -13,10 +13,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from backend.app.models.surrogate import ForwardSurrogate
+from backend.app.models.checkpoints import load_forward_checkpoint, load_forward_dataset
 
 
 def evaluate(checkpoint_path: Path, inputs: np.ndarray, targets: np.ndarray) -> dict:
-    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    checkpoint = load_forward_checkpoint(checkpoint_path)
     model = ForwardSurrogate(checkpoint["input_size"], checkpoint["output_size"])
     model.load_state_dict(checkpoint["model_state"])
     model.eval()
@@ -52,10 +53,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
-    payload = np.load(args.data)
-    inputs = payload["inputs"].astype(np.float32)
-    targets = payload["targets"].astype(np.float32)
-    dataset_metadata = json.loads(str(payload["metadata"]))
+    inputs, targets, dataset_metadata = load_forward_dataset(args.data)
     results = {
         "evaluation_dataset": str(args.data),
         "evaluation_seed": dataset_metadata.get("seed"),

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { argusApi } from '@/services/api';
 import type { ResearchJob } from '@/types/argus';
 import { ResearchEvidence } from '@/components/ResearchEvidence';
@@ -9,9 +9,41 @@ export function ResearchLab() {
   const [jobs, setJobs] = useState<ResearchJob[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const refresh = useCallback(() => argusApi.jobs().then((result) => { setJobs(result.jobs); setError(null); }).catch((reason) => setError(reason instanceof Error ? reason.message : String(reason))), []);
-  useEffect(() => { refresh(); const timer = window.setInterval(refresh, 1500); return () => window.clearInterval(timer); }, [refresh]);
+  const mounted = useRef(false), mutating = useRef(false), activeJobs = useRef(false);
+  const request = useRef<AbortController | null>(null);
+  const refresh = useCallback(async (freshAfterMutation = false) => {
+    if (!mounted.current || document.hidden) return;
+    if (request.current && !request.current.signal.aborted && !freshAfterMutation) return;
+    request.current?.abort();
+    const controller = new AbortController(); request.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 20_000);
+    try {
+      const result = await argusApi.jobs(controller.signal);
+      if (mounted.current && request.current === controller && !controller.signal.aborted) {
+        setJobs(result.jobs); setError(null);
+        activeJobs.current = result.jobs.some(job => job.status === 'running' || job.status === 'queued');
+      }
+    } catch (reason) {
+      if (mounted.current && request.current === controller && !controller.signal.aborted) setError(reason instanceof Error ? reason.message : String(reason));
+    } finally { window.clearTimeout(timeout); if (request.current === controller) request.current = null; }
+  }, []);
+  useEffect(() => {
+    mounted.current = true;
+    let generation = 0, timer: number | undefined;
+    const poll = async (version: number) => {
+      await refresh();
+      if (mounted.current && !document.hidden && version === generation) timer = window.setTimeout(() => { void poll(version); }, activeJobs.current ? 1500 : 10000);
+    };
+    const visibility = () => {
+      generation++; window.clearTimeout(timer); request.current?.abort();
+      if (!document.hidden) void poll(generation);
+    };
+    visibility(); document.addEventListener('visibilitychange', visibility);
+    return () => { mounted.current = false; generation++; window.clearTimeout(timer); request.current?.abort(); document.removeEventListener('visibilitychange', visibility); };
+  }, [refresh]);
   const start = async (type: ResearchJob['job_type'], overrides: Record<string, unknown> = {}) => {
+    if (mutating.current) return;
+    mutating.current = true;
     setError(null); setBusy(true);
     try {
       const parameters = type === 'calibration'
@@ -25,15 +57,17 @@ export function ResearchLab() {
               : type === 'demo_scenario'
                 ? { cases: 4, seed: 17 }
               : { cases: 2, max_experiments: 5, seed: 100 };
-      await argusApi.startJob(type, { ...parameters, ...overrides }); await refresh();
-    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
-    finally { setBusy(false); }
+      await argusApi.startJob(type, { ...parameters, ...overrides }); await refresh(true);
+    } catch (reason) { if (mounted.current) setError(reason instanceof Error ? reason.message : String(reason)); }
+    finally { mutating.current = false; if (mounted.current) setBusy(false); }
   };
   const cancel = async (id: string) => {
+    if (mutating.current) return;
+    mutating.current = true;
     setBusy(true); setError(null);
-    try { await argusApi.cancelJob(id); await refresh(); }
-    catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
-    finally { setBusy(false); }
+    try { await argusApi.cancelJob(id); await refresh(true); }
+    catch (reason) { if (mounted.current) setError(reason instanceof Error ? reason.message : String(reason)); }
+    finally { mutating.current = false; if (mounted.current) setBusy(false); }
   };
   return <section className="secondary-page research-page"><div className="secondary-header"><div><p className="eyebrow">REPRODUCIBLE LOCAL SCIENCE</p><h1>Research and failure lab.</h1></div><span className="secondary-kpi">CPU-FIRST · SEALED TRUTHS · NO PAID SERVICE</span></div>
     <ResearchEvidence />

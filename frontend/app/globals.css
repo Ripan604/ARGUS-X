@@ -498,6 +498,13 @@ button:disabled { cursor: not-allowed; opacity: .48; }
   .narrative-twin *, .story-track *, .experiment-storyline * { animation: none !important; transition-duration: 0.01ms !important; }
   .twin-world { transform: rotateX(58deg) rotateZ(-27deg); }
 }
+.engine-access { margin: 24px 0; padding: 18px 22px; border: 1px solid var(--line); border-radius: 4px; background: #101b2ab8; color: var(--text); }
+.engine-access summary { cursor: pointer; font-weight: 600; }
+.engine-access form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 16px; }
+.engine-access label { display: grid; gap: 6px; flex: 1 1 240px; }
+.engine-access input { padding: 10px; border: 1px solid var(--line); background: #0b1422; color: var(--text); border-radius: 3px; }
+.engine-access button { padding: 10px 16px; border: 1px solid var(--line); color: var(--acid); border-radius: 3px; }
+.engine-access p { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 
 /* ARGUS / field intelligence. One spatial and typographic system across the instrument. */
 :root {

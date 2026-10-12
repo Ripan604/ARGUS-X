@@ -22,6 +22,7 @@ models/*.pt
 models/*.pth
 models/*.onnx
 models/*.joblib
+models/*.npz
 backend/data/
 backend/uploads/
 benchmark_results/*.png
@@ -40,3 +41,19 @@ output/*-site-*.tar.gz
 output/site-*-screenshot.png
 .DS_Store
 Thumbs.db
+datasets/external/open_guided_waves/
+datasets/external/open_guided_waves_confirmation/
+datasets/external/morpho_50khz/
+
+# Local release packaging, operational logs and compiled host fixtures.
+output/release/*.zip
+output/release/**/*.zip
+output/release/*.exe
+output/release/**/*.exe
+output/release/*.log
+output/release/**/*.log
+output/release/artifact-qa-*/
+
+# Local environment overrides; examples remain publishable.
+.env.*
+!.env.example

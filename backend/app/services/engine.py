@@ -9,6 +9,8 @@ from scipy.signal import correlate, correlation_lags
 
 from backend.app.active_learning.planner import CandidateScore, ExperimentPlanner, PlannedExperiment
 from backend.app.active_learning.neo_planner import NeoExperimentPlanner
+from backend.app.active_learning.bayes_design import FiniteHorizonRiskPlanner
+from backend.app.active_learning.reference_design import select_task_reference
 from backend.app.assurance.monitor import RuntimeAssuranceMonitor
 from backend.app.control.dual_control import AdaptiveDualControlManager
 from backend.app.core.config import ArgusConfig
@@ -16,7 +18,9 @@ from backend.app.decision.loss import DecisionLossModel
 from backend.app.decision.stopping import StoppingEngine
 from backend.app.digital_twin.discrepancy import OnlineDiscrepancyModel
 from backend.app.hardware.devices import SimulationDevice
+from backend.app.hardware.timing_contract import AcquisitionTimingAssessment
 from backend.app.inference.calibration import CalibrationEngine
+from backend.app.inference.belief import measurement_likelihood, posterior_update
 from backend.app.inference.diagnostics import estimate_measurement_quality
 from backend.app.inference.joint_state import JointInferenceState
 from backend.app.inference.structural_posterior import StructuralPosterior
@@ -67,6 +71,7 @@ class ArgusEngine:
         reference_path = Path(__file__).resolve().parents[3] / "models" / "sim2real_acoustic_reference.json"
         self.acoustic_reference = AcousticReferenceMonitor.from_file(reference_path) if reference_path.exists() else None
         self.neo_planner = NeoExperimentPlanner(self.simulator, self.config, self.discrepancy_model, self.seed + 20_000)
+        self.risk_planner = FiniteHorizonRiskPlanner(self.neo_planner)
         self.loss_model = DecisionLossModel()
         self.stopping_engine = StoppingEngine()
         self.assurance = RuntimeAssuranceMonitor()
@@ -89,10 +94,10 @@ class ArgusEngine:
         self.prior_signals: dict[str, np.ndarray] = {}
         self.current_recommendation = self._recommend()
 
-    def run_recommended(self) -> ExperimentResult:
-        return self.run_experiment(self.current_recommendation.selected.experiment, self.current_recommendation)
+    def run_recommended(self, *, plan_next: bool = True) -> ExperimentResult:
+        return self.run_experiment(self.current_recommendation.selected.experiment, self.current_recommendation, plan_next=plan_next)
 
-    def run_experiment(self, experiment: Experiment, recommendation: PlannedExperiment | None = None) -> ExperimentResult:
+    def run_experiment(self, experiment: Experiment, recommendation: PlannedExperiment | None = None, *, plan_next: bool = True) -> ExperimentResult:
         recommendation = self._resolve_recommendation(experiment, recommendation)
         if recommendation.action_type == "calibration":
             baseline = self.acquisition_simulator.simulate_baseline(experiment)
@@ -103,7 +108,7 @@ class ArgusEngine:
             ).astype(np.float32)
         else:
             signal = self.simulation_device.acquire(experiment, self.config.sample_rate)
-        return self.process_signal(signal, experiment, recommendation)
+        return self.process_signal(signal, experiment, recommendation, plan_next=plan_next)
 
     def process_signal(
         self,
@@ -111,88 +116,139 @@ class ArgusEngine:
         experiment: Experiment,
         recommendation: PlannedExperiment | None = None,
         quality_context: dict | None = None,
+        *, plan_next: bool = True, physical_acquisition: bool = False,
+        physical_timing: AcquisitionTimingAssessment | None = None,
     ) -> ExperimentResult:
         recommendation = self._resolve_recommendation(experiment, recommendation)
         before = self.belief.posterior.copy()
+        containment_before = self.belief.radial_containment(self.panel)
+        # Validate the entire declared observation before changing any state.
+        # Flattening channels or truncating an incomplete recording changes the
+        # physical observation while retaining its original action metadata.
+        signal = np.asarray(signal, dtype=np.float64)
+        expected_samples = max(32, int(round(experiment.duration_s * self.config.sample_rate)))
+        if signal.ndim != 1 or signal.size != expected_samples:
+            raise ValueError("Signal must be mono and match the declared experiment window")
         analysis = analyze_signal(signal, self.config.sample_rate)
+        self.joint_state.verification_state = {"accepted": False, "reason": "latest_action_not_verified"}
         experiment_key = json.dumps(experiment.to_dict(), sort_keys=True, separators=(",", ":"))
         prior_signal = self.prior_signals.get(experiment_key)
         quality_context = quality_context or {}
         reference_assessment = None
-        sensor_id = str(quality_context.get("sensor_id", "")).lower()
-        if self.acoustic_reference is not None and sensor_id and "simulation" not in sensor_id:
+        # Provenance comes from the acquisition adapter, not a client-supplied
+        # sensor name which could suppress the measured-data reference gate.
+        if self.acoustic_reference is not None and physical_acquisition:
             reference_assessment = self.acoustic_reference.assess(analysis["features"])
         quality = estimate_measurement_quality(
             signal, prior_signal,
             acceleration_rms=quality_context.get("acceleration_deviation_g"),
             visual_position_error=quality_context.get("visual_position_error"),
         )
+        # Travel-time likelihoods require a known excitation time origin and
+        # a validated arrival adapter. Only the ingestion service can supply
+        # this assessment; an arbitrary sensor name/metadata flag cannot
+        # turn an unaligned physical recording into structural evidence.
+        timing_supported = not physical_acquisition or bool(
+            physical_timing is not None and physical_timing.supported
+        )
+        if not timing_supported:
+            timing_reason = physical_timing.reason if physical_timing is not None else "unknown_excitation_time_origin"
+            quality = replace(quality, accepted=False, reasons=(*quality.reasons, timing_reason))
         evidence_weight = max(self.config.minimum_evidence_weight, quality.evidence_weight) if quality.accepted else 0.0
+        # Channel reliability is part of the evidence gate. A merely adequate
+        # reading must not update structure/calibration while its sensor still
+        # has an accumulated unreliable-channel state.
+        assurance_state = self.assurance.update(quality, {}, quality_context, action_type=recommendation.action_type)
+        current_sensor = assurance_state.get("sensors", {}).get(assurance_state.get("last_update", {}).get("sensor_id", ""), {})
+        sensor_status = current_sensor.get("status", "NOMINAL")
+        if sensor_status == "UNRELIABLE":
+            evidence_weight = 0.0
+        elif sensor_status == "DEGRADED":
+            evidence_weight *= 0.35
         calibration_result = None
         if recommendation.action_type == "calibration":
             likelihood = np.ones_like(self.belief.posterior)
             diagnostics = self._direct_path_diagnostics(signal, experiment)
+            diagnostics.update({key: quality_context[key] for key in (
+                "source_pose_error_observed", "receiver_pose_error_observed", "pose_observation_std"
+            ) if key in quality_context})
+            calibration_quality = quality
+            if sensor_status == "UNRELIABLE":
+                calibration_quality = replace(quality, accepted=False, reasons=(*quality.reasons, "unreliable_channel"))
+            elif sensor_status == "DEGRADED":
+                calibration_quality = replace(quality, signal_quality=quality.signal_quality * 0.35)
             calibration_result = self.calibration_engine.update(
                 self.joint_state.nuisance,
                 experiment,
                 self.panel,
                 diagnostics,
-                quality,
+                calibration_quality,
                 str((recommendation.structured_explanation or {}).get("calibration_type", "direct_path")),
             ).to_dict()
             self.joint_state.last_calibration = calibration_result
             if calibration_result["accepted"]:
                 self.synchronize_inference_material()
-                calibration_residual = np.asarray([
-                    diagnostics.get("peak_delay_s", 0.0)
-                    - (self.material.system_delay_s + float(physical_distance(experiment.source_x, experiment.source_y, experiment.receiver_x, experiment.receiver_y, self.panel)) / self.material.wave_velocity),
-                    0.0, 0.0, 0.0,
-                ])
-                self.ood_detector.register_calibration(calibration_residual)
+                # Direct-path residuals are not exchangeable with defect-scatter
+                # residuals and must not populate the latter's conformal set.
                 prior_trust = float(self.joint_state.discrepancy_state.get("model_trust", 0.5))
                 self.joint_state.discrepancy_state = {
                     **self.joint_state.discrepancy_state,
-                    "model_trust": min(0.96, prior_trust + 0.20),
-                    "uncertainty": float(self.joint_state.discrepancy_state.get("uncertainty", 0.5)) * 0.68,
+                    # A valid reference permits a cautious diagnostic probe;
+                    # it does not validate the entire scattered-wave model.
+                    "model_trust": max(prior_trust, 0.20),
                     "calibration_supported": True,
+                    "calibration_support_scope": "propagation_reference_only",
+                    "trust_is_heuristic": True,
                 }
                 prior_ood = float(self.joint_state.ood_state.get("score", 0.0))
                 self.joint_state.ood_state = {
                     **self.joint_state.ood_state,
-                    "score": prior_ood * 0.55,
-                    "status": "NOMINAL" if prior_ood * 0.55 < self.config.ood_caution_threshold else "CAUTION",
-                    "recommendation": "Calibration evidence incorporated; resume diagnostic interrogation while monitoring residuals.",
+                    "score": min(prior_ood, self.config.ood_caution_threshold),
+                    "status": "NOMINAL" if prior_ood < self.config.ood_caution_threshold else "CAUTION",
+                    "recommendation": "Reference evidence incorporated; a fresh diagnostic measurement must reassess structural model support.",
                 }
             else:
                 self.joint_state.ood_state = {
                     **self.joint_state.ood_state,
-                    "status": "CAUTION",
+                    "status": self.joint_state.ood_state.get("status") if self.joint_state.ood_state.get("status") in {"ABSTAIN", "OUT_OF_DISTRIBUTION"} else "CAUTION",
                     "decision_confidence_cap": min(
                         0.35, float(self.joint_state.ood_state.get("decision_confidence_cap", 1.0))
                     ),
                     "recommendation": "Calibration acquisition failed quality checks; reacquire the reference signal.",
                 }
-        elif not quality.accepted:
+        elif not quality.accepted or sensor_status == "UNRELIABLE":
             likelihood = np.ones_like(self.belief.posterior)
             diagnostics = {"rejected": 1.0, "evidence_weight": 0.0}
+            if sensor_status == "UNRELIABLE":
+                diagnostics["update_blocked_sensor"] = True
         else:
-            likelihood, diagnostics = self.belief.update(
+            likelihood, diagnostics = measurement_likelihood(
                 signal,
                 experiment,
                 self.simulator,
+                self.belief.grid_size,
                 temperature=self.config.likelihood_temperature,
-                evidence_weight=evidence_weight,
             )
-            if self.config.enable_nuisance_inference:
-                self.joint_state.nuisance.passive_quality_update(
-                    analysis["features"]["noise_estimate"], quality.coupling_quality, quality.signal_quality
-                )
+            # Assess against the pre-observation belief. An outlier must not
+            # first move the posterior toward itself and then pass its own test.
             if self.config.enable_discrepancy_model or self.config.enable_ood_layer:
                 self._update_model_diagnostics(
                     experiment,
                     diagnostics,
                     quality.evidence_weight,
                     reference_assessment.score if reference_assessment is not None else 0.0,
+                )
+            ood_status = str(self.joint_state.ood_state.get("status", "NOMINAL"))
+            if self.config.enable_ood_layer and ood_status in {"ABSTAIN", "OUT_OF_DISTRIBUTION"}:
+                evidence_weight = 0.0
+                diagnostics["update_blocked_ood"] = True
+            elif self.config.enable_ood_layer and ood_status == "CAUTION":
+                evidence_weight *= 0.35
+            self.belief.posterior = posterior_update(before, np.maximum(likelihood, 1e-12) ** evidence_weight)
+            self.belief.history.append(self.belief.posterior.copy())
+            if self.config.enable_nuisance_inference and evidence_weight > 0:
+                self.joint_state.nuisance.passive_quality_update(
+                    analysis["features"]["noise_estimate"], quality.coupling_quality, quality.signal_quality
                 )
         diagnostics.update({
             "coupling_quality": quality.coupling_quality,
@@ -204,16 +260,23 @@ class ArgusEngine:
             "real_reference_distance": reference_assessment.distance if reference_assessment is not None else None,
             "real_reference_quantile": reference_assessment.empirical_quantile if reference_assessment is not None else None,
             "real_reference_score": reference_assessment.score if reference_assessment is not None else 0.0,
+            "sensor_status_before_fusion": sensor_status,
+            "update_blocked_sensor": sensor_status == "UNRELIABLE",
+            "update_blocked_physical_timing": not timing_supported,
+            "physical_timing": physical_timing.to_dict() if physical_timing is not None else {
+                "supported": not physical_acquisition,
+                "reason": "simulation_time_origin" if not physical_acquisition else "unknown_excitation_time_origin",
+            },
         })
-        assurance_state = self.assurance.update(
-            quality,
-            diagnostics,
-            quality_context,
-            action_type=recommendation.action_type,
-        )
-        current_sensor = assurance_state.get("sensors", {}).get(assurance_state.get("last_update", {}).get("sensor_id", ""), {})
-        sensor_status = current_sensor.get("status", "NOMINAL")
-        if sensor_status == "UNRELIABLE":
+        self.assurance.incorporate_structural_evidence(quality, diagnostics, action_type=recommendation.action_type)
+        if not timing_supported:
+            self.joint_state.ood_state = {
+                **self.joint_state.ood_state,
+                "status": "ABSTAIN", "decision_confidence_cap": 0.0,
+                "recommendation": "Record a trigger-aligned signal with an externally validated arrival/drive adapter before structural interpretation.",
+                "physical_time_origin_supported": False,
+            }
+        elif sensor_status == "UNRELIABLE":
             self.joint_state.ood_state = {
                 **self.joint_state.ood_state,
                 "score": max(self.config.ood_abstain_threshold, float(self.joint_state.ood_state.get("score", 0.0))),
@@ -232,6 +295,24 @@ class ArgusEngine:
                 "sensor_fault": current_sensor,
             }
         self.joint_state.last_quality = quality
+        if recommendation.action_type == "verification":
+            estimate_after = self.belief.estimate()
+            displacement_mm = 1000 * float(np.hypot(
+                (estimate_after["map_x"] - containment_before["reference_x"]) * self.panel.width_m,
+                (estimate_after["map_y"] - containment_before["reference_y"]) * self.panel.height_m,
+            ))
+            diverse = bool(self.experiments and self._verification_is_diverse(experiment, self.experiments[-1]))
+            verified = bool(quality.accepted and evidence_weight > 0 and diverse
+                            and self.joint_state.ood_state.get("status") == "NOMINAL"
+                            and displacement_mm <= containment_before["radius90_mm"] + 1e-9)
+            self.joint_state.verification_state = {
+                "accepted": verified, "experiment_index": len(self.experiments) + 1,
+                "diverse_from_previous": diverse, "map_displacement_mm": displacement_mm,
+                "prior_radius90_mm": containment_before["radius90_mm"],
+                "reason": "accepted_diverse_consistent_measurement" if verified else "quality_ood_diversity_or_consistency_failed",
+                "field_calibrated": False,
+            }
+        diagnostics["verification"] = self.joint_state.verification_state.copy()
         self.joint_state.revision += 1
         self.experiments.append(experiment)
         result = ExperimentResult(
@@ -250,14 +331,41 @@ class ArgusEngine:
         )
         self.results.append(result)
         self.action_history.append(result.action_type)
-        self.prior_signals[experiment_key] = np.asarray(signal, dtype=np.float32).copy()
+        # A rejected reading must not become the consistency reference for a
+        # future measurement and poison its coupling-quality assessment.
+        accepted_reference = bool(evidence_weight > 0 if recommendation.action_type != "calibration"
+                                  else calibration_result and calibration_result.get("accepted"))
+        if quality.accepted and sensor_status != "UNRELIABLE" and accepted_reference:
+            self.prior_signals[experiment_key] = np.asarray(signal, dtype=np.float32).copy()
         # There is no executable "next" action once the inspection budget is
         # exhausted.  Keeping the last recommendation makes status/evidence
         # rendering deterministic and avoids an unnecessary planner call that
         # can legitimately find no supported action at very low model trust.
-        if len(self.experiments) < self.config.max_experiments:
+        if plan_next and len(self.experiments) < self.config.max_experiments:
             self.current_recommendation = self._recommend()
         return result
+
+    @staticmethod
+    def _verification_is_diverse(experiment: Experiment, previous: Experiment) -> bool:
+        """Require changed path geometry or excitation content.
+
+        Amplitude/duration metadata and reciprocal TX/RX order alone do not
+        provide a new structural path constraint in this reciprocal model.
+        This is a diversity check, not a guarantee of conditional independence.
+        """
+        geometry = np.asarray([experiment.source_x, experiment.source_y, experiment.receiver_x, experiment.receiver_y])
+        old_geometry = np.asarray([previous.source_x, previous.source_y, previous.receiver_x, previous.receiver_y])
+        same_path = np.allclose(geometry, old_geometry, rtol=0, atol=1e-8) or np.allclose(
+            geometry, old_geometry[[2, 3, 0, 1]], rtol=0, atol=1e-8
+        )
+        same_excitation = (
+            np.isclose(experiment.frequency_start_hz, previous.frequency_start_hz, rtol=1e-8, atol=1e-8)
+            and np.isclose(experiment.frequency_end_hz, previous.frequency_end_hz, rtol=1e-8, atol=1e-8)
+            and experiment.waveform == previous.waveform
+            and experiment.phase_code == previous.phase_code
+            and experiment.spectral_notches_hz == previous.spectral_notches_hz
+        )
+        return not (same_path and same_excitation)
 
     def _resolve_recommendation(
         self,
@@ -393,7 +501,8 @@ class ArgusEngine:
         positive = lags >= 0
         selected_lags, selected_corr = lags[positive], correlation[positive]
         peak_index = int(np.argmax(selected_corr))
-        noise_floor = float(np.median(np.abs(signal - np.median(signal))) * 1.4826 + 1e-12)
+        quiet = signal[max(0, int(len(signal) * 0.8)):]
+        noise_floor = float(np.median(np.abs(quiet - np.median(quiet))) * 1.4826 + 1e-12)
         baseline = self.simulator.simulate_baseline(experiment)
         return {
             "peak_delay_s": float(selected_lags[peak_index] / self.config.sample_rate),
@@ -401,6 +510,10 @@ class ArgusEngine:
             "direct_correlation_peak": float(selected_corr[peak_index]),
             "signal_rms": float(np.sqrt(np.mean(np.square(signal)))),
             "baseline_rms": float(np.sqrt(np.mean(np.square(baseline)))),
+            "delay_std_s": float(np.sqrt(max(1.0 / self.config.sample_rate, 0.00020)**2
+                + (max(self.panel.width_m, self.panel.height_m) * np.hypot(
+                    self.joint_state.nuisance.parameter("source_pose_error").std,
+                    self.joint_state.nuisance.parameter("receiver_pose_error").std) / self.material.wave_velocity)**2)),
         }
 
     def synchronize_inference_material(self) -> None:
@@ -419,6 +532,9 @@ class ArgusEngine:
         no_go_regions: list[NoGoRegion] | None = None,
         unavailable_actions: set[str] | None = None,
     ) -> PlannedExperiment:
+        if self.config.enable_risk_calibration_design:
+            return self.risk_planner.recommend(self.joint_state, self.experiments,
+                no_go_regions=no_go_regions, unavailable_actions=unavailable_actions)
         baseline = self.planner.recommend(self.belief.posterior, self.experiments)
         diagnostic_value = float(np.clip(baseline.selected.hypothesis_disagreement + baseline.selected.expected_information_gain / 4.0, 0, 1))
         decision = self.dual_control.choose(
@@ -455,6 +571,7 @@ class ArgusEngine:
                 )
         if decision.action_type == "calibration":
             start_index = len(self.experiments)
+            reference_design = None
             calibration_options = [
                 self.dual_control.calibration_experiment(decision.calibration_type, start_index + offset)
                 for offset in range(3)
@@ -471,6 +588,19 @@ class ArgusEngine:
                 ),
                 None,
             )
+            if (experiment is not None and self.config.enable_task_conditioned_calibration
+                    and decision.calibration_type == "direct_path"):
+                feasible = [e for e in calibration_options if self.neo_planner.constraints.evaluate(
+                    e, no_go_regions=no_go_regions, unavailable_actions=unavailable_actions).feasible]
+                target = next((item.experiment for item in baseline.top_candidates
+                    if self.neo_planner.constraints.evaluate(item.experiment,
+                        no_go_regions=no_go_regions, unavailable_actions=unavailable_actions).feasible), None)
+                if target is not None:
+                    selection = select_task_reference(self.belief.posterior, self.joint_state.nuisance,
+                        self.panel, target, feasible, sample_rate=self.config.sample_rate,
+                        cost_function=lambda e: self.planner._experiment_cost(e, self.experiments),
+                        cost_m2_per_unit=self.config.decision_cost_m2_per_unit)
+                    experiment, reference_design = selection.experiment, selection.diagnostics
             if experiment is None:
                 decision = replace(
                     decision,
@@ -508,10 +638,15 @@ class ArgusEngine:
                 "uncertainty_before": decision.metrology_uncertainty,
                 "predicted_uncertainty_after": candidate.predicted_uncertainty_after,
             }
+            if reference_design is not None:
+                explanation["reference_design"] = reference_design
+                explanation["primary_reason"] = (
+                    decision.primary_reason + " Reference geometry minimizes full-grid modeled propagation "
+                    "variance for the next diagnostic geometry plus declared cost.")
             return PlannedExperiment(
                 candidate,
                 (candidate, *baseline.top_candidates[:4]),
-                decision.primary_reason,
+                explanation.get("primary_reason", decision.primary_reason),
                 strategy="adaptive_dual_control",
                 action_type="calibration",
                 objective=self.config.planner_objective,
@@ -538,13 +673,18 @@ class ArgusEngine:
         uncertainty = self.joint_state.uncertainty_summary()
         posterior_containment = self.belief.radial_containment(self.panel)
         expected_value = float(self.current_recommendation.selected.expected_information_gain) if hasattr(self, "current_recommendation") else 1.0
+        if self.config.enable_risk_calibration_design:
+            # Bits/proxies and m² have different units. The legacy VOI stopping
+            # threshold is disabled for the physical-loss experimental policy.
+            expected_value = 1.0
         credible_area = float(self.belief.credible_region(0.90)["area_fraction"])
         decision_confidence = float(min(
             estimate["confidence"] * self.joint_state.discrepancy_state.get("model_trust", 1.0),
             self.joint_state.ood_state.get("decision_confidence_cap", 1.0),
         ))
         bayes_risk = self.loss_model.current_risk(decision_confidence, float(self.joint_state.ood_state.get("score", 0.0)), credible_area)
-        verification_count = sum(action_type == "verification" for action_type in self.action_history)
+        verification_count = int(self.joint_state.verification_state.get("accepted", False)
+                                 and self.joint_state.verification_state.get("experiment_index") == len(self.experiments))
         stop = self.stopping_engine.evaluate(
             confidence=decision_confidence,
             confidence_threshold=self.config.confidence_threshold,
@@ -575,6 +715,9 @@ class ArgusEngine:
             "stop_explanation": stop.explanation,
             "stop_criteria": stop.triggered,
             "bayes_risk": bayes_risk,
+            "bayes_risk_method": "legacy_heuristic_risk_index_not_failure_probability",
+            "decision_confidence_method": "posterior_concentration_times_heuristic_trust_not_calibrated_probability",
+            "verification_state": self.joint_state.verification_state,
             "expected_value_of_information": expected_value,
             "structural_uncertainty": uncertainty["structural"]["combined"],
             "metrology_uncertainty": uncertainty["metrology"]["combined"],
@@ -596,6 +739,7 @@ class ArgusEngine:
         return (
             len(self.experiments) < self.config.max_experiments
             and self.current_recommendation.action_type == "calibration"
+            and not self.joint_state.ood_state.get("planning_blocked", False)
         )
 
     def localization_error(self) -> float:

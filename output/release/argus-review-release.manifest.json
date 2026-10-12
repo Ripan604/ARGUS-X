@@ -1,0 +1,1472 @@
+{
+  "artifact_type": "argus_local_review_release",
+  "authenticity_verified": false,
+  "created_at_utc": "2026-10-07T07:20:30.559006+00:00",
+  "evidence_sources": [
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "benchmark_results/benchmark.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/ae_sim2real_metrics.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/ae_timing_calibration.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/forward_surrogate.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/forward_surrogate_50000_73123.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/lmsd_surrogate.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/sim2real_acoustic_reference.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/sim2real_feature_transport.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "models/sim2real_metrics.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "planned_not_acquired",
+      "file": "output/audit_physical_acquisition_plan.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "output/frontend_checks_2026_10_07.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "output/release_summary_2026_10_07.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/active_surrogate_quick.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/audit_risk_pilot.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/audit_risk_validation.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/calibration_quick.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/measurement_compression.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/model_mismatch.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/neo_ablation_quick.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/neo_benchmark_quick.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/nuisance_design_pilot_legacy.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/nuisance_design_validation.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/release_validation_2026_10_07.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/rival_hypotheses.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/surrogate_comparison_73124.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    },
+    {
+      "declared_evidence_source": "unspecified_in_file",
+      "file": "research_results/surrogate_external_benchmark.json",
+      "interpretation": "saved report or metadata; packaging does not establish acquisition provenance or validate its claims"
+    }
+  ],
+  "exclusions": "Private env files, secrets/credential directories, Git metadata, vendors, generated runtime data, logs/databases, binary models/raw measurements, prior release archives, and PDFs.",
+  "expanded_bytes": 7285636,
+  "file_count": 259,
+  "files": {
+    ".gitignore": {
+      "role": "source_or_configuration",
+      "sha256": "20e3d7543646cb731112eadc239f73d9e6b8d0f1a6e8b1575330962a6072708f",
+      "size": 649
+    },
+    "IMPLEMENTATION_REPORT.md": {
+      "role": "documentation",
+      "sha256": "d24631db473f3d9595f2d1bc6ef221c03a85d2f8cdd06b6c6530bbedf7fd89ce",
+      "size": 14028
+    },
+    "LICENSE": {
+      "role": "documentation",
+      "sha256": "37dc4a389204b555cc6e33cc1115c4343016f264a12c4ae4f17b9e47c2571f48",
+      "size": 1075
+    },
+    "README.md": {
+      "role": "documentation",
+      "sha256": "77bf84896fdbb22f188b8557839d7975ca0c3976cf873dedb341bd08c20c2eab",
+      "size": 19268
+    },
+    "backend/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "d180f230be78394c1329fe05b470db547b4679741e868934a12afba2d706d8bd",
+      "size": 29
+    },
+    "backend/app/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "74b1ff65eaab93e275e04ae5a6caf7063a6ab4d7a44d417ad1f52603d9876531",
+      "size": 76
+    },
+    "backend/app/active_learning/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "97b914a47d840210c6bd395d94ac2c8378ec09554e38cbcc87c4cf9dd2f79d48",
+      "size": 112
+    },
+    "backend/app/active_learning/bayes_design.py": {
+      "role": "source_or_configuration",
+      "sha256": "2924bbe6c4ae2bf1820bf0ca5cca2978f0a37aaa64a2a3bc5adab8a88c2b4e31",
+      "size": 14184
+    },
+    "backend/app/active_learning/counterfactual.py": {
+      "role": "source_or_configuration",
+      "sha256": "13da85005371794ff9a645d0fd735e10fe87e980892d40ff194bcab8c19ad866",
+      "size": 4979
+    },
+    "backend/app/active_learning/horizon.py": {
+      "role": "source_or_configuration",
+      "sha256": "e0351dc771ccaa8a5ce10de6023bbc172c72cdb727a22efdfe7e1778d03f6776",
+      "size": 1940
+    },
+    "backend/app/active_learning/neo_planner.py": {
+      "role": "source_or_configuration",
+      "sha256": "4da856653aed00830b0d53a368ba936d26cb6e4a6191c2317343c7953d06766a",
+      "size": 18415
+    },
+    "backend/app/active_learning/nuisance_design.py": {
+      "role": "source_or_configuration",
+      "sha256": "edb251f718829b51cf42e1d8c82e4324b8664ff14a3f437f14d67c5bde98ec01",
+      "size": 10795
+    },
+    "backend/app/active_learning/planner.py": {
+      "role": "source_or_configuration",
+      "sha256": "0f0a24c8fb0ae12047907de20b42add6d9e1d8b863a93631999eb14afb60dc74",
+      "size": 11982
+    },
+    "backend/app/active_learning/waveform_optimizer.py": {
+      "role": "source_or_configuration",
+      "sha256": "2b7755fe34294d3f202c4d3c82ab7826868acc2c18f786e7e8cb61f7d71bee61",
+      "size": 3506
+    },
+    "backend/app/api/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "c5e79b75137811726e30acef2fa5cfc649514fce1c86da771535b368f43238c0",
+      "size": 24
+    },
+    "backend/app/assurance/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "300fe73873f67eed202c003a83d1e7a8b3a21ea1c1e9ee32d04276e1dd8cf876",
+      "size": 156
+    },
+    "backend/app/assurance/monitor.py": {
+      "role": "source_or_configuration",
+      "sha256": "7149f6b8a58d121ae48fe8d974664bf4b2d0739f8f2fd6a52226778350148949",
+      "size": 14596
+    },
+    "backend/app/control/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "4ec5e0885e8936fe738ca29f2813a5829c99abba130903a77bcfffe1633a7428",
+      "size": 140
+    },
+    "backend/app/control/dual_control.py": {
+      "role": "source_or_configuration",
+      "sha256": "f630f87003b61a5d3dd84d4d7536d3c10fc60c803a693ff8e2d175d82b57ec0a",
+      "size": 5867
+    },
+    "backend/app/core/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "ace90f1ff5400dfa7e3eaedaf49e3ea63ed0b8b3bd20d93d4415a315b4916e6d",
+      "size": 53
+    },
+    "backend/app/core/config.py": {
+      "role": "source_or_configuration",
+      "sha256": "cb1d4d076e683b6712b0ff2b28be617f32c080f126d367d366992d44d4fe8761",
+      "size": 8359
+    },
+    "backend/app/core/materials.py": {
+      "role": "source_or_configuration",
+      "sha256": "fb4873cb0ff5cb90339d3fc35659888453074e181e225deae42d5c53704980a4",
+      "size": 1845
+    },
+    "backend/app/database/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "9d68ff72ccb58dfa2b47efb25d48218a777e12d1139f92b3c60fb9d4ea814504",
+      "size": 75
+    },
+    "backend/app/database/migrations.py": {
+      "role": "source_or_configuration",
+      "sha256": "9bd9fb27b7b7de888173561de8b25b4f7b23918ccd0fc1dbd04d83248a5372c1",
+      "size": 3217
+    },
+    "backend/app/database/repository.py": {
+      "role": "source_or_configuration",
+      "sha256": "abd5173a704ef4307d2ab0427fc065d508b48437305ec8967f00686d05da5946",
+      "size": 18123
+    },
+    "backend/app/decision/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "39c1d4c4faedc1f592a33fddeef21cbda648fea2ec8a70500176638552704dd7",
+      "size": 205
+    },
+    "backend/app/decision/loss.py": {
+      "role": "source_or_configuration",
+      "sha256": "1f5e35cfc252cc61f62e738a45d3611bd49c913ef340139ebda073da692aca49",
+      "size": 2573
+    },
+    "backend/app/decision/stopping.py": {
+      "role": "source_or_configuration",
+      "sha256": "944e2631e4fa7884176c6e7677a96e234a8345585390314ea36cde252c65e3c5",
+      "size": 2504
+    },
+    "backend/app/demo/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "7319079ce795504a952c9d12bdce02147bd2a1c2989c67c68f5be8dec198ba33",
+      "size": 98
+    },
+    "backend/app/demo/scenarios.py": {
+      "role": "source_or_configuration",
+      "sha256": "1eca7efa942c1b7360551dc734a0d785d1620836f0da5a835fa09ab8e3ad3ff7",
+      "size": 7372
+    },
+    "backend/app/digital_twin/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "b78c65a1ef4ce31bcc1a71d7bc45bde11d95ebe1a0784c8797342eb24a716286",
+      "size": 341
+    },
+    "backend/app/digital_twin/cache.py": {
+      "role": "source_or_configuration",
+      "sha256": "3787bb8a22d992dd7fe4337b5db5be4dd448e47ec65ed7fe998b8fd15494a1ff",
+      "size": 1500
+    },
+    "backend/app/digital_twin/discrepancy.py": {
+      "role": "source_or_configuration",
+      "sha256": "04fa6ac41c4807ee13413211425009fda64fcddfdf9442197ab363192943b9f8",
+      "size": 2892
+    },
+    "backend/app/digital_twin/forward_models.py": {
+      "role": "source_or_configuration",
+      "sha256": "15f6c1bd52b7f2f3568c2563ef42003b3436d93e4cd62a3669390eb816e6f0d0",
+      "size": 5614
+    },
+    "backend/app/digital_twin/multifidelity.py": {
+      "role": "source_or_configuration",
+      "sha256": "92b5f15b196f4110c5fca2bc9f441e2a53fc8eebef4e7b8ec83718ef1b211a69",
+      "size": 1683
+    },
+    "backend/app/evaluation/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "0eb449f197caaabf02b2f4ad9c28b32dcb1618ada3bb31317966bca522db3acc",
+      "size": 66
+    },
+    "backend/app/evaluation/benchmark.py": {
+      "role": "source_or_configuration",
+      "sha256": "1bc71fa4ec43b079463b98aaab30057c9a89c52c5e7e5918184ad7e0d420daca",
+      "size": 7362
+    },
+    "backend/app/evaluation/calibration_study.py": {
+      "role": "source_or_configuration",
+      "sha256": "226416f1696e28a99dd8db736d16165b5b5282a7ddf8e53f57191844b8945bba",
+      "size": 7339
+    },
+    "backend/app/evaluation/neo_benchmark.py": {
+      "role": "source_or_configuration",
+      "sha256": "0009fb66cfea508ef374ece8da75f74f47d4a3a71e2eff408559def46c082b2d",
+      "size": 12124
+    },
+    "backend/app/evaluation/research_validation.py": {
+      "role": "source_or_configuration",
+      "sha256": "fbc5f86b4c5735f8cd6aa9bfca157d5c60239887751f78e27c327a2ca85c6b8c",
+      "size": 14906
+    },
+    "backend/app/evidence/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "f91aaf93ac72a308bc864b64e3a849f4ea12b6f769c3fdf69048ace151ec4995",
+      "size": 100
+    },
+    "backend/app/evidence/bundles.py": {
+      "role": "source_or_configuration",
+      "sha256": "5c254a7e10073aa33dc95ea10d70ba5bd317cd3754359b2b5026848d835aee1d",
+      "size": 26685
+    },
+    "backend/app/evidence/ledger.py": {
+      "role": "source_or_configuration",
+      "sha256": "fd7ad60ba6c3fd434db83bc43c66adc31ba067f8cf6b207013149c34f729e075",
+      "size": 12250
+    },
+    "backend/app/hardware/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "fe9f905a866a431f3c878dd5d02cf2cd4bf41bd91bea47122e27ed91ea9bebd7",
+      "size": 234
+    },
+    "backend/app/hardware/devices.py": {
+      "role": "source_or_configuration",
+      "sha256": "260c82e6aad91f57613754bc5015c235841593fd35fdfb07eb48f20273554719",
+      "size": 7146
+    },
+    "backend/app/inference/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "a254a54536d154d68d04b3c737bb1b40d0784d3244a36689998233750c56d10d",
+      "size": 402
+    },
+    "backend/app/inference/belief.py": {
+      "role": "source_or_configuration",
+      "sha256": "5693377de99857dcb46172d4c47ccd1740666b3b9379e56198062c9a3c603bba",
+      "size": 10635
+    },
+    "backend/app/inference/calibration.py": {
+      "role": "source_or_configuration",
+      "sha256": "79e81f76aa928e10a5a9186bc1a675cfde5ddbcd310172e3fad9d21b68b35eff",
+      "size": 7757
+    },
+    "backend/app/inference/diagnostics.py": {
+      "role": "source_or_configuration",
+      "sha256": "b16a15581df74a1f6ded0aa1cf6940273d77dcc0b26192fc352f39ea63d0a690",
+      "size": 4490
+    },
+    "backend/app/inference/interfaces.py": {
+      "role": "source_or_configuration",
+      "sha256": "84ec19a89c36c2d095f69a10e870f5cd228aa5235828607c518eba4957a9bd88",
+      "size": 816
+    },
+    "backend/app/inference/joint_state.py": {
+      "role": "source_or_configuration",
+      "sha256": "32f9628be1e5f76c6ff0a159f03ac8d9cf147566b57363d183fda0f37a4ed93f",
+      "size": 2848
+    },
+    "backend/app/inference/nuisance_posterior.py": {
+      "role": "source_or_configuration",
+      "sha256": "f4ed15b3663573361084da54df5d4ad86ebedd7678c38110e7f1420f5c1c409a",
+      "size": 12369
+    },
+    "backend/app/inference/particle_engine.py": {
+      "role": "source_or_configuration",
+      "sha256": "c98913843e7c7a9bc88b16f0424e88822928e9970d09a311fad325f484ba792d",
+      "size": 2247
+    },
+    "backend/app/inference/structural_posterior.py": {
+      "role": "source_or_configuration",
+      "sha256": "c315d0109452ce1832ee44d2bd78771dba91d9d75b02b27d080bfb7a81e9c9e8",
+      "size": 9074
+    },
+    "backend/app/main.py": {
+      "role": "source_or_configuration",
+      "sha256": "cee7455a1b72ea8219a7fa16b641100c96b6d83b5ab5c23b78b8af277eb7f53c",
+      "size": 26220
+    },
+    "backend/app/models/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "7e5531ff69167c79e5f7ab7ab609340fd25871c1ab7a7f13e32e2db0802e270b",
+      "size": 113
+    },
+    "backend/app/models/active_learning.py": {
+      "role": "source_or_configuration",
+      "sha256": "106419fd1b5a5b2aae1b2d817eb46627d10e66e7a393930909208dbd2166e531",
+      "size": 4376
+    },
+    "backend/app/models/checkpoints.py": {
+      "role": "source_or_configuration",
+      "sha256": "834fdf3ee1d5662e6c107ce9168d233970c79db614a81f061d698adf4c78e3c9",
+      "size": 7520
+    },
+    "backend/app/models/domain.py": {
+      "role": "source_or_configuration",
+      "sha256": "dd4b7f4c5469f6ac3087b33c0d259cb2101e1910813cb41f1185521d44d1b49a",
+      "size": 5993
+    },
+    "backend/app/models/registry.py": {
+      "role": "source_or_configuration",
+      "sha256": "226cf79263b97d7f7ab5570f4307c2c5236f3e0ab99726d475c3f12864e9fcf8",
+      "size": 1406
+    },
+    "backend/app/models/sim2real.py": {
+      "role": "source_or_configuration",
+      "sha256": "6fd699fc846748a4bfd98663f9235b67166cfcd16c86a8ba7e04ff360b24e31a",
+      "size": 6293
+    },
+    "backend/app/models/surrogate.py": {
+      "role": "source_or_configuration",
+      "sha256": "45d64e7655cf4d34d19aa2647705a54da6e0cbe6306c2e9fa7a97a36b963f5d3",
+      "size": 682
+    },
+    "backend/app/ood/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "a41c41a6f6ab5735397f179ec13a45d24ee9923d11f8fac9d0d371c86330f0ea",
+      "size": 239
+    },
+    "backend/app/ood/acoustic_reference.py": {
+      "role": "source_or_configuration",
+      "sha256": "1df1e837deec8c45e6618e50170cf33d2ce3d3789fc622983c75ff872aa88821",
+      "size": 3774
+    },
+    "backend/app/ood/detection.py": {
+      "role": "source_or_configuration",
+      "sha256": "07d9e48222163cbf3a03961eba36e01965fbd1b5eb77d752acd4438ba93bc8d6",
+      "size": 5597
+    },
+    "backend/app/replay/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "767beb0354bb5129a58948c69e7ae8f0f612f49f444b934e285e17e8a9605d7b",
+      "size": 734
+    },
+    "backend/app/replay/datasets.py": {
+      "role": "source_or_configuration",
+      "sha256": "cbc666592f24fd977f0ba1209f2bd2f7ccba6ad1d7847f029b73516f64c26c67",
+      "size": 15484
+    },
+    "backend/app/replay/runner.py": {
+      "role": "source_or_configuration",
+      "sha256": "fc71f195c518c2051d452d8609c718c9ac432568549c0acf6d0a08966b447659",
+      "size": 7390
+    },
+    "backend/app/replay/safe_io.py": {
+      "role": "source_or_configuration",
+      "sha256": "d04a1e3d82f2e32d5f10888b38c0ff993133da0f77aa86b3b28278d87bd20149",
+      "size": 5642
+    },
+    "backend/app/research/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "d888b897f5fcf6ecd2013ed6e850e7f1c25a015989e7359c272c709bb99955de",
+      "size": 72
+    },
+    "backend/app/research/bank.py": {
+      "role": "source_or_configuration",
+      "sha256": "6e06ca21b7c2cf248fc8968b7c74294df719461560cfa4c11bef65759cae626a",
+      "size": 4088
+    },
+    "backend/app/research/failure_explorer.py": {
+      "role": "source_or_configuration",
+      "sha256": "6115c79f26a725c878cbd10fe2324f0de79ada8afe18cd956acdde7e598fe9a5",
+      "size": 1200
+    },
+    "backend/app/research/faults.py": {
+      "role": "source_or_configuration",
+      "sha256": "142b9391d473a7d955c97349a131d62a7af33df528cccdb217e74ae01b322d7e",
+      "size": 2056
+    },
+    "backend/app/research/jobs.py": {
+      "role": "source_or_configuration",
+      "sha256": "1309da51e469bfd84364391fddba4b4846489e13272968b6395f8ffea4609cc5",
+      "size": 10259
+    },
+    "backend/app/safety/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "f87c07361cc67af190e4879429bd5a0c27022a0cde72ea27ab9521e7172534cc",
+      "size": 159
+    },
+    "backend/app/safety/constraints.py": {
+      "role": "source_or_configuration",
+      "sha256": "171f066bfbc768e23b34b953ed62c132aba84df759b649f5d720e51820b96c18",
+      "size": 2940
+    },
+    "backend/app/schemas/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "c2dd7af5ed47a655a0c657c6f8ab6922585d7d642bea18584d2a62a5cec0c038",
+      "size": 166
+    },
+    "backend/app/schemas/api.py": {
+      "role": "source_or_configuration",
+      "sha256": "c8179ad57be9e1fe2dde8d7228ca6e5183ab94fb5b8b49dbe93bf47014293c31",
+      "size": 6962
+    },
+    "backend/app/security/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "3c7f80df62733ae94e32399bafd5790aa046822e91b02404db5a954b887eef82",
+      "size": 218
+    },
+    "backend/app/security/network.py": {
+      "role": "source_or_configuration",
+      "sha256": "20aac57a8fcb91adace07a05908f9ba911dc9e200fa93ae86bf42d32c460c0c6",
+      "size": 15301
+    },
+    "backend/app/services/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "ac2a6f30ca384cbc9c7f483879ff32810207aacdb06737b52c669ec05c64ebf3",
+      "size": 59
+    },
+    "backend/app/services/engine.py": {
+      "role": "source_or_configuration",
+      "sha256": "5aaa2dcf87fe09c651382dca5f60f375a6f40a93483073f65dabf56edc9edaf9",
+      "size": 39370
+    },
+    "backend/app/services/session_manager.py": {
+      "role": "source_or_configuration",
+      "sha256": "c6e4db1f2280b21cc45f55d52ca8d197537ad296d952c6085a054c169b95b24a",
+      "size": 27865
+    },
+    "backend/app/signal/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "7ca5bc2f6083ee8576e25335f494c03ba1642d892f92eac4f0a7e78f86b296e3",
+      "size": 147
+    },
+    "backend/app/signal/processing.py": {
+      "role": "source_or_configuration",
+      "sha256": "2834b3a91da20a688a36db9351222c64283213d0cbf6f41e5c4c2eb488aa3f62",
+      "size": 5643
+    },
+    "backend/app/simulation/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "be744f0c2dee2c18f743da85ee13301f01c58621425084a959a5bfd4eda5e153",
+      "size": 110
+    },
+    "backend/app/simulation/physics.py": {
+      "role": "source_or_configuration",
+      "sha256": "47ea4f1ca94058205d18b0e3e6fa74255ebfc88ae6af8616cbbb91d9cc05189b",
+      "size": 10346
+    },
+    "backend/app/utils/__init__.py": {
+      "role": "source_or_configuration",
+      "sha256": "f8d2651d3c650fe89f73179bb2a7ce561ac2b0b5f5b82faf2ac1fa5acb737a88",
+      "size": 28
+    },
+    "backend/app/utils/logging.py": {
+      "role": "source_or_configuration",
+      "sha256": "f059420368b0d7db83c4425df1b1bb511d4e3e85187743d31f77473848d2f658",
+      "size": 786
+    },
+    "backend/requirements.lock.txt": {
+      "role": "source_or_configuration",
+      "sha256": "604c4f1cc2b130617772bc449f3b7bce0d887a4c00d8b1bcf3f79d1818e2a081",
+      "size": 446
+    },
+    "backend/requirements.txt": {
+      "role": "source_or_configuration",
+      "sha256": "d4e1f06907516b61af9129286f97275770e8545f1e1dc5c681f381e90c601cb1",
+      "size": 245
+    },
+    "backend/run_backend.py": {
+      "role": "source_or_configuration",
+      "sha256": "fca09e47e3e26419eda35bad73950d7cc6d427e7dd268fe023e7cc173584d841",
+      "size": 1023
+    },
+    "backend/tests/conftest.py": {
+      "role": "source_or_configuration",
+      "sha256": "86ef22a91a2fbc713f886138177d2103a44d90ad0884112f03605fd8b5a81961",
+      "size": 144
+    },
+    "backend/tests/test_api.py": {
+      "role": "source_or_configuration",
+      "sha256": "0a97fd3b7117e440bd5dfa81a0b7cfd5be2eb2bf9d88ab9db84319d835f77a6b",
+      "size": 9431
+    },
+    "backend/tests/test_artifact_security.py": {
+      "role": "source_or_configuration",
+      "sha256": "81c80630f1db1665a13359efebb9502f3fbd7af839bdcba030d279c1f04ea812",
+      "size": 13936
+    },
+    "backend/tests/test_assurance.py": {
+      "role": "source_or_configuration",
+      "sha256": "f3097c42d2b7c1e37ed1ac513cdfa895d8896326e0fbabb949dba82e057c99b9",
+      "size": 5620
+    },
+    "backend/tests/test_audit_hardening.py": {
+      "role": "source_or_configuration",
+      "sha256": "9b259a578d13012b3023673a4a17aa30a7f6fb329dbe9f6b0e0eaf81cff7f109",
+      "size": 9087
+    },
+    "backend/tests/test_inference.py": {
+      "role": "source_or_configuration",
+      "sha256": "022162dc4a58c9ce8b228dc829f3dbf7a8fea1ceeca8235374f10d272bb0d09d",
+      "size": 940
+    },
+    "backend/tests/test_launcher_edge_security.py": {
+      "role": "source_or_configuration",
+      "sha256": "c195fcacac30fb36acfed1580d94b2daecfecdfe52272f93e4765da1c4fef472",
+      "size": 3443
+    },
+    "backend/tests/test_neo_core.py": {
+      "role": "source_or_configuration",
+      "sha256": "e3f42a8a4f8d5b6b9ff6e4ce24ba97e91b68cfa1bfbeaed1304f0b76a4766dae",
+      "size": 11702
+    },
+    "backend/tests/test_neo_evidence_replay.py": {
+      "role": "source_or_configuration",
+      "sha256": "ee87ded03c499d4157261aab6cc7665bf4a2e7c04ce18d25c6dbfe42e82b0f1b",
+      "size": 12813
+    },
+    "backend/tests/test_neo_science_integration.py": {
+      "role": "source_or_configuration",
+      "sha256": "c2e22bda344cb6e9e29e319d87c8fa6114b20fb299f3dba625cf023bcee007f5",
+      "size": 3231
+    },
+    "backend/tests/test_network_security.py": {
+      "role": "source_or_configuration",
+      "sha256": "2473a52b5a2c284b1afb600833bf2e94f062dab011c867d1c83de0f93d9d20f0",
+      "size": 17196
+    },
+    "backend/tests/test_nuisance_design.py": {
+      "role": "source_or_configuration",
+      "sha256": "60fc23b8ddbdf8210cd0a1bb43a01719cfdff7b825d21af150bc4f3ef818be6e",
+      "size": 8578
+    },
+    "backend/tests/test_planner.py": {
+      "role": "source_or_configuration",
+      "sha256": "aaa0e71bae66fea6a0593d2d45ad91b60cb9bac444f85e800e523994f0618a45",
+      "size": 1034
+    },
+    "backend/tests/test_published_research.py": {
+      "role": "source_or_configuration",
+      "sha256": "df75c05191b05e641d71fbd5816c00f2349fd806d27831c419924ad82ef3c027",
+      "size": 1335
+    },
+    "backend/tests/test_release_bundle.py": {
+      "role": "source_or_configuration",
+      "sha256": "239b3fd49fe1c112fe00e055306db98f9f2adc610c29ce74cc42fa6c533d4978",
+      "size": 9211
+    },
+    "backend/tests/test_release_input_contracts.py": {
+      "role": "source_or_configuration",
+      "sha256": "af71622a9b3feb84491a5010b352a1b10873002c555ddc785214e322be89cfb3",
+      "size": 5110
+    },
+    "backend/tests/test_research_validation.py": {
+      "role": "source_or_configuration",
+      "sha256": "2169f64de0deded78094a4f7fe1f9fd9b09ee2e3bbab01a2294f93cdab229951",
+      "size": 3817
+    },
+    "backend/tests/test_safe_checkpoints.py": {
+      "role": "source_or_configuration",
+      "sha256": "397852d2845854fa667db415eeb57472cfc420fb86d9307fafb65eb5994efd74",
+      "size": 2864
+    },
+    "backend/tests/test_scientific_release_hardening.py": {
+      "role": "source_or_configuration",
+      "sha256": "e012ef890f714fb68cc5b1973b2237d87150475a0a062e703716e043718c18a8",
+      "size": 12007
+    },
+    "backend/tests/test_signal.py": {
+      "role": "source_or_configuration",
+      "sha256": "eada987eb57b6ea76745ff4353cb5b0c31561bb16d78ba581d18bd3d205ae289",
+      "size": 768
+    },
+    "backend/tests/test_sim2real.py": {
+      "role": "source_or_configuration",
+      "sha256": "f20390c8090e78ad4579f0756ab3e497a2d31dd189420605d7ab0abe9a2f4eee",
+      "size": 2818
+    },
+    "backend/tests/test_simulation.py": {
+      "role": "source_or_configuration",
+      "sha256": "dc66eaec21ac23e5f0679c871baee16810e9473664699b5b06e6ba0743ed094a",
+      "size": 1437
+    },
+    "backend/tests/test_surrogate.py": {
+      "role": "source_or_configuration",
+      "sha256": "0e662901acb4cd2f3f3b2feb377c6cf85c86442893f7bab02d63286066a3a1c1",
+      "size": 1220
+    },
+    "backend/tests/test_training_data.py": {
+      "role": "source_or_configuration",
+      "sha256": "59418c0e6f654eeea13067bf3f27a116e8fc50070eccb4b651e1c0789b53cd8b",
+      "size": 2527
+    },
+    "benchmark_results/benchmark.csv": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "1379fa4f9903597c7a6f2bffe98ad8df865c01b7e28652af1f3dba362e94f0a7",
+      "size": 55327
+    },
+    "benchmark_results/benchmark.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "c2dc2828ff5ff7188a35958eefe0c7522ebb40888c309842f29e4c87c3dfc494",
+      "size": 118217
+    },
+    "docs/API.md": {
+      "role": "documentation",
+      "sha256": "d578510718ce134e25a076dc0e74e2c1cc8180df06dfb918ba2d9619c78584ef",
+      "size": 4258
+    },
+    "docs/ARCHITECTURE.md": {
+      "role": "documentation",
+      "sha256": "f87254dfda1065f3b02b58edd2f0311c244e01616892a0fd84f96994eaeef013",
+      "size": 2539
+    },
+    "docs/ARGUS_CURRENT_ARCHITECTURE.md": {
+      "role": "documentation",
+      "sha256": "05825ed67d38effd05c551080d21997039e1cdb7cf85ed048d749070db6a1460",
+      "size": 8114
+    },
+    "docs/ARGUS_NEO_ARCHITECTURE.md": {
+      "role": "documentation",
+      "sha256": "4e136b2415c0d0873fa4226dd990b6ddb1c45cbc7e804cd5e22f966ba32f8a15",
+      "size": 6632
+    },
+    "docs/AUDIT_REMEDIATION.md": {
+      "role": "documentation",
+      "sha256": "f66b792f3974dc953ca0c50a525fe61bf74c8768892e38ffbef5557d15576a11",
+      "size": 13606
+    },
+    "docs/BENCHMARK_PROTOCOL.md": {
+      "role": "documentation",
+      "sha256": "14407498397af79ffb19ffbdeeef6559839554b6ba9e31bfb2aaff16ed435c7e",
+      "size": 1627
+    },
+    "docs/CURRENT_INVENTION_DISCLOSURE.md": {
+      "role": "documentation",
+      "sha256": "56038b47b580bef514617f974f22b9ae798af1931d02206d2507dafe9a38b7f2",
+      "size": 7458
+    },
+    "docs/EVIDENCE_LEDGER.md": {
+      "role": "documentation",
+      "sha256": "9aa9964b06b17c266528e047d76db1fa153d17b30dfe3bf49fb7433cd73eb030",
+      "size": 1454
+    },
+    "docs/HARDWARE.md": {
+      "role": "documentation",
+      "sha256": "3f5ee8458fdca8be79bd2420402b8c4fa17a659513584e41bc3cc50fcc8ca0c1",
+      "size": 1145
+    },
+    "docs/LIMITATIONS.md": {
+      "role": "documentation",
+      "sha256": "8fb14be78f9a6de281168900d23d5fa7c1ae6a8dcb57059ae98c40f18ecdaddd",
+      "size": 1986
+    },
+    "docs/PATENT_REVIEW_PACKAGE.md": {
+      "role": "documentation",
+      "sha256": "4e27ed6cac50eea6fe09766c1431a18cd29a2cf252931ec0db1e6afd0e981922",
+      "size": 9511
+    },
+    "docs/PATENT_TECHNICAL_DISCLOSURE_NOTES.md": {
+      "role": "documentation",
+      "sha256": "9bbde24cceccdc3c53530b074e46cac75a518764c19673976434becab86fb25c",
+      "size": 4900
+    },
+    "docs/PRIOR_ART_NOTES.md": {
+      "role": "documentation",
+      "sha256": "6c6cb52cdd6bfc7de549dec9f3bb30f0771d716ee32c56adeea4d28cea4afb22",
+      "size": 3226
+    },
+    "docs/PUBLICATION_READINESS.md": {
+      "role": "documentation",
+      "sha256": "83c7c80f68782ec118478c73f24541a2cf3d49931db2e6500d70605fd516c4b4",
+      "size": 4155
+    },
+    "docs/REAL_DATA_GUIDE.md": {
+      "role": "documentation",
+      "sha256": "aea53d0043aec7fcf5d681a774575961f243ba3790e0cd8dacd33931ba6b3680",
+      "size": 9474
+    },
+    "docs/RELEASE_READINESS_REPORT.md": {
+      "role": "documentation",
+      "sha256": "3b81a6a8275dbf871559f6c4c41c06efa56877d821f318293374c44476604e8f",
+      "size": 11659
+    },
+    "docs/RELEASE_VERIFICATION.md": {
+      "role": "documentation",
+      "sha256": "9032ba33d46e830649e2dd4a3e3578ab8520b45a544ba7dacbe544d6553f8815",
+      "size": 2734
+    },
+    "docs/REPRODUCIBILITY.md": {
+      "role": "documentation",
+      "sha256": "28c43f43235aa5886f52f73478e96adc5e4d01f315bde75e6a1a592dd16091bf",
+      "size": 1665
+    },
+    "docs/RESEARCH_EVALUATION.md": {
+      "role": "documentation",
+      "sha256": "d37aff183f73205ee314bdeeca39d56526811873831a1af6721d61d31d8070a5",
+      "size": 7762
+    },
+    "docs/SCIENTIFIC_MODEL.md": {
+      "role": "documentation",
+      "sha256": "f58f2a1d187b35a315432aa3a520e3dcf17ee3efb4753523b255441c21e1960c",
+      "size": 3649
+    },
+    "docs/SECURITY.md": {
+      "role": "documentation",
+      "sha256": "672475c553485a1bbf5c834019ea77b1ab32ff4546b3f764d49e6bc3688c3688",
+      "size": 6359
+    },
+    "docs/VALIDATION_PROTOCOL_2026_10_07.md": {
+      "role": "documentation",
+      "sha256": "c88d9e15100ce1a49028eb19b969aa67e65e8cbdb07fe2e4b3a965db7bae516d",
+      "size": 3325
+    },
+    "docs/VERIFICATION_REPORT.md": {
+      "role": "documentation",
+      "sha256": "c1e62f55848abfb74eef5805bae4c4026e90b1752814900d0e37ecd526db18aa",
+      "size": 10175
+    },
+    "firmware/esp32/README.md": {
+      "role": "source_or_configuration",
+      "sha256": "98e282eff03538a2738129df896ecd13030af024d68b9da6e664fae6e1b534e8",
+      "size": 1355
+    },
+    "firmware/esp32/argus_probe.ino": {
+      "role": "source_or_configuration",
+      "sha256": "bae376e01d7fb5b0db87b97747a516e1df7990da1c0755315c48bdbb298e3648",
+      "size": 4541
+    },
+    "frontend/.env.example": {
+      "role": "source_or_configuration",
+      "sha256": "d2d7eb202222b96af137fea0231885fe3e54118aadbec4b4da5cab8e9e43c2ef",
+      "size": 305
+    },
+    "frontend/.gitignore": {
+      "role": "source_or_configuration",
+      "sha256": "57ef375aa89eaeaa587d58e9b67a15a22fcb268fe4e2ded0ebaa362de19b09af",
+      "size": 412
+    },
+    "frontend/app/globals.css": {
+      "role": "source_or_configuration",
+      "sha256": "c5ad3e576c26b05643339f349b06033c4966bc6f51baad899a2d569d8f11fc47",
+      "size": 123060
+    },
+    "frontend/app/layout.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "d24b38e949fad0d471b0d9f32ab3192c3c3b570d1d7335780ca8dc93c652ed14",
+      "size": 1224
+    },
+    "frontend/app/manifest.ts": {
+      "role": "source_or_configuration",
+      "sha256": "7e9525d2addbc14912e97fbeacb056ac59d002753836c82106da9bc8610cd3c0",
+      "size": 401
+    },
+    "frontend/app/page.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "ef3ed41d82b76326b9a92ff6de1ce26e02ed71ab6868afd973f7cfe6e2371ac2",
+      "size": 18887
+    },
+    "frontend/app/probe/page.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "6cf9579dd85fbe500dfe418b04acf26dac0b215413dbdb9fb6574d98e7b6dfa7",
+      "size": 14745
+    },
+    "frontend/app/research/page.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "0a94f24ccc698c32d1c36151eb49f64a4eca1077300b2ce6218bedc2e17b4a0d",
+      "size": 1368
+    },
+    "frontend/app/setup/layout.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "5657babcc56fcc3f995dd10862ce7e8965651f138389520331148f84bfa46019",
+      "size": 367
+    },
+    "frontend/app/setup/page.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "16e08ed24be8f9ebeecc84f91e009aa213d185f262d63b257b7ef8294c48be2d",
+      "size": 7634
+    },
+    "frontend/app/simulator/layout.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "3aff62010f45752776f78f5228eea85ce8143b34dcc4354f448225bcc01864d4",
+      "size": 351
+    },
+    "frontend/app/simulator/page.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "1b4b0946f9d5e41e57b26947a8d29667843e6f723874d6f000ca76f5a2597ce0",
+      "size": 25946
+    },
+    "frontend/components/ArgusBrain.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "31ea8c0dfa4b379efdbaa82cdf0c686438e398cd381b7f8a3bb96f5278e7b7d0",
+      "size": 10299
+    },
+    "frontend/components/AssurancePanel.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "865feffdeb7caf7677134251d1e985098751aa60f3e37e9eb50e4b6dcb3d3d6e",
+      "size": 5851
+    },
+    "frontend/components/BeliefEvolution.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "3323408e04e66aa22c244aa7c441fbc2846de29db2e6dab40b8fa82bd41ae620",
+      "size": 4008
+    },
+    "frontend/components/BenchmarkPanel.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "6b1082c96642292c5472673fdd4c734037cd4bb5da70342d1ce720cf7a32ffc3",
+      "size": 4027
+    },
+    "frontend/components/CameraOverlay.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "ba174e6e19915bded95513b78cf60fe52e0dfcbde583fbf589ade736edfed6df",
+      "size": 8548
+    },
+    "frontend/components/EngineAccess.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "a250a91281c730f7ba1efcc0de8c5de8ad46564f40c596adb40b3f2c821d3ada",
+      "size": 1601
+    },
+    "frontend/components/EvidenceLedger.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "e7a168216bf8ffe049f5ba735bf7ffff7ea238b32c44de0bb3416c3ab31b43a1",
+      "size": 5062
+    },
+    "frontend/components/HeatmapCanvas.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "454dd9d9bebd01df23518908bcfb65b7027bcd4474a6eb531bad2adbc9f0284d",
+      "size": 7934
+    },
+    "frontend/components/NarrativeTwin.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "742c40c629e2c18bb6d74d2f6d96108cfcb266a12cc169c74f23436bb99e968c",
+      "size": 12724
+    },
+    "frontend/components/ResearchEvidence.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "4350aaac4b499d6cc66368c1a153a419ed35b8e435f54d080045207068ac60bc",
+      "size": 6251
+    },
+    "frontend/components/ResearchLab.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "2789eec47e46e2ef385fa72ef5cc33878faa43a247bbf378e6c5517de4c523e8",
+      "size": 4862
+    },
+    "frontend/components/SignalPlots.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "340607b46d5b2406dce4427653af9a691dedb095e67342b6fd16120645369e00",
+      "size": 3744
+    },
+    "frontend/components/SpatialWorld.tsx": {
+      "role": "source_or_configuration",
+      "sha256": "e83dcace4e0cc67436a3fea1024dee9d61d6472762bf79ce303e630c413b0e9e",
+      "size": 3161
+    },
+    "frontend/components/spatialGeometry.ts": {
+      "role": "source_or_configuration",
+      "sha256": "797e8e6bafa374d6ebb847de2a1a4921edc65019bcece14d5b05db9bb9793992",
+      "size": 1039
+    },
+    "frontend/eslint.config.mjs": {
+      "role": "source_or_configuration",
+      "sha256": "5c697206f302dadc0c8b7b2f7a707257dab15129a2149872b0f84ea1ac17d263",
+      "size": 345
+    },
+    "frontend/hooks/useArgusSession.ts": {
+      "role": "source_or_configuration",
+      "sha256": "0e80226b0e4cdbbf5713f9580d252ea29aa3a0bf9c81b7a3a5050811d370e070",
+      "size": 7507
+    },
+    "frontend/next-env.d.ts": {
+      "role": "source_or_configuration",
+      "sha256": "539b8eff936dcf0cb92eeecd475bfe28b068121f71631abd0a614b9c7707d6e4",
+      "size": 291
+    },
+    "frontend/next.config.ts": {
+      "role": "source_or_configuration",
+      "sha256": "d063bebef3a4878ae82f9f9547c2c9675b8b6945ab23702932dcb63a011a9fc9",
+      "size": 104
+    },
+    "frontend/package-lock.json": {
+      "role": "source_or_configuration",
+      "sha256": "3b8012c1c4e55a8a15d10cea6200b6b5a8e32b04647384f8c12af68e87fb8a38",
+      "size": 350774
+    },
+    "frontend/package.json": {
+      "role": "source_or_configuration",
+      "sha256": "b1a459ff919e6ca422f8e29ce796f3da8c62c0a7126c6dbf7b5285d80e8c532e",
+      "size": 1119
+    },
+    "frontend/services/api.ts": {
+      "role": "source_or_configuration",
+      "sha256": "d49455de36b9763e6387d6cdbc8f26d593ca8f228895bd38ca5468306adc666e",
+      "size": 9610
+    },
+    "frontend/tests/api.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "cd4828ea31506143090062a8713cdf74accdc8b28cfc0ade2cfd5f7fd1377a85",
+      "size": 4222
+    },
+    "frontend/tests/neo.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "3ce40afe5121207a510303f1a4cb59b5c55a16aec013a9a9f3686e8b672783ba",
+      "size": 1169
+    },
+    "frontend/tests/posteriorDisplay.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "f9e10e73dcab5de6de0669734bd0de405511c32ddcd9971a3e92b680a7f3d93c",
+      "size": 1423
+    },
+    "frontend/tests/researchDesign.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "f4af0af06f7bed801ebaa34a1e8b70a81a5e4d01a4f84fd9f789f8a29741ca10",
+      "size": 1490
+    },
+    "frontend/tests/spatialGeometry.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "7bd5b10ba76c6bb18b565988ad1b0502bfa75d01d075c7c2e0d72e5eaa507322",
+      "size": 1554
+    },
+    "frontend/tests/virtual-acoustics.test.ts": {
+      "role": "source_or_configuration",
+      "sha256": "9784807cd3dc71cee77d1d990253ca9354befe26e0a240c2985032329489d4e5",
+      "size": 2834
+    },
+    "frontend/tsconfig.json": {
+      "role": "source_or_configuration",
+      "sha256": "0518b5a613caaff145f0cdda356b16e8b0032c0b8fdfdd01c11e58b39e609f5d",
+      "size": 758
+    },
+    "frontend/types/argus.ts": {
+      "role": "source_or_configuration",
+      "sha256": "e72132a7d3165a0f349ac88746ab3ab96859e1c914a9f94ae30b147f7342e3ec",
+      "size": 7871
+    },
+    "frontend/utils/audio.ts": {
+      "role": "source_or_configuration",
+      "sha256": "58ddfb8478b5bca21e78fc83c2607174da8c02be4a0e74f7c7f39272611b9fd8",
+      "size": 2739
+    },
+    "frontend/utils/neo.ts": {
+      "role": "source_or_configuration",
+      "sha256": "443e7443a9c8f542dbfb18061a7ff4f0c42a0e200473d64a489d100e1650cc9f",
+      "size": 694
+    },
+    "frontend/utils/posteriorDisplay.ts": {
+      "role": "source_or_configuration",
+      "sha256": "79008c45403402a7ff2c750b08639b1553d053bec2a24ef4ab03ec8c862b0098",
+      "size": 1477
+    },
+    "frontend/utils/researchDesign.ts": {
+      "role": "source_or_configuration",
+      "sha256": "ee29e64f10ad389ed933791d89a40b9e8feb2dcc96cb286e437afbaaef9a7c5d",
+      "size": 1625
+    },
+    "frontend/utils/virtualAcoustics.ts": {
+      "role": "source_or_configuration",
+      "sha256": "c2ca2a50a41e2f3dd882b02cea6965bad38f27e52fcb8c2a135455ee7c4c6150",
+      "size": 14345
+    },
+    "frontend/vite.config.ts": {
+      "role": "source_or_configuration",
+      "sha256": "a7703e54209d86725658965f2f620d6b0b5ba1d91b18935b0713d63a4fe78cd5",
+      "size": 2092
+    },
+    "models/README.md": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "2368b89564d0d08b74da945e5c2ce66cf6e082492c3010c0be7c92f2e5b200f6",
+      "size": 2928
+    },
+    "models/ae_sim2real_metrics.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "bfb17a1361abfae7c35855fea76ce74567f0225352a92518becefdc73b9971b5",
+      "size": 5756
+    },
+    "models/ae_timing_calibration.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "abe2a1dcc6e8ba147eb6110561bb60c610390b6f01c1795badfa38af6828bca3",
+      "size": 1082
+    },
+    "models/forward_surrogate.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "fdb19e44aaa448a659d052b0e31ae06545c5d247b8fa72c9ef971b47214c7453",
+      "size": 2516
+    },
+    "models/forward_surrogate_50000_73123.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "2e3999fd330b11de76e15957fcc3946e7be1e4ec89bcbe5f96c6dd8249236a99",
+      "size": 8956
+    },
+    "models/lmsd_surrogate.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "b2a7058fbfae4878bf9f373b50554ebcd2a6364ae971c67754ccbbfbe8c3b2d6",
+      "size": 3070
+    },
+    "models/sim2real_acoustic_reference.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "dd09c68ea63c1d982c81f8cbf7a26620ae791530f5c78ca56b1fe7c96556ddae",
+      "size": 65254
+    },
+    "models/sim2real_feature_transport.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "da12df68e7841c05ba6e9ad1b0fbe38dfec5e40906255ba315693ed95af4547e",
+      "size": 23663
+    },
+    "models/sim2real_metrics.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "36dec3eed3c77ef1e79903b2e99ed434de3c6b496fdcbe6a74a238674ff23d9f",
+      "size": 4167
+    },
+    "output/audit_physical_acquisition_plan.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "52985209dff60b3b62cfc623458e822aace0c760db941e77f31d1811987f8a80",
+      "size": 11727
+    },
+    "output/frontend_checks_2026_10_07.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "09d95c6950f24c9e3905017e0246fca60e6f90376c5b528641b83ca8629a313c",
+      "size": 5342
+    },
+    "output/release_summary_2026_10_07.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "15e36947d535a002de7101f9f5ffc973f92756356cb751504fc02606e99cf7b0",
+      "size": 5847
+    },
+    "paper/README.md": {
+      "role": "documentation",
+      "sha256": "5887ae4fd4daff77bbf1596c563c3af759e53e0e70ddadef2b034bc7a938ffce",
+      "size": 3309
+    },
+    "paper/main.tex": {
+      "role": "documentation",
+      "sha256": "5822e3e110a89db058a12b3061df7b79ae0ab3a1431997d255bae238c66127d5",
+      "size": 89760
+    },
+    "paper/nuisance-design-section.tex": {
+      "role": "documentation",
+      "sha256": "2f7f154aaef2bd71a8797c12814863dfc7ec874b29204fbce61a4352b317f0af",
+      "size": 8709
+    },
+    "paper/references.bib": {
+      "role": "documentation",
+      "sha256": "09d62dc3978805aa93e4c0f6e5934d39dc3866eff1068b58e44170bdf64bd5f3",
+      "size": 11693
+    },
+    "paper/release-validation-section.tex": {
+      "role": "documentation",
+      "sha256": "396b49459a2fe0597ec38556ba393f99ac0dc3a80a079031638fd2b86874b997",
+      "size": 1907
+    },
+    "pytest.ini": {
+      "role": "source_or_configuration",
+      "sha256": "bffbee89247497890b4a16b8a2b424c31c94f2e011e2cf59293e7ce327c0d66d",
+      "size": 48
+    },
+    "research_results/active_surrogate_quick.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "5b6f1a39ed20d76df84427a100f8bb09b5961fea5f0a46c04907bb01f492d17f",
+      "size": 1174
+    },
+    "research_results/audit_risk_pilot.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "cdaa7a5d90bf3e964ca83319c2b8708be7eefb5160c803402a780a664d554e68",
+      "size": 736213
+    },
+    "research_results/audit_risk_validation.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "2bc12ff3a56b626ff72f809c87b573d83ecd3d57cac1899fc9034ccdb7c61380",
+      "size": 732107
+    },
+    "research_results/calibration_quick.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "993b3ca33bdd4e36f7df8a3116f68a69ffb2cde58fb586e648a9a07d3d607fbe",
+      "size": 3139
+    },
+    "research_results/measurement_compression.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "0d07646b6e16b6fda37ec84984d8ca93fbef81942d20593b730155fb75d85c0d",
+      "size": 397115
+    },
+    "research_results/model_mismatch.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "74832aaefc26c203d31f995bdb36ecfeaadebd97e8cb7cf4ebbc679e2824c534",
+      "size": 66294
+    },
+    "research_results/neo_ablation_quick.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "82a1a4c466250edbdf3074342a6fa15e18227b136f1d9d5e15b4382f8bfbfa8b",
+      "size": 60978
+    },
+    "research_results/neo_benchmark_quick.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "e2128e1187d4940d8b63eb81cf08924ed3b9d964309901018cfeee849cd7c944",
+      "size": 153256
+    },
+    "research_results/nuisance_design_pilot_legacy.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "099aa1e8876f8946fb2de186c57f9be5e0b0995e2ecbfabf8e1acbdbe58c420c",
+      "size": 114492
+    },
+    "research_results/nuisance_design_validation.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "8708012f5f854251ae5f47b47de8be23a57e2dface639aa9ffd42573f1c09abf",
+      "size": 1556414
+    },
+    "research_results/release_validation_2026_10_07.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "fb2784bb4cb8a1d22e964c3e412de0a941a8ed42aa7b5fc88f126e8330a006ea",
+      "size": 1339718
+    },
+    "research_results/rival_hypotheses.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "4e9fc02fa8fedfd507a99402dae6852aa2dbb65eb82d9e8cf3779b79866f4d1d",
+      "size": 22491
+    },
+    "research_results/surrogate_comparison_73124.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "c38dae60a601f1002096e9347859681f33460d99c35f402e0ce20d79767afb95",
+      "size": 5662
+    },
+    "research_results/surrogate_external_benchmark.json": {
+      "role": "saved_evidence_or_model_metadata",
+      "sha256": "b0070bb9d954dc68bfab08ecc7b6c772bf1a97cc52c9b915da1fcba60d7ba0fe",
+      "size": 2100
+    },
+    "run_argus.ps1": {
+      "role": "source_or_configuration",
+      "sha256": "5c58a5c91ee4aff09f50d4a5cc61f8182f1950c454888201106da21548419180",
+      "size": 372
+    },
+    "run_argus.py": {
+      "role": "source_or_configuration",
+      "sha256": "6dc0a19fcb02467f89c9ed854ae177fcc2a24ffc06248187fb78709939d1e511",
+      "size": 5950
+    },
+    "run_edge_node.py": {
+      "role": "source_or_configuration",
+      "sha256": "78d97a69c6a6bff4c04a967bf703daca4800eac7009969d0624547b4f3cd488b",
+      "size": 5739
+    },
+    "scripts/active_learn_surrogate.py": {
+      "role": "source_or_configuration",
+      "sha256": "01a09d16d688fe54e9b527b9a605cb0f5736ab55f2a69e5d2d060f5071e9bc30",
+      "size": 1101
+    },
+    "scripts/benchmark_ae_sim2real.py": {
+      "role": "source_or_configuration",
+      "sha256": "e8b3048e87bc59704ca261372b8068cc38e30022e2243dc5ad305456f16adc19",
+      "size": 11447
+    },
+    "scripts/build_argus_x_register.py": {
+      "role": "source_or_configuration",
+      "sha256": "1054d470ba3fb99021ac404b9386f2108279c5a2c4f3c74285253a98eff9b4d8",
+      "size": 11885
+    },
+    "scripts/build_release_bundle.py": {
+      "role": "source_or_configuration",
+      "sha256": "9aee6bddb79db8e09c5cb6a96599b1fe0aef4d7a35ad33b4ea91adf1f4c2a9d1",
+      "size": 21554
+    },
+    "scripts/calibrate.py": {
+      "role": "source_or_configuration",
+      "sha256": "df0cbc80453ccb2c7ed736339b965b6f3c54da3bb042b54baf90cedb5ae1333e",
+      "size": 2193
+    },
+    "scripts/compare_surrogates.py": {
+      "role": "source_or_configuration",
+      "sha256": "bf50a0295179b8803c1e31483cbb1ce0d69837cc494030263d6317e988ab2896",
+      "size": 5780
+    },
+    "scripts/demo_simulation.py": {
+      "role": "source_or_configuration",
+      "sha256": "4970ee3591eae837b4d386ce122f3ea78d6e8e4804baff535836f667fa298c60",
+      "size": 2264
+    },
+    "scripts/doctor.py": {
+      "role": "source_or_configuration",
+      "sha256": "6bfd4042ec34a6857ab429fac2c548401baead83060d8533e3cbfd126bc1f8a4",
+      "size": 3226
+    },
+    "scripts/download_lmsd_dataset.py": {
+      "role": "source_or_configuration",
+      "sha256": "b0af6c1d1a2dd47cd35cd3cf79a87c1e7ee2451bb8805d576d8f69eed8ae5d07",
+      "size": 4193
+    },
+    "scripts/download_sim2real_datasets.py": {
+      "role": "source_or_configuration",
+      "sha256": "3f6dca2d3283d70f519615fe89a8c36668e08e13385bdb3d27dc0dae0ee1cdd5",
+      "size": 8081
+    },
+    "scripts/evaluate_model.py": {
+      "role": "source_or_configuration",
+      "sha256": "90678d827c3760db3de5981f8d64bec86445b48c85ab110e20c3995183994e39",
+      "size": 1159
+    },
+    "scripts/evaluate_surrogate_checkpoints.py": {
+      "role": "source_or_configuration",
+      "sha256": "e8dcdd1941cea524c151b615832f95246295414749559e5678feb5bd6403776a",
+      "size": 2899
+    },
+    "scripts/fit_sim2real_models.py": {
+      "role": "source_or_configuration",
+      "sha256": "09fc0c3d1ad924b3e3b8fcc9f896e9bdae9c5a790c7d75aeb94bf137391d1b1e",
+      "size": 11358
+    },
+    "scripts/generate_counterfactual_bank.py": {
+      "role": "source_or_configuration",
+      "sha256": "d71a680d8e878dd69c3b4214a6b1711f471a0c5e38fb54605c8a53210dfba616",
+      "size": 946
+    },
+    "scripts/generate_dataset.py": {
+      "role": "source_or_configuration",
+      "sha256": "39b970f73d40e4ec0de4356329f7b9d52ad49435b5ba4ee99c0bd5b35dc9b6d6",
+      "size": 4500
+    },
+    "scripts/neo_benchmark.py": {
+      "role": "source_or_configuration",
+      "sha256": "ae2208593db435c227b8775f267088bddea1490d7151d88194cfd87f85cbc425",
+      "size": 1242
+    },
+    "scripts/neo_calibration.py": {
+      "role": "source_or_configuration",
+      "sha256": "c42c97d0f91d534f865903b6840b5a1cbdacd5c8e49416fb073b0410b353cf52",
+      "size": 1481
+    },
+    "scripts/physical_campaign.py": {
+      "role": "source_or_configuration",
+      "sha256": "fe7ef4000c1bbf533e83c328654f6db8facfd408be65e12756bceba238b71556",
+      "size": 7648
+    },
+    "scripts/prepare_ae_impact_dataset.py": {
+      "role": "source_or_configuration",
+      "sha256": "7969168fe1da073b747f3742fcd6549141d460d597ccf80c319ff71bb7a38336",
+      "size": 7059
+    },
+    "scripts/prepare_lmsd_dataset.py": {
+      "role": "source_or_configuration",
+      "sha256": "1b4b589ba6d494dc7d0bc00640bfb4c9584dc4c6e09c800e0780a5425f51e59e",
+      "size": 5631
+    },
+    "scripts/prepare_tud_gfrp_dataset.py": {
+      "role": "source_or_configuration",
+      "sha256": "9d652d62760c2e8fc60385f512697f9e76dc8fe881300e80a96e4c38794f8733",
+      "size": 6475
+    },
+    "scripts/publish_release_report.py": {
+      "role": "source_or_configuration",
+      "sha256": "eba14e63d032ab5ac388198eda2cf373d1a83589dcc5d3282164c346b7204ab6",
+      "size": 7447
+    },
+    "scripts/publish_research_report.py": {
+      "role": "source_or_configuration",
+      "sha256": "5bb376ad813f2812b8c40e321752d46c7ce1587b550f087522b90ce5a1bd9528",
+      "size": 1902
+    },
+    "scripts/research_validation.py": {
+      "role": "source_or_configuration",
+      "sha256": "599a7375c8dedb317f725aa777153b917c20d10313b89ed8d74f902b0584dc7b",
+      "size": 2234
+    },
+    "scripts/run_frontend_release_checks.py": {
+      "role": "source_or_configuration",
+      "sha256": "015a3fec4289df9772f0a6663c0dca2fb67b245d1a162e5cc59f7f0bdc021806",
+      "size": 2191
+    },
+    "scripts/run_neo_demo.py": {
+      "role": "source_or_configuration",
+      "sha256": "b39a8a851ad894135879b2cf0bbe29786edc2c44e96d98288a723fd0611e0198",
+      "size": 1091
+    },
+    "scripts/train_model.py": {
+      "role": "source_or_configuration",
+      "sha256": "4e118337fec6693adb3ffb20a47f95896b28b11ab5021cdb75f40bc45f394c7e",
+      "size": 10702
+    },
+    "scripts/update_release_evidence.py": {
+      "role": "source_or_configuration",
+      "sha256": "cdb9006a4e4afd1878965f6ec20b465f26331e72d8b1545cf7fce45783b3d6c5",
+      "size": 5520
+    },
+    "start_argus.bat": {
+      "role": "source_or_configuration",
+      "sha256": "65e018ae96cd52604aa8bf6583215d4c5f5237ff1c1fc4dd62e88ff9ce3009a2",
+      "size": 44
+    },
+    "start_argus.sh": {
+      "role": "source_or_configuration",
+      "sha256": "6f4e967e2dcd530f38aa0da659e99ea64d7fe5116fc7afc4da4da49b37dcb208",
+      "size": 67
+    },
+    "start_backend.bat": {
+      "role": "source_or_configuration",
+      "sha256": "00883e4d83ac90dd2b3029a8e1c9e1d3e5903875b3f9dac6be9609bc14c0c833",
+      "size": 54
+    },
+    "start_backend.sh": {
+      "role": "source_or_configuration",
+      "sha256": "d10dd1d47a3504f558784a920012d0512d66b6a4da85d652c78eb29632fd227d",
+      "size": 77
+    },
+    "start_frontend.bat": {
+      "role": "source_or_configuration",
+      "sha256": "98b07c135f90fa316d04d16fa57ec8d784bc29fec79edd6713d7db367223daa0",
+      "size": 80
+    },
+    "start_frontend.sh": {
+      "role": "source_or_configuration",
+      "sha256": "5750f7356d662416de39cfc4fb65210f05cf0c04c197dbde2cb9f34f4ee07ee4",
+      "size": 104
+    }
+  },
+  "limitations": "Hashes establish content consistency, not signatures, trusted timestamps, acquisition authenticity, patentability, novelty, or scientific validation. Retain the manifest independently for later comparison.",
+  "patent_filing_performed": false,
+  "publication_performed": false,
+  "schema_version": 1,
+  "scope": "Local source, dependency specifications, firmware, current review documents, manuscript source, and saved JSON/CSV evidence metadata.",
+  "source_identity": {
+    "dirty_source": true,
+    "fingerprint_scope": "actual packaged source and configuration bytes, including dirty/untracked source; documentation and saved evidence excluded",
+    "git_commit": "f68a2f0fcf16ae0390290f6a81475e84f8057d72",
+    "revision": "f68a2f0fcf16ae0390290f6a81475e84f8057d72+packaged-source-sha256:e0d57fe62c9a9f9d8cd43b03889fe290226c89274b838fda98b85fe98a205a8f",
+    "untracked_source_files": [
+      "backend/app/active_learning/bayes_design.py",
+      "backend/app/models/checkpoints.py",
+      "backend/app/replay/safe_io.py",
+      "backend/app/security/__init__.py",
+      "backend/app/security/network.py",
+      "backend/requirements.lock.txt",
+      "backend/tests/test_artifact_security.py",
+      "backend/tests/test_audit_hardening.py",
+      "backend/tests/test_launcher_edge_security.py",
+      "backend/tests/test_network_security.py",
+      "backend/tests/test_release_bundle.py",
+      "backend/tests/test_release_input_contracts.py",
+      "backend/tests/test_safe_checkpoints.py",
+      "backend/tests/test_scientific_release_hardening.py",
+      "frontend/components/EngineAccess.tsx",
+      "scripts/build_release_bundle.py",
+      "scripts/compare_surrogates.py",
+      "scripts/physical_campaign.py",
+      "scripts/publish_release_report.py",
+      "scripts/run_frontend_release_checks.py",
+      "scripts/update_release_evidence.py"
+    ],
+    "working_tree_sha256": "e0d57fe62c9a9f9d8cd43b03889fe290226c89274b838fda98b85fe98a205a8f"
+  }
+}

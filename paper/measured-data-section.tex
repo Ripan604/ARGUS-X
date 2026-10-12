@@ -1,0 +1,222 @@
+\section{Measured-Source Assessments: 8--9 October 2026}
+\label{sec:measured-evidence}
+
+Four separately scoped studies use published measured recordings to test
+screening, source localization, sequential path replay, and signal quality.
+Table~\ref{tab:measured-units} identifies their distinct evaluation units.
+Protocols fix grouping, preprocessing, models, and thresholds before the new
+fits; complete predictions, poor cases, and source/input hashes are retained in
+the four dated measured-study JSON reports. GFRP and Bologna are reanalyses of
+previously examined records, rather than independently acquired blind trials.
+The new OGW and MORPHO analyses use separate ultrasonic instruments. These
+studies have not exercised or validated the ARGUS physical apparatus.
+
+\begin{table}[t]
+\caption{Measured Tasks and Evaluation Units}
+\label{tab:measured-units}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.18\columnwidth}L{0.31\columnwidth}L{0.38\columnwidth}@{}}
+\toprule
+Source & Physical groups / records & Task and reported metric \\
+\midrule
+GFRP audio & 8 plates / 2,568 taps & Point screening; balanced accuracy \\
+Bologna & 1 plate / 9 sources & Transient-source error, mm \\
+OGW & 1 plate / 4 mass positions; 18 banks & Offline path reveal; conditional MAP error, mm \\
+MORPHO & 5 panels / 1,011 selected labels & Operator quality; BAD recall \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Whole-Plate Audio Screening}
+The TU Darmstadt GFRP record~\cite{feldmann2026dataset} supplies 2,568
+unaugmented microphone taps from eight plates: 2,100 intact-labelled and 468
+defect-labelled recordings. Each clip contains 5,120 samples at 51.2 kHz.
+The new study verifies publisher labels, original archive/member integrity,
+and decoded-recording duplicates, then recomputes the 15 fixed ARGUS features
+after the declared per-record resampling/filtering. Filenames, coordinates,
+plate identities, and labels do not enter the feature matrix. Four grouped
+folds keep complete plates apart; standardization uses training rows only.
+No previously fitted CORAL map, acoustic reference, or model checkpoint is used.
+
+Fixed logistic regression yields pooled out-of-fold balanced accuracy 0.8381
+and AUROC 0.9222, versus 0.5000 for the no-feature majority baseline.
+A 2,000-resample bootstrap of the eight complete plate clusters gives a
+balanced-accuracy interval [0.7521, 0.9154]. This interval conditions on the
+already fitted out-of-fold predictions, without model refitting. All 2,568
+records receive predictions. Performance is heterogeneous: plate 5 has 188
+false positives among 240 intact-labelled taps, whereas several other plates
+perform substantially better. The result supports dataset-conditioned audio
+screening, with eight specimen groups; it establishes neither a defect
+coordinate nor adaptive guided-wave inspection or field probability of detection.
+
+\subsection{Previously Seen Transient-Source Localization}
+The Bologna dataset~\cite{zonzini2024dataset} contributes nine measured source
+positions with three simultaneous channels per position on one aluminum plate.
+Its native rate is 2 MHz. Each fold holds out a complete position and fits
+timing or feature calibration on the other eight; channels from one event
+remain together. The fixed 5\% cumulative-energy time picker feeds an isotropic
+time-difference-of-arrival model with training-fitted effective speed and
+relative sensor offsets.
+
+Mean source error is 108.99 mm for calibrated TDoA, compared with 181.07 mm for
+the training-position centroid and 140.56 mm for three-nearest-neighbor
+regression. Only one of nine TDoA predictions lies within 50 mm. No independent
+repeat axis or second specimen is available. These descriptive improvements
+concern a transient source on a previously seen public record, not the
+location of a persistent hidden defect; no specimen-generalization interval
+is inferred from the nine positions.
+
+\subsection{Native Ultrasonic Offline Path Replay}
+The OGW temperature extension~\cite{moll2019temperature,moll2019temperaturedata}
+provides twelve transducers on a 500 by 500 mm CFRP plate. A protocol-index
+subset contains 18 complete banks at nominal 20, 40, and 60~$^{\circ}$C, with
+40 kHz excitation and native 10 MHz sampling. Each bank has 66 actually
+recorded unordered source--receiver pairs; reciprocal observations are not
+invented. Four reference locations use removable surface-mounted masses.
+Original ZIP-member lengths, CRC32, and local SHA-256 are verified; the
+whole-archive publisher MD5 remains unverified because only bounded members
+were downloaded.
+
+Healthy thermal cycle 1 supplies reference waveforms; cycle 2 supplies reserved
+healthy tests in this dated replay. A position and all its temperatures are held out together.
+The scalar observation is $1-|\rho|$ between reference and catch waveforms.
+A fixed RAPID ellipse kernel, with $\beta=1.05$, defines the spatial mean.
+Amplitude and residual noise are fitted only on the other three positions.
+Gaussian updates combine a healthy hypothesis with a uniform spatial prior;
+their conditional-independence assumptions and weights are not field-calibrated.
+Adaptive disagreement selects the next path from predicted response variance
+under current weights and observes only that selected test path. Cyclic,
+geometry-spread, training-static, and seeded random sequences share inference
+and reveal budgets. Sixteen random orders per case generate policy variability.
+The 960 trajectories reuse measured banks and are not 960 independent
+measurements or physical experiments.
+
+At 32 revealed paths with condition-matched references, adaptive conditional
+MAP error is 160.76 mm versus 190.70 mm for random order; conditional 50 mm
+success is 25.00\% versus 8.85\%. These location scores are computed within the
+damage-cell map even when the separate damage decision is negative. Adaptive
+damage-positive rate is only 50\%, while the healthy false-positive
+condition--model rate is 66.67\%. The latter comprises twelve model evaluations
+reusing just three unique healthy test banks across four calibration folds.
+Thus, conditional localization improvement does not constitute successful
+operational NDE.
+
+Full 66-path inference has mean error 213.28 mm and full-bank classical RAPID
+209.43 mm under matched references. Adding paths does not repair the declared
+response model. Applying the 20~$^{\circ}$C baseline at all temperatures gives
+adaptive error 200.04 mm and no 50 mm successes. Condition matching is not
+unseen-temperature generalization. One plate and four surrogate locations
+support descriptive model/policy comparison, not a large independent-sample
+efficacy claim or validation of the 16 kHz ARGUS probe.
+
+\subsection{Cross-Panel Operator Quality: Negative Transfer Result}
+The verified CC-BY-4.0 MORPHO curated record~\cite{stamatelatos2026morphodata}
+contains 12,504 native 1 MHz traces from five panels, with 1,011 actively
+selected operator labels: 875 GOOD and 136 BAD. These labels concern clean,
+noisy, saturated, low-energy, or drifting waveforms. They are not defect
+positions or an unbiased acquisition sample. Sixteen waveform-only features
+from the first 500 samples feed fixed logistic regression and a 300-tree forest
+in five leave-panel-out folds. Training-only scaling, a majority dummy, and
+one within-training-panel shuffled-label forest provide controls. All labelled
+rows receive out-of-fold predictions.
+
+At the frozen 0.5 threshold, the forest rejects only 1/136 BAD signals despite
+ordinary accuracy 0.8595 and AUROC 0.7715; balanced accuracy is 0.4997.
+Logistic regression rejects 27/136, with balanced accuracy 0.5124 and AUROC
+0.2675. The majority dummy achieves accuracy 0.8655 by rejecting no BAD signals;
+the shuffled-training forest rejects none. FOD6 has only GOOD labels, so its
+fold AUROC and balanced accuracy remain undefined. Strong panel-dependent
+label prevalence and discrepancies between README cycle counts and actual
+HDF5 groups remain documented. No threshold was retuned on held-out labels,
+and no learned quality classifier was promoted to the live controller.
+
+\subsection{Healthy Reference Transport and Confirmation Gate}
+The false alarms motivate a separate, healthy-only development branch using
+established baseline stretch and phase-compensation principles
+\cite{croxford2010temperature,herdovics2019phase}. Recorded electrical pitch
+aligns source-clock delay before a bounded receiver time-scale, residual delay
+and gain are fitted to first-cycle healthy anchors at nominal 20, 40 and
+60~$^{\circ}$C. Prediction interpolates in actual mean surface temperature;
+it cannot fit a warp to a damaged/test catch. Immutable policy, template and
+source identities accompany each prediction. This remains an affine
+approximation to a dispersive, temperature-dependent wavefield.
+
+The initial $\pm1\%$ stretch domain qualified zero of 66 receiver paths;
+that failure and its exact source were archived. Expanding the healthy-development
+domain to $\pm5\%$ with a fixed $41\times41$ search retained the same
+source-correlation, residual and identifiability limits. Mean healthy
+40~$^{\circ}$C leave-temperature-out DI decreased from 0.271 to 0.063.
+These diagnostics include \emph{all} 66 paths, including unqualified fits;
+only 20 paths met qualification across the anchors. A 16-path horizon was
+therefore frozen from healthy evidence. The residual scale is a held-out
+healthy-temperature proxy, not an independently estimated noise distribution.
+
+A new, explicitly exploratory reanalysis of the previously seen banks compares
+three likelihood variants on this common eligible path set and horizon.
+Adaptive conditional MAP errors are 159.45 mm for the raw global-scale model,
+171.92 mm for transported references with global scale, and 170.03 mm with
+path-dependent residual scales. Thus, improved healthy waveform agreement
+did not improve localization in this development experiment. These are
+conditional-location diagnostics, not new blind tests or evidence that
+transport guarantees better decisions.
+
+An experimental reference gate uses a complete healthy trajectory as one
+calibration unit. Each calibration score is the maximum, over the fixed budget
+prefixes, of the mean squared normalized selected-path DI. The current observed
+prefix score is compared with those complete-trajectory maxima. A rank comparison gives
+\begin{equation}
+ p_{\rm ref}=\frac{1+\#\{j:A_j\geq A_{\rm current}\}}{n+1},
+ \label{eq:measured-reference-rank}
+\end{equation}
+where each $A_j$ belongs to an entire healthy block. Such ranking principles
+are established \cite{shafer2008conformal}; interpreting the complete-prefix
+maximum requires frozen control/reference identities and exchangeable healthy
+blocks. At least 19 blocks are required for 5\% rank resolution. The initial
+development check reused only three old healthy banks and consequently returned
+unsupported gate decisions. Paths and Monte Carlo orders were not promoted
+into independent calibration blocks; that incomplete development result remains
+retained separately from the later confirmation.
+
+The expanded verification suite passes 662 backend/acquisition tests, with one deliberate legacy-pickle skip, and 34 frontend tests, type checking, lint and build. These checks do not establish physical inspection efficacy.
+
+The planned 29-bank confirmation completed on 9 October after temporary
+HTTP 403 download failures were resolved through a public retry. All 29
+complete native banks, totaling 403,070,304 bytes, passed member-size/CRC and
+local SHA-256 verification. They comprise 19 healthy calibration blocks and ten
+separate 30/50~$^{\circ}$C confirmation banks. The report filename retains the
+8 October protocol tag. Predictions, fitting policy
+and controller parameters were frozen before reading confirmation catches;
+source hashes remained unchanged during scoring. The report retains 864
+trajectories and 216 controller-bound calibrations, each using the same 19
+physical blocks, with zero recorded rejections. These counts are not independent
+specimens or newly acquired adaptive experiments.
+
+At 16 paths, adaptive conditional MAP errors are 161.20 mm for raw global
+scaling, 206.49 mm for transported global scaling, and 215.39 mm for
+path-dependent transported scaling. Transport therefore worsened this
+confirmation localization metric. Across all three adaptive variants, no
+allowed prefix produced a supported anomaly: the two unique healthy test
+banks had zero false alarms, but the eight mass-position/temperature conditions
+had zero detections. Zero false alarms in this setting reflects an insensitive,
+conservative gate and is not successful NDE. The new temperatures reuse the
+same plate and four removable-mass positions. Correlated cooling calibration
+blocks and unverified exchangeability still prevent a field-coverage claim.
+
+For each transported random-order variant, 10 of 128 damaged-condition order
+runs produced an early supported alert, with none in 128 healthy-condition
+order runs. Averaging the 16 order repetitions within each of eight mass/temperature
+conditions first gives a 7.8125\% mean any-prefix alert frequency. These are
+replays of the same measured banks, not ten independent physical detections.
+Raw random order and every geometry-spread variant produced no supported alerts.
+No variant retained a supported alert at the final budget; the reported
+any-prefix counts preserve early events that a final-only summary would miss.
+
+Experimental dispositions request qualified references or diverse verification, with stale
+identity/index guards. They authorize neither an actuator nor a healthy
+structural release. The ordered clock/reference qualification and model/control
+feedback remain candidates for separate prior-art and human-inventorship
+review; BSS, phase compensation and conformal ranking are not claimed novel.
+
+Measured-data replay consequently provides inspectable positive and negative
+development and confirmation evidence, while apparatus validation and operational NDE remain open.

@@ -1,5 +1,19 @@
 # ARGUS model artifacts
 
+## Additional candidate, 20 September 2026
+
+`forward_surrogate_50000_73123.pt` is a separately saved local candidate trained
+using a 50,000-example synthetic bank (35,000 actual training rows). On a fresh
+4,000-example paired comparison, common-scale MAE improved from 0.44659 to
+0.43630 and mean feature R² from 0.46491 to 0.48902. The original
+`forward_surrogate.pt` remains unchanged. Neither checkpoint is a validated
+live NEO localization model. See `../docs/SURROGATE_TRAINING_2026_09_20.md` and
+`../research_results/surrogate_comparison_73124.json` for the complete protocol,
+uncertainty, per-feature regressions, and limitations. Generated candidate
+weights remain local/Git-ignored.
+
+## Retained reference and measured-domain artifacts
+
 ARGUS runs with its interpretable physics likelihood when no checkpoint is present. `python scripts/train_model.py` creates an optional `forward_surrogate.pt` plus transparent training metadata. The 59 KB reference checkpoint and JSON metrics are intentionally small enough to share; other generated checkpoints remain excluded from Git.
 
 The current checkpoint was trained on 15,000 domain-randomized simulator examples, five times the original training set. It was promoted only after a fixed 3,000-case external simulator benchmark improved mean feature R² from 0.407 to 0.461 and reduced standardized MAE from 0.468 to 0.437. Reproduce the same-checkpoint comparison with `scripts/evaluate_surrogate_checkpoints.py`; the recorded result is `research_results/surrogate_external_benchmark.json`.

@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "evidence_source": "measured_reference_conditioned_external_reanalysis",
+  "review_date": "2026-10-09",
+  "exported_at_utc": "2026-10-09T03:58:52.681789+00:00",
+  "hardware_validated": false,
+  "field_accuracy_established": false,
+  "patent_novelty_established": false,
+  "status": "completed",
+  "sources_verified_at_export": true,
+  "source_files_checked": 58,
+  "scope": "Recorded OGW development and separate confirmation on one specimen; model/order trajectories reuse physical banks. No prospective ARGUS apparatus trial.",
+  "source_url": "https://doi.org/10.6084/m9.figshare.c.4488089.v1",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "native_sample_rate_hz": 10000000,
+  "excitation_hz": 40000,
+  "specimens": 1,
+  "recorded_paths": 66,
+  "qualified_paths": 20,
+  "healthy_reference": {
+    "before_di": 0.2708961474297316,
+    "after_di": 0.06310186467128294,
+    "unit": "dimensionless_damage_index",
+    "paths_in_diagnostic_mean": 66,
+    "healthy_anchors": 3,
+    "scope": "Leave-middle-temperature-out healthy reference discrepancy over all 66 paths, including unqualified fits; not localization accuracy."
+  },
+  "confirmation_acquired_banks": 29,
+  "confirmation_required_banks": 29,
+  "development": {
+    "stage": "development",
+    "previously_seen_data": true,
+    "horizon": 16,
+    "model_order_trajectories": 1296,
+    "controller_model_calibrations": 216,
+    "unique_calibration_blocks": 3,
+    "unique_test_banks": 15,
+    "minimum_reference_rank": 0.25,
+    "alpha": 0.05,
+    "adaptive": [
+      {
+        "variant": "raw_global",
+        "label": "Raw response / global noise",
+        "mean_error_mm": 159.4452201282254,
+        "damage_alerts": 0,
+        "damage_conditions": 12,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 3,
+        "model_order_trajectories": 24,
+        "unsupported_trajectories": 24,
+        "descriptive_healthy_model_positive_rate": 0.6666666666666666
+      },
+      {
+        "variant": "transport_global",
+        "label": "Healthy transport / global noise",
+        "mean_error_mm": 171.9240687465958,
+        "damage_alerts": 0,
+        "damage_conditions": 12,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 3,
+        "model_order_trajectories": 24,
+        "unsupported_trajectories": 24,
+        "descriptive_healthy_model_positive_rate": 0.6666666666666666
+      },
+      {
+        "variant": "transport_heteroscedastic",
+        "label": "Healthy transport / path-specific noise",
+        "mean_error_mm": 170.0275853351097,
+        "damage_alerts": 0,
+        "damage_conditions": 12,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 3,
+        "model_order_trajectories": 24,
+        "unsupported_trajectories": 24,
+        "descriptive_healthy_model_positive_rate": 0.6666666666666666
+      }
+    ]
+  },
+  "confirmation": {
+    "stage": "confirmation",
+    "previously_seen_data": false,
+    "horizon": 16,
+    "model_order_trajectories": 864,
+    "controller_model_calibrations": 216,
+    "unique_calibration_blocks": 19,
+    "unique_test_banks": 10,
+    "minimum_reference_rank": 0.05,
+    "alpha": 0.05,
+    "adaptive": [
+      {
+        "variant": "raw_global",
+        "label": "Raw response / global noise",
+        "mean_error_mm": 161.20212870921046,
+        "damage_alerts": 0,
+        "damage_conditions": 8,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 2,
+        "model_order_trajectories": 16,
+        "unsupported_trajectories": 0,
+        "descriptive_healthy_model_positive_rate": 1.0
+      },
+      {
+        "variant": "transport_global",
+        "label": "Healthy transport / global noise",
+        "mean_error_mm": 206.4878418162621,
+        "damage_alerts": 0,
+        "damage_conditions": 8,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 2,
+        "model_order_trajectories": 16,
+        "unsupported_trajectories": 0,
+        "descriptive_healthy_model_positive_rate": 0.5
+      },
+      {
+        "variant": "transport_heteroscedastic",
+        "label": "Healthy transport / path-specific noise",
+        "mean_error_mm": 215.3871547274504,
+        "damage_alerts": 0,
+        "damage_conditions": 8,
+        "healthy_alerts": 0,
+        "unique_healthy_banks": 2,
+        "model_order_trajectories": 16,
+        "unsupported_trajectories": 0,
+        "descriptive_healthy_model_positive_rate": 0.5
+      }
+    ]
+  },
+  "risks": [
+    "Compensated adaptive localization worsened on separate confirmation: 161.2 mm raw, 206.5 mm global transport, 215.4 mm path-specific transport.",
+    "Each adaptive variant produced supported alerts in 0 of 8 damage conditions and 0 of 2 unique healthy banks. Zero healthy alerts alongside zero damage detections does not establish detector success.",
+    "864 confirmation trajectories and 216 controller/model calibrations reuse the same measured banks; they are not independent physical trials.",
+    "Cooling calibration and warming tests on one plate have unverified exchangeability. No field false-alarm guarantee or specimen generalization is established.",
+    "Qualified paths are a development selection; healthy residual scales remain proxies. Compensated/reference-gated modes remain experimental and outside production physical acquisition."
+  ],
+  "artifacts": [
+    {
+      "role": "healthy",
+      "path": "research_results/healthy_reference_development_2026_10_08.json",
+      "sha256": "ee4253d8f59b9221929d505ffe9d32bce891b8a5f553e20df0d2cade860c96ec",
+      "source_verification": {
+        "files_checked": 9,
+        "matches_at_export": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "610f8a49e10b87582eec01c4eedf3064bf020988f134948052114b0de2bed0de"
+      }
+    },
+    {
+      "role": "development",
+      "path": "research_results/reference_conditioned_development_2026_10_08.json",
+      "sha256": "d6a0500399a2df8fc90265081fe68f95ea21fc98ded48dea8574691373495a94",
+      "source_verification": {
+        "files_checked": 25,
+        "matches_at_export": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "8dd33a39184e42324ee840acf3e6990892b33610edd74cdc99ccdf66b4e4c40d"
+      }
+    },
+    {
+      "role": "confirmation",
+      "path": "research_results/reference_conditioned_confirmation_2026_10_08.json",
+      "sha256": "3fa7265af7f37c1e116e4905ade3b19fe92d63c87e1fb33ce1578929708fcb1c",
+      "source_verification": {
+        "files_checked": 55,
+        "matches_at_export": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "0f1373b728df65d20e3edf639668d559302e8323b3cde8a8dd3d24c85217d3db"
+      }
+    }
+  ],
+  "canonical_summary": {
+    "path": "output/fundamental_upgrade_summary.json",
+    "sha256": "c0db2da7024b58f8b874d22a8e294e13eb61138650c9c2f7e6cd64ea88434b1f"
+  },
+  "review_document": {
+    "path": "docs/FUNDAMENTAL_UPGRADE_RESULTS_2026_10_08.md",
+    "sha256": "6bd926a2c70370778d8391e9d6af896b2e40b2d95109d95e80589d2529558f20"
+  },
+  "verification_scope": "Study JSON hashes and their recorded source/data SHA-256 manifests matched local files at export; the browser does not rehash raw recordings or rerun studies."
+}

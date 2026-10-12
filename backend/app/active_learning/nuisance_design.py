@@ -140,6 +140,7 @@ class NuisanceArrivalTimeDesign:
         components = {
             "timing": np.full(n, timing.std**2),
             "velocity": average(path**2) * velocity.std**2 / velocity.mean**4,
+            "velocity_timing_cross": -2 * path_mean * nuisance.propagation_covariance()[0, 1] / velocity.mean**2,
             "pose": average(pose_variance(source_delta, ds, "source_pose_error") + pose_variance(receiver_delta, dr, "receiver_pose_error")),
         }
         nominal_variances = structural_variance + self.measurement_variance
@@ -190,7 +191,7 @@ class NuisanceArrivalTimeDesign:
                 "measurement_floor": self.measurement_variance,
                 **{key: float(regions.probabilities @ value) for key, value in components.items()},
             },
-            "approximation": "spatial_region_gaussian_moment_matching_and_first_order_velocity_pose",
+            "approximation": "spatial_region_gaussian_moment_matching_and_correlated_first_order_velocity_timing_pose",
             "velocity_relative_std": velocity.std / velocity.mean,
             "field_calibrated": False,
         }

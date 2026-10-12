@@ -1,0 +1,40 @@
+\section{Concurrent Acquisition and Extended Reference Study}
+\subsection{Implemented Time-Origin Contract}
+The later October v2 revision replaces the reference sketch's excite-then-record sequence. A classic ESP32 precomputes a quantized chirp or tone burst, records 16 pretrigger samples, and performs DAC25 source updates and ADC34 receiver sampling in one timed loop. GPIO26 marks excitation onset for external timing measurement. Rational sample deadlines avoid representing a truncated 62~$\mu$s interval as exactly 16~kHz. Frames retain sample call timestamps, ADC values, commanded DAC codes, the full experiment hash, fresh request identifier, trigger and drive intervals, ordered counts, integrity checksum and completion status. The host checks the complete declared excitation, timing deviations, waveform sequence and coverage before ingestion. The drive envelope is narrower than the simulated waveform bank: unsupported families are rejected before excitation.
+
+The host requires a chip-specific operator declaration binding sampling rate, drive family and bounded clock/alignment errors to an external bench-report digest. A frame check is not a transfer-function measurement or authentication of the apparatus. The source has been compiled and tested against Arduino host mocks, including an independently generated mock frame accepted by the Python parser. No ESP32 board-target SDK compilation, flashing, external timing capture or physical inspection was performed. An isolated stable SDK installation attempt did not complete. Electrical DAC/ADC latency, analog filtering, amplifier limits, coupling and physical pose remain unmeasured.
+
+The ingestion service, rather than client-supplied sensor names, assesses excitation-relative timing. Missing timing/adapter support gives zero structural evidence, blocks reference calibration and cannot satisfy verification, while preserving the recording for history and plots. A bounded exact external WAV declaration may instead identify a zero-trimmed trigger, source rate, complete experiment and external reference; this remains operator-declared evidence. Original checked serial timestamps, ADC values, DAC codes and declaration metadata are retained before ledger append. Regression tests verify that changes to retained timing evidence invalidate content verification.
+
+\subsection{Prediction-Oriented Reference Criterion}
+The optional fast selector evaluates every spatial grid cell under a nominated diagnostic source--receiver geometry. With $\ell_z$ its bistatic path, $g_z=(-\ell_z/v^2,1)$ and speed/delay covariance $C$, define
+\begin{equation}
+ W=\sum_zp_zg_z^Tg_z, \qquad V=\operatorname{tr}(WC).
+\end{equation}
+For each feasible direct reference, the implemented correlated Gaussian update predicts $C_r$ and ranks $v^2\operatorname{tr}(WC_r)$ plus configured acquisition cost. This is locally linear, posterior-weighted prediction-variance design, related to established V-optimal design; neither Gaussian conditioning nor prediction-variance minimization is asserted as newly invented. The objective is path-equivalent propagation uncertainty, not defect-position loss. The selector remains optional and distinct from the finite-horizon localization-risk controller.
+
+\subsection{Prospective Strong-Baseline Comparison}
+A source-frozen scalar study used 48 new independent seed clusters, four diagnostic geometries with nonuniform 20-by-20 spatial maps, two prespecified acquisition-noise regimes, five reference policies and three opportunities per policy: 1,920 attempted runs. Truth, innovations, candidate opportunities, initial covariance and geometry were sealed before any policy ran. Measurement noise uses fixed true acquisition physics and is never supplied to selection. Comparator A/D designs use dimensionless speed/delay covariance scales and the same declared cost conversion. All runs, costs and rejected updates remain in summaries; 1,909 runs completed without rejection and 11 opportunities were rejected.
+
+\begin{table}[t]
+\caption{Extended Scalar Target Arrival RMSE ($\mu$s)}
+\label{tab:extended-reference}
+\centering\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Reference policy & Nominal noise & Doubled noise\\
+\midrule
+Cyclic & 229.82 & 419.26\\
+Seeded random & 232.30 & 396.96\\
+Scaled A-optimal & 200.23 & 363.06\\
+Scaled D-optimal & 190.85 & 342.63\\
+Task-conditioned & 189.09 & 343.47\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pooled comparator-minus-task RMSE advantages, with seed-cluster bootstrap 95\% intervals, were 58.26~$\mu$s [35.13,82.52] for cyclic, 48.35 [26.69,70.91] for random, 15.37 [4.79,26.57] for scaled A-optimal, and 0.46 [-5.70,6.90] for scaled D-optimal. Intervals resample 48 clusters, preserve within-seed dependence and are exploratory without multiplicity correction. D-optimal differences remain inconclusive for both RMSE and prediction-plus-cost; task RMSE is slightly worse under doubled noise. A general superiority claim is unsupported.
+
+Task nominal-noise timing-offset error worsens to 186.23~$\mu$s versus cyclic's 168.23, despite better target prediction. Its posterior-weighted 95\% latent-arrival interval coverage is 91.83\% nominal and 66.19\% under doubled noise. These parameter intervals do not achieve nominal coverage and are not noisy-waveform or defect-confidence guarantees. All rejected updates and geometry/regime contrasts are retained in the full JSON. The study is synthetic scalar propagation evidence, not physical waveform or defect-localization validation. Earlier 192-run scalar and 48-run waveform studies retain their original source boundaries.
+
+The v2 release passed 470 backend tests, with one deliberate legacy-pickle checkpoint skip, and 30 frontend tests, type checking, lint and production build. The complete study, protocol, source hashes and narrower claim assessment accompany the local review package. Close prior art already covers active Bayesian instrument calibration and acoustic reference localization; the specific apparatus/control interaction requires claim-level novelty and inventive-step review. Publication and grant probabilities cannot be inferred from software checks or these synthetic results.

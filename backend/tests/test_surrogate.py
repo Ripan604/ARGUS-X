@@ -2,13 +2,17 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import pytest
 
 from backend.app.models.surrogate import ForwardSurrogate
+from backend.app.models.checkpoints import load_forward_checkpoint
 
 
 def test_reference_surrogate_checkpoint_loads_and_predicts():
-    checkpoint_path = Path(__file__).resolve().parents[2] / "models" / "forward_surrogate.pt"
-    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    checkpoint_path = Path(__file__).resolve().parents[2] / "models" / "forward_surrogate.npz"
+    if not checkpoint_path.exists():
+        pytest.skip("Historical pickle checkpoint is not deserialized; retrain the optional model using the pickle-free trainer")
+    checkpoint = load_forward_checkpoint(checkpoint_path)
     model = ForwardSurrogate(checkpoint["input_size"], checkpoint["output_size"])
     model.load_state_dict(checkpoint["model_state"])
     model.eval()

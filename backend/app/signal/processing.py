@@ -12,9 +12,15 @@ def preprocess_signal(
     bandpass: tuple[float, float] | None = (250.0, 7_000.0),
     normalize: bool = False,
 ) -> np.ndarray:
-    values = np.asarray(samples, dtype=np.float64).reshape(-1)
+    if isinstance(sample_rate, bool) or not isinstance(sample_rate, (int, np.integer)) or sample_rate <= 0:
+        raise ValueError("Sample rate must be a positive integer")
+    values = np.asarray(samples, dtype=np.float64)
+    if values.ndim != 1:
+        raise ValueError("Signal must be a one-dimensional mono recording")
     if values.size < 8 or not np.all(np.isfinite(values)):
         raise ValueError("Signal must contain at least eight finite samples")
+    if np.max(np.abs(values)) > np.finfo(np.float32).max / 4:
+        raise ValueError("Signal amplitude exceeds the supported numeric range")
     values = values - np.mean(values)
     if bandpass is not None and values.size >= 48:
         low, high = bandpass
@@ -41,7 +47,7 @@ def _spectral_distribution(values: np.ndarray, sample_rate: int) -> tuple[np.nda
 
 
 def extract_features(samples: np.ndarray, sample_rate: int) -> dict[str, float]:
-    values = preprocess_signal(samples, sample_rate, normalize=False)
+    values = preprocess_signal(samples, sample_rate, normalize=False).astype(np.float64)
     magnitude = np.abs(values)
     rms = float(np.sqrt(np.mean(values**2)))
     peak = float(np.max(magnitude))
@@ -91,7 +97,9 @@ def extract_features(samples: np.ndarray, sample_rate: int) -> dict[str, float]:
 
 
 def analyze_signal(samples: np.ndarray, sample_rate: int, max_points: int = 700) -> dict:
-    values = preprocess_signal(samples, sample_rate, normalize=False)
+    if isinstance(max_points, bool) or not isinstance(max_points, (int, np.integer)) or max_points <= 0:
+        raise ValueError("max_points must be a positive integer")
+    values = preprocess_signal(samples, sample_rate, normalize=False).astype(np.float64)
     stride = max(1, int(np.ceil(len(values) / max_points)))
     indices = np.arange(0, len(values), stride)
     frequencies, power = _spectral_distribution(values, sample_rate)

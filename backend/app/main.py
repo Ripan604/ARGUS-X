@@ -3,19 +3,20 @@ from __future__ import annotations
 import json
 import logging
 import os
+from copy import deepcopy
 from pathlib import Path
 import io
 from datetime import datetime, timezone
+from threading import RLock
 
 import numpy as np
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
 from backend.app.database.repository import SessionRepository
 from backend.app.demo.scenarios import SCENARIOS
-from backend.app.evaluation.benchmark import run_benchmark
 from backend.app.evidence.bundles import export_research_bundle, import_research_bundle
 from backend.app.hardware.devices import MicrophoneDevice, SerialProbeDevice, discover_devices
 from backend.app.models.registry import ModelRegistry
@@ -26,22 +27,26 @@ from backend.app.schemas.api import (
     CreateSessionRequest, DeviceConnectRequest, DeviceExperimentRequest, ExperimentParameters,
     EmergencyReleaseRequest, EmergencyStopRequest, HumanDecisionRequest, NoGoRegionsRequest,
     ProbeMeasurementRequest, ProbeRegistrationRequest,
-    ResearchJobRequest, RunExperimentRequest,
+    ResearchJobRequest, RunExperimentRequest, bounded_metadata,
 )
 from backend.app.services.session_manager import SessionManager
+from backend.app.security import NetworkSecurityMiddleware, SecuritySettings
+from backend.app.security.network import MAX_BUNDLE_BYTES, MAX_WAV_BYTES
 from backend.app.utils.logging import configure_logging
 
 configure_logging()
 logger = logging.getLogger("argus.api")
 
 
-def create_app(database_path: str | Path | None = None) -> FastAPI:
+def create_app(database_path: str | Path | None = None, *, security_settings: SecuritySettings | None = None) -> FastAPI:
+    security = security_settings or SecuritySettings.from_environment()
     db_path = database_path or os.getenv("ARGUS_DB_PATH", "backend/data/argus.db")
     repository = SessionRepository(db_path)
     manager = SessionManager(repository)
     jobs = ResearchJobManager(repository)
     model_registry = ModelRegistry(repository)
     devices = {"serial_probe": SerialProbeDevice(), "microphone": MicrophoneDevice()}
+    device_locks = {name: RLock() for name in devices}
     app = FastAPI(
         title="ARGUS API",
         version="0.1.0",
@@ -49,12 +54,13 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
     )
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-        allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?",
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_origins=list(security.allowed_origins),
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type"],
     )
+    app.add_middleware(NetworkSecurityMiddleware, settings=security)
+    app.state.security = security
     app.state.manager = manager
     app.state.repository = repository
     app.state.devices = devices
@@ -76,7 +82,8 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.get("/health")
     def health() -> dict:
-        return {"status": "ok", "service": "argus", "version": "0.1.0", "physics_inference": True}
+        return {"status": "ok", "service": "argus", "version": "0.1.0", "physics_inference": True,
+                "network_mode": security.network_mode, "authentication_required": security.authentication_required}
 
     @app.get("/api/materials")
     def material_profiles() -> dict:
@@ -97,7 +104,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         return manager.public_state(runtime)
 
     @app.get("/sessions")
-    def list_sessions(limit: int = 50) -> dict:
+    def list_sessions(limit: int = Query(default=50, ge=1, le=200)) -> dict:
         return {"sessions": repository.list_sessions(limit)}
 
     @app.get("/sessions/{session_id}")
@@ -134,19 +141,34 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         session_id: str,
         file: UploadFile = File(...),
         experiment_json: str | None = Form(None),
+        sensor_metadata_json: str | None = Form(None),
     ) -> dict:
         runtime_or_404(session_id)
         if file.content_type not in {"audio/wav", "audio/x-wav", "audio/wave", "application/octet-stream"}:
             raise HTTPException(415, "Only WAV audio is accepted")
         parameters = None
+        metadata = None
+        if sensor_metadata_json:
+            try:
+                if len(sensor_metadata_json.encode("utf-8")) > 16384:
+                    raise ValueError("Metadata exceeds 16 KiB")
+                metadata = json.loads(sensor_metadata_json)
+                if not isinstance(metadata, dict):
+                    raise ValueError("Sensor metadata must be an object")
+                metadata = bounded_metadata(metadata)
+            except (ValueError, TypeError, RecursionError) as exc:
+                raise HTTPException(422, "Invalid or oversized sensor_metadata_json") from exc
         if experiment_json:
             try:
                 parameters = Experiment(**ExperimentParameters.model_validate(json.loads(experiment_json)).model_dump())
             except Exception as exc:
                 raise HTTPException(422, f"Invalid experiment_json: {exc}")
-        payload = await file.read(10 * 1024 * 1024 + 1)
+        payload = await file.read(MAX_WAV_BYTES + 1)
+        await file.close()
+        if len(payload) > MAX_WAV_BYTES:
+            raise HTTPException(413, "WAV file exceeds 10 MiB")
         try:
-            result = manager.process_wav(session_id, payload, parameters)
+            result = manager.process_wav(session_id, payload, parameters, sensor_metadata=metadata)
         except RuntimeError as exc:
             raise HTTPException(409, str(exc))
         except ValueError as exc:
@@ -163,11 +185,33 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             # Hold the per-session lock from recommendation selection through
             # ingestion so another request cannot silently change the action
             # whose physical response is being recorded.
-            with runtime.lock:
+            with device_locks[request.device], runtime.lock:
+                # Gate physical execution before touching a device. Ingestion
+                # repeats these checks, but rejecting after excitation is late.
+                manager._assert_operable(runtime)
                 experiment = Experiment(**request.experiment.model_dump()) if request.experiment else runtime.engine.current_recommendation.selected.experiment
-                samples = device.acquire(experiment, runtime.engine.config.sample_rate)
+                manager._validate_experiment(runtime, experiment)
+                requested_rate = runtime.engine.config.sample_rate
+                serial_calibration = getattr(device, "timing_calibration", None)
+                if request.device == "serial_probe" and serial_calibration is not None:
+                    requested_rate = serial_calibration.sample_rate_hz
+                samples = device.acquire(experiment, requested_rate)
+                sensor_metadata = None
+                source_rate = runtime.engine.config.sample_rate
+                serial_frame_checked = request.device == "serial_probe"
+                if serial_frame_checked:
+                    frame = deepcopy(getattr(device, "last_acquisition_metadata", None))
+                    if not isinstance(frame, dict) or frame.get("evidence_status") != "frame_contract_checked_with_operator_attestation":
+                        raise RuntimeError("Serial acquisition did not return a host-checked trigger-referenced frame")
+                    source_rate = frame.get("sample_rate_hz")
+                    if (isinstance(source_rate, bool) or not isinstance(source_rate, int)
+                            or not 1000 <= source_rate <= 16000 or source_rate != requested_rate):
+                        raise RuntimeError("Serial frame did not report a valid actual source rate")
+                    sensor_metadata = {"units": "normalized", "sensor_id": frame["device_id"],
+                                       "measurement_id": frame["request_id"], "acquisition_timing": frame}
                 result = manager.process_samples(
-                    session_id, samples, runtime.engine.config.sample_rate, experiment, acquisition_source=request.device
+                    session_id, samples, source_rate, experiment, acquisition_source=request.device,
+                    sensor_metadata=sensor_metadata, hardware_frame_checked=serial_frame_checked,
                 )
         except RuntimeError as exc:
             raise HTTPException(409, str(exc))
@@ -202,18 +246,27 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.post("/devices/connect")
     def connect_device(request: DeviceConnectRequest) -> dict:
-        return devices[request.device].connect(port=request.port, baudrate=request.baudrate)
+        if request.device == "serial_probe" and request.port is not None:
+            available_ports = {item["port"] for item in devices["serial_probe"].available_ports()}
+            if request.port not in available_ports:
+                raise HTTPException(422, "Serial port must be one of the discovered local probe ports")
+        with device_locks[request.device]:
+            return devices[request.device].connect(
+                port=request.port, baudrate=request.baudrate,
+                timing_calibration=request.timing_calibration.model_dump() if request.timing_calibration else None,
+            )
 
     @app.post("/devices/disconnect")
     def disconnect_device(request: DeviceConnectRequest) -> dict:
-        return devices[request.device].disconnect()
+        with device_locks[request.device]:
+            return devices[request.device].disconnect()
 
     @app.get("/benchmarks")
     def benchmarks() -> dict:
         path = Path("benchmark_results/benchmark.json")
         if path.exists():
             return json.loads(path.read_text(encoding="utf-8"))
-        return run_benchmark(cases=4, max_experiments=8)
+        raise HTTPException(404, "No saved benchmark is available; submit a bounded benchmark research job")
 
     @app.get("/api/planner/recommend")
     def planner_recommend(session_id: str) -> dict:
@@ -319,9 +372,17 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         return {"entries": repository.list_ledger_entries(session_id)}
 
     @app.get("/api/ledger/{session_id}/verify")
-    def verify_ledger(session_id: str) -> dict:
+    def verify_ledger(session_id: str, trusted_head_hash: str | None = Query(default=None, pattern="^[0-9a-f]{64}$"),
+                      trusted_record_count: int | None = Query(default=None, ge=0)) -> dict:
         runtime_or_404(session_id)
-        return manager.ledger.verify(session_id)
+        if (trusted_head_hash is None) != (trusted_record_count is None):
+            raise HTTPException(status_code=422, detail="Supply both trusted head hash and record count")
+        return manager.ledger.verify(session_id, trusted_head_hash=trusted_head_hash, trusted_record_count=trusted_record_count)
+
+    @app.get("/api/ledger/{session_id}/checkpoint")
+    def ledger_checkpoint(session_id: str) -> dict:
+        runtime_or_404(session_id)
+        return manager.ledger.checkpoint(session_id)
 
     @app.get("/api/events/{session_id}")
     def session_events(session_id: str) -> dict:
@@ -341,7 +402,10 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
     async def import_bundle(file: UploadFile = File(...)) -> dict:
         if file.content_type not in {"application/zip", "application/octet-stream", "application/x-zip-compressed"}:
             raise HTTPException(415, "Only an ARGUS ZIP research bundle is accepted")
-        payload = await file.read(100 * 1024 * 1024 + 1)
+        payload = await file.read(MAX_BUNDLE_BYTES + 1)
+        await file.close()
+        if len(payload) > MAX_BUNDLE_BYTES:
+            raise HTTPException(413, "Research bundle exceeds 50 MiB")
         result: dict | None = None
         try:
             result = import_research_bundle(repository, payload)
@@ -357,7 +421,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         return submit_job_or_422(request.job_type, request.parameters)
 
     @app.get("/api/research/jobs")
-    def list_research_jobs(limit: int = 50) -> dict:
+    def list_research_jobs(limit: int = Query(default=50, ge=1, le=200)) -> dict:
         return {"jobs": repository.list_jobs(limit)}
 
     @app.get("/api/research/jobs/{job_id}")
@@ -432,12 +496,16 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
     @app.websocket("/ws/probe/{node_id}")
     async def probe_socket(websocket: WebSocket, node_id: str) -> None:
+        if not 3 <= len(node_id) <= 128:
+            await websocket.close(code=4400, reason="Invalid node ID length")
+            return
         await websocket.accept()
+        registered_node_type: str | None = None
         try:
             while True:
                 try:
                     message = await websocket.receive_json()
-                except ValueError:
+                except (ValueError, TypeError, KeyError, RecursionError):
                     await websocket.send_json({"type": "error", "message": "Message must be valid JSON"})
                     continue
                 if not isinstance(message, dict):
@@ -455,6 +523,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
                         node_id, node_type, capabilities,
                         {"status": "connected", "session_id": message.get("session_id")},
                     )
+                    registered_node_type = node_type
                     await websocket.send_json({"type": "ack", "node": node})
                 elif message_type == "state" and message.get("session_id"):
                     try:
@@ -466,7 +535,8 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
                 else:
                     await websocket.send_json({"type": "error", "message": "Unsupported probe message"})
         except WebSocketDisconnect:
-            repository.upsert_probe_node(node_id, "browser", {}, {"status": "disconnected"})
+            if registered_node_type is not None:
+                repository.upsert_probe_node(node_id, registered_node_type, {}, {"status": "disconnected"})
 
     @app.websocket("/ws/session/{session_id}")
     async def session_socket(websocket: WebSocket, session_id: str) -> None:
@@ -480,7 +550,7 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             while True:
                 try:
                     message = await websocket.receive_json()
-                except ValueError:
+                except (ValueError, TypeError, KeyError, RecursionError):
                     await websocket.send_json({"type": "error", "message": "Message must be valid JSON"})
                     continue
                 if not isinstance(message, dict):

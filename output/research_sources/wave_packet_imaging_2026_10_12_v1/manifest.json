@@ -1,0 +1,37 @@
+{
+  "result": "research_results/wave_packet_imaging_development_2026_10_12.json",
+  "source_snapshot_verified": true,
+  "files": [
+    {
+      "original_path": "scripts/validate_wave_packet_imaging.py",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/scripts/validate_wave_packet_imaging.py",
+      "sha256": "b93d22dcbc49e25d03ce5f50b8dd8b05a107bc2d278364a13b856a8ae3a86937"
+    },
+    {
+      "original_path": "backend/app/evaluation/wave_packet_imaging.py",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/backend/app/evaluation/wave_packet_imaging.py",
+      "sha256": "cf566600dea42970b85630b60abecbbffbabdfae322f3c3391cf94065883f917"
+    },
+    {
+      "original_path": "backend/app/evaluation/measured_guided_waves.py",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/backend/app/evaluation/measured_guided_waves.py",
+      "sha256": "cb3de3b44a6cd890a452082a34a361ea3a67894a7324e4d136bd8a26b7562a67"
+    },
+    {
+      "original_path": "scripts/validate_measured_guided_waves.py",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/scripts/validate_measured_guided_waves.py",
+      "sha256": "263150e04ca5da5646dc40a59cb819629f4c5dc2bcbb83df07022d0a16bd27f8"
+    },
+    {
+      "original_path": "docs/WAVE_PACKET_IMAGING_PROTOCOL.md",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/docs/WAVE_PACKET_IMAGING_PROTOCOL.md",
+      "sha256": "14276cfd9fdfa5b3752012838b7e4bdd170a2c050699cc4642486e2ec7220f69"
+    },
+    {
+      "original_path": "backend/tests/test_wave_packet_imaging.py",
+      "archive_path": "output/research_sources/wave_packet_imaging_2026_10_12_v1/backend/tests/test_wave_packet_imaging.py",
+      "sha256": "686b6d7a0c99c36161fe0ad93c4ea9ecd60cad0beb58c1054580f136903a0469"
+    }
+  ],
+  "reason": "Preserve frozen experiment sources before signed-integer input-bound fix; native-bank float numerics unchanged."
+}

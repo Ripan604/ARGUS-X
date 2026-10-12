@@ -17,9 +17,11 @@ def main() -> None:
     parser.add_argument("--preset", choices=["easy", "medium", "hard"], default="medium")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--experiments", type=int, default=10)
+    parser.add_argument("--task-calibration", action="store_true", help="Use experimental task-conditioned reference geometry")
     args = parser.parse_args()
 
-    config = ArgusConfig(max_experiments=args.experiments, seed=args.seed)
+    config = ArgusConfig(max_experiments=args.experiments, seed=args.seed,
+                         enable_task_conditioned_calibration=args.task_calibration)
     engine = ArgusEngine(config=config, seed=args.seed, preset=args.preset)
     print("ARGUS - Adaptive Recursive Guided Uncertainty Sensing")
     print(f"Secret {args.preset} defect generated. Ground truth remains hidden during interrogation.")
@@ -35,6 +37,12 @@ def main() -> None:
             f" | {e.frequency_start_hz:4.0f}-{e.frequency_end_hz:4.0f} | {status['normalized_entropy']:.3f}"
             f"   | {status['confidence']:.3f}      | {recommendation.selected.expected_information_gain:.3f}"
         )
+        reference_design = (recommendation.structured_explanation or {}).get("reference_design")
+        if reference_design:
+            chosen = reference_design["selected"]
+            print(f"       task-conditioned reference {chosen['path_length_m']:.3f} m; "
+                  f"modeled arrival variance {reference_design['expected_task_variance_before_s2']:.3e} "
+                  f"-> {chosen['expected_task_variance_after_s2']:.3e} s^2 (not a location-error bound)")
     estimate = engine.belief.estimate()
     print(f"\nStopped: {engine.status()['stop_reason']}")
     print(f"Estimated defect (MAP): ({estimate['map_x']:.3f}, {estimate['map_y']:.3f})")

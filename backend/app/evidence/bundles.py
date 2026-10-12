@@ -12,11 +12,11 @@ import numpy as np
 
 from backend.app.database.repository import SessionRepository
 from backend.app.core.config import ArgusConfig
-from backend.app.evidence.ledger import GENESIS_HASH, canonical_hash, json_safe
-from backend.app.inference.belief import normalize_probability_grid
+from backend.app.evidence.ledger import GENESIS_HASH, canonical_hash, json_safe, ledger_measurement_matches
 from backend.app.inference.joint_state import JointInferenceState
 from backend.app.models.domain import Defect, Experiment, Material, Panel
 from backend.app.safety.constraints import NoGoRegion
+from backend.app.replay.safe_io import load_bounded_npy, strict_json_loads, validate_archive, validate_signal
 
 
 MAX_BUNDLE_BYTES = 100 * 1024 * 1024
@@ -33,14 +33,80 @@ def _json_bytes(value: object) -> bytes:
     return json.dumps(json_safe(value), indent=2, sort_keys=True).encode("utf-8")
 
 
+def _read_member(archive: zipfile.ZipFile, name: str) -> bytes:
+    try:
+        with archive.open(name) as member:
+            content = member.read(MAX_BUNDLE_BYTES + 1)
+        if len(content) > MAX_BUNDLE_BYTES:
+            raise ValueError("Expanded research bundle member exceeds the size limit")
+        return content
+    except (KeyError, zipfile.BadZipFile, RuntimeError, NotImplementedError, OSError) as exc:
+        raise ValueError(f"Research bundle contains an invalid archive member: {name}") from exc
+
+
 def _load_json(archive: zipfile.ZipFile, name: str):
     try:
-        return json.loads(
-            archive.read(name).decode("utf-8"),
-            parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f"Non-finite JSON number: {value}")),
-        )
-    except (KeyError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return strict_json_loads(_read_member(archive, name), maximum_bytes=MAX_BUNDLE_BYTES, maximum_nodes=8_000_000)
+    except (KeyError, UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ValueError(f"Research bundle contains invalid {name}") from exc
+
+
+def _validate_grid(value, grid_size: int, *, probability: bool) -> np.ndarray:
+    grid = np.asarray(value, dtype=np.float64)
+    if grid.shape != (grid_size, grid_size) or not np.isfinite(grid).all() or np.any(grid < 0):
+        raise ValueError("Probability or likelihood grid has an invalid shape or values")
+    total = float(grid.sum())
+    # Session snapshots historically round each cell to ten decimal places.
+    tolerance = max(1e-8, grid.size * 5.01e-11)
+    if not np.isfinite(total) or total <= 0 or (probability and not np.isclose(total, 1, atol=tolerance, rtol=0)):
+        raise ValueError("Probability grid must be normalized; likelihood must have positive mass")
+    return grid
+
+
+def _validate_online_buffers(state: dict, experiment_count: int) -> None:
+    """Hydration must not fit attacker-sized online models or fake counters."""
+    discrepancy = state.get("discrepancy_model")
+    if discrepancy:
+        if not isinstance(discrepancy, dict):
+            raise ValueError("online discrepancy state must be an object")
+        maximum = discrepancy.get("maximum_samples", 256)
+        if isinstance(maximum, bool) or not isinstance(maximum, int) or not 1 <= maximum <= 256:
+            raise ValueError("online discrepancy sample budget is invalid")
+        inputs, residuals = discrepancy.get("inputs", []), discrepancy.get("residuals", [])
+        if (not isinstance(inputs, list) or not isinstance(residuals, list) or len(inputs) != len(residuals)
+                or len(inputs) > maximum or (inputs and np.asarray(inputs, dtype=np.float64).shape != (len(inputs), 8))
+                or (residuals and np.asarray(residuals, dtype=np.float64).shape != (len(residuals), 4))):
+            raise ValueError("online discrepancy buffers have invalid dimensions or counts")
+        alpha = discrepancy.get("ridge_alpha", 0.8)
+        norms = discrepancy.get("recent_norms", [])
+        if (isinstance(alpha, bool) or not isinstance(alpha, (int, float)) or alpha <= 0
+                or not isinstance(norms, list) or len(norms) > 64
+                or any(isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0 for v in norms)):
+            raise ValueError("online discrepancy hyperparameters are invalid")
+    ood = state.get("ood_detector")
+    if ood:
+        if not isinstance(ood, dict):
+            raise ValueError("OOD state must be an object")
+        vectors = ood.get("residual_vectors", [])
+        scores = ood.get("calibration_nonconformity", [])
+        if (not isinstance(vectors, list) or len(vectors) > 128
+                or (vectors and np.asarray(vectors, dtype=np.float64).shape != (len(vectors), 4))
+                or not isinstance(scores, list) or len(scores) > 256
+                or any(isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0 for v in scores)):
+            raise ValueError("OOD reference buffers have invalid dimensions or counts")
+        caution, abstain = ood.get("caution_threshold", 0.55), ood.get("abstain_threshold", 0.82)
+        if (any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in (caution, abstain))
+                or not 0 <= caution <= abstain <= 1):
+            raise ValueError("OOD thresholds are invalid")
+    assurance = state.get("assurance")
+    if assurance:
+        if not isinstance(assurance, dict):
+            raise ValueError("assurance state must be an object")
+        counts = [assurance.get(field, 0) for field in ("accepted_measurements", "rejected_measurements")]
+        if any(isinstance(v, bool) or not isinstance(v, int) or not 0 <= v <= experiment_count for v in counts) or sum(counts) != experiment_count:
+            raise ValueError("assurance measurement counts do not match experiment history")
+        from backend.app.assurance.monitor import RuntimeAssuranceMonitor
+        RuntimeAssuranceMonitor.from_dict(assurance)
 
 
 def _validate_session_state(session: dict, experiments: list[dict]) -> None:
@@ -64,18 +130,53 @@ def _validate_session_state(session: dict, experiments: list[dict]) -> None:
             Defect(**state["truth"])
         elif state.get("truth") is not None:
             raise ValueError("physical session evidence must not contain synthetic ground truth")
+        if isinstance(state.get("seed"), bool) or not isinstance(state.get("seed"), int) or not 0 <= state["seed"] <= 2_147_483_647:
+            raise ValueError("session seed is invalid")
+        if not isinstance(state.get("revealed", False), bool):
+            raise ValueError("session revealed flag must be boolean")
+        posterior = _validate_grid(state["posterior"], config.grid_size, probability=True)
+        if experiments and not np.allclose(posterior, np.asarray(experiments[-1]["posterior_after"], dtype=np.float64), atol=5.01e-11, rtol=0):
+            raise ValueError("session posterior does not match its final experiment")
+        if len(experiments) > config.max_experiments:
+            raise ValueError("session experiment history exceeds its configured budget")
         if state.get("joint_inference"):
-            JointInferenceState.from_dict(state["joint_inference"], material)
-        else:
-            posterior = np.asarray(state["posterior"], dtype=np.float64)
-            if posterior.shape != (config.grid_size, config.grid_size):
-                raise ValueError("posterior shape does not match grid_size")
-            normalize_probability_grid(posterior)
+            joint = state["joint_inference"]
+            structural = joint["structural"]
+            if isinstance(structural.get("grid_size"), bool) or structural.get("grid_size") != config.grid_size:
+                raise ValueError("joint structural grid_size does not match configuration")
+            joint_posterior = _validate_grid(structural["posterior"], config.grid_size, probability=True)
+            if not np.allclose(joint_posterior, posterior, atol=5.01e-11, rtol=0):
+                raise ValueError("joint structural posterior does not match session posterior")
+            for field in ("radius_mean", "radius_std", "severity_mean", "severity_std"):
+                value = structural.get(field)
+                if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 < value <= 1:
+                    raise ValueError("joint structural moments are invalid")
+            types = structural.get("type_probabilities")
+            if (not isinstance(types, dict) or not types or set(types) - {"cavity", "loose_region", "delamination", "dense_inclusion"}
+                    or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not 0 <= v <= 1 for v in types.values())
+                    or not np.isclose(sum(types.values()), 1, atol=1e-8)):
+                raise ValueError("joint structural type probabilities are invalid")
+            if experiments:
+                diagnostics = experiments[-1]["diagnostics"]
+                if canonical_hash(joint.get("verification_state", {})) != canonical_hash(diagnostics.get("verification", {})):
+                    raise ValueError("session verification state does not match experiment evidence")
+                if canonical_hash(joint.get("last_quality")) != canonical_hash(diagnostics.get("quality")):
+                    raise ValueError("session quality state does not match experiment evidence")
+            elif joint.get("verification_state", {}).get("accepted"):
+                raise ValueError("session verification has no experiment evidence")
+            JointInferenceState.from_dict(joint, material)
         state_experiments = [Experiment(**item).to_dict() for item in state.get("experiments", [])]
         metadata_experiments = [Experiment(**item["parameters"]).to_dict() for item in experiments]
         for item in state.get("no_go_regions", []):
             NoGoRegion(**item)
-    except (KeyError, TypeError, ValueError) as exc:
+        for name in ("rng_state", "acquisition_rng_state"):
+            if state.get(name) is not None:
+                generator = np.random.default_rng()
+                generator.bit_generator.state = state[name]
+        if state.get("acquisition_material"):
+            Material(**state["acquisition_material"])
+        _validate_online_buffers(state, len(experiments))
+    except (KeyError, TypeError, ValueError, AttributeError, OverflowError) as exc:
         raise ValueError(f"Research bundle contains invalid session state: {exc}") from exc
     if state_experiments != metadata_experiments:
         raise ValueError("Research bundle session history does not match experiment metadata")
@@ -86,6 +187,8 @@ def _validate_session_state(session: dict, experiments: list[dict]) -> None:
         or any(action not in {"diagnostic", "calibration", "verification", "exploration"} for action in action_history)
     ):
         raise ValueError("Research bundle action history is invalid")
+    if action_history is not None and action_history != [item["diagnostics"].get("action_type", "diagnostic") for item in experiments]:
+        raise ValueError("Research bundle action history does not match measurement evidence")
 
 
 def _validate_experiment_metadata(item: dict, grid_size: int, expected_index: int) -> None:
@@ -96,14 +199,11 @@ def _validate_experiment_metadata(item: dict, grid_size: int, expected_index: in
     if not isinstance(item, dict) or not required <= set(item):
         raise ValueError(f"Experiment {expected_index} metadata is incomplete")
     try:
-        if isinstance(item["experiment_index"], bool) or int(item["experiment_index"]) != expected_index:
+        if isinstance(item["experiment_index"], bool) or not isinstance(item["experiment_index"], int) or item["experiment_index"] != expected_index:
             raise ValueError("Experiment indices must be contiguous and one-based")
         Experiment(**item["parameters"])
         for name in ("posterior_before", "posterior_after", "likelihood"):
-            grid = np.asarray(item[name], dtype=np.float64)
-            if grid.shape != (grid_size, grid_size):
-                raise ValueError(f"Experiment {expected_index} has an invalid {name} shape")
-            normalize_probability_grid(grid)
+            _validate_grid(item[name], grid_size, probability=name != "likelihood")
     except (KeyError, TypeError, ValueError) as exc:
         raise ValueError(f"Experiment {expected_index} metadata is invalid: {exc}") from exc
     if not isinstance(item["features"], dict) or not isinstance(item["planner"], dict) or not isinstance(item["diagnostics"], dict):
@@ -118,11 +218,10 @@ def _validate_audit(audit: list[dict], experiments: list[dict], signals: list[np
         entry = record.get("entry") if isinstance(record, dict) else None
         if not isinstance(entry, dict):
             raise ValueError(f"Evidence ledger record {index} is invalid")
-        try:
-            record_index = int(record.get("experiment_index", -1))
-            entry_index = int(entry.get("experiment_number", -1))
-        except (TypeError, ValueError) as exc:
-            raise ValueError("Evidence ledger indices must be integers") from exc
+        record_index = record.get("experiment_index")
+        entry_index = entry.get("experiment_number")
+        if any(isinstance(value, bool) or not isinstance(value, int) for value in (record_index, entry_index)):
+            raise ValueError("Evidence ledger indices must be integers")
         if record_index != index or entry_index != index:
             raise ValueError("Evidence ledger indices are not contiguous")
         if record.get("previous_hash") != previous_hash or entry.get("previous_record_hash") != previous_hash:
@@ -132,17 +231,8 @@ def _validate_audit(audit: list[dict], experiments: list[dict], signals: list[np
             raise ValueError(f"Evidence ledger hash is invalid at record {index}")
         if entry.get("session_id") != session_id:
             raise ValueError(f"Evidence ledger session identity is invalid at record {index}")
-        raw_hash = sha256(np.asarray(signal, dtype=np.float32).tobytes()).hexdigest()
-        if entry.get("raw_data_hash") != raw_hash:
-            raise ValueError(f"Evidence ledger signal hash is invalid at record {index}")
-        if entry.get("processed_data_hash") != canonical_hash(item["features"]):
-            raise ValueError(f"Evidence ledger processed-data hash is invalid at record {index}")
-        if entry.get("posterior_before_hash") != canonical_hash(np.asarray(item["posterior_before"], dtype=np.float64)):
-            raise ValueError(f"Evidence ledger prior hash is invalid at record {index}")
-        if entry.get("posterior_after_hash") != canonical_hash(np.asarray(item["posterior_after"], dtype=np.float64)):
-            raise ValueError(f"Evidence ledger posterior hash is invalid at record {index}")
-        if entry.get("likelihood_hash") != canonical_hash(np.asarray(item["likelihood"], dtype=np.float64)):
-            raise ValueError(f"Evidence ledger likelihood hash is invalid at record {index}")
+        if not ledger_measurement_matches(entry, {**item, "signal": signal}):
+            raise ValueError(f"Evidence ledger measurement metadata or hashes are invalid at record {index}")
         previous_hash = entry_hash
 
 
@@ -208,17 +298,8 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
         raise ValueError("Invalid research bundle ZIP archive") from exc
     with archive_context as archive:
         members = archive.infolist()
-        if len(members) > MAX_BUNDLE_MEMBERS:
-            raise ValueError("Research bundle contains too many archive members")
+        validate_archive(archive, maximum_members=MAX_BUNDLE_MEMBERS, maximum_bytes=MAX_BUNDLE_BYTES)
         names = [item.filename for item in members]
-        if len(names) != len(set(names)):
-            raise ValueError("Research bundle contains duplicate member names")
-        if sum(item.file_size for item in members) > MAX_BUNDLE_BYTES:
-            raise ValueError("Expanded research bundle exceeds the 100 MB limit")
-        for item in members:
-            path = PurePosixPath(item.filename)
-            if path.is_absolute() or ".." in path.parts or item.flag_bits & 0x1:
-                raise ValueError("Research bundle contains an unsafe or encrypted member")
         manifest = _load_json(archive, "manifest.json")
         if not isinstance(manifest, dict) or manifest.get("schema_version") != 1 or not isinstance(manifest.get("files"), dict):
             raise ValueError("Research bundle manifest schema is invalid")
@@ -229,7 +310,7 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
             path = PurePosixPath(name)
             if path.is_absolute() or ".." in path.parts or not isinstance(expected, dict):
                 raise ValueError("Research bundle manifest contains an unsafe entry")
-            content = archive.read(name)
+            content = _read_member(archive, name)
             expected_hash = expected.get("sha256")
             expected_size = expected.get("size")
             if (
@@ -252,8 +333,13 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
         result_summary = _load_json(archive, "result_summary.json")
         if not isinstance(experiments, list) or len(experiments) > MAX_BUNDLE_EXPERIMENTS:
             raise ValueError("Research bundle experiment count exceeds the import limit")
-        if not isinstance(audit, list) or not isinstance(events, list):
+        if not isinstance(audit, list) or not isinstance(events, list) or len(events) > 10_000:
             raise ValueError("Research bundle audit or event history is invalid")
+        for event in events:
+            if (not isinstance(event, dict) or not isinstance(event.get("event_type"), str)
+                    or not 1 <= len(event["event_type"]) <= 256 or not isinstance(event.get("payload"), dict)
+                    or not isinstance(event.get("created_at"), str) or len(event["created_at"]) > 128):
+                raise ValueError("Research bundle contains invalid session event metadata")
         grid_size_raw = session.get("state", {}).get("config", {}).get("grid_size", 0) if isinstance(session, dict) else 0
         if isinstance(grid_size_raw, bool) or not isinstance(grid_size_raw, int) or not 4 <= grid_size_raw <= 256:
             raise ValueError("Research bundle grid_size is invalid")
@@ -265,7 +351,7 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
             signal_name = f"signals/{index:04d}.npy"
             expected_signals.add(signal_name)
             try:
-                signal = np.load(io.BytesIO(archive.read(signal_name)), allow_pickle=False)
+                signal = validate_signal(load_bounded_npy(_read_member(archive, signal_name)))
             except (KeyError, ValueError, OSError) as exc:
                 raise ValueError(f"Research bundle signal {index} is invalid") from exc
             if not isinstance(signal, np.ndarray) or signal.ndim != 1 or not 8 <= signal.size <= 384_000 or not np.all(np.isfinite(signal)):
@@ -275,6 +361,15 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
             raise ValueError("Research bundle signal members do not match experiment metadata")
         _validate_session_state(session, experiments)
         original_id = str(session["id"])
+        for item, signal in zip(experiments, signals):
+            expected_samples = max(32, int(round(session["state"]["config"]["sample_rate"] * item["parameters"]["duration_s"])))
+            if signal.size != expected_samples:
+                raise ValueError("Research bundle signal length does not match its acquisition window")
+        if manifest.get("session_id") != original_id:
+            raise ValueError("Research bundle manifest session identity is inconsistent")
+        for previous, current in zip(experiments, experiments[1:]):
+            if previous["posterior_after"] != current["posterior_before"]:
+                raise ValueError("Research bundle posterior history is discontinuous")
         _validate_audit(audit, experiments, signals, original_id)
         if posterior_history != [item["posterior_after"] for item in experiments]:
             raise ValueError("Research bundle posterior history does not match experiment metadata")
@@ -287,6 +382,9 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
             or not isinstance(summary_count, int)
             or summary_count != len(experiments)
             or result_summary.get("bundle_state_hash") != canonical_hash(session["state"])
+            or result_summary.get("ledger_records") != len(audit)
+            or result_summary.get("ledger_head") != (audit[-1]["entry_hash"] if audit else None)
+            or result_summary.get("revealed") is not session["state"].get("revealed", False)
         ):
             raise ValueError("Research bundle result summary is inconsistent")
 
@@ -344,4 +442,6 @@ def import_research_bundle(repository: SessionRepository, payload: bytes) -> dic
         "ledger_verified": True,
         "ledger_identity_preserved": preserved_identity,
         "ledger_rebased": not preserved_identity,
+        "authenticity_verified": False,
+        "verification_scope": "local_content_and_chain_consistency; imported hashes are not signatures",
     }

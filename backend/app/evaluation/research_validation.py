@@ -29,7 +29,7 @@ CONTEXTS = {
     "nominal": {"velocity_multiplier": 1.0, "attenuation_multiplier": 1.0, "noise_multiplier": 1.0},
     "mismatch_noise": {"velocity_multiplier": 1.02, "attenuation_multiplier": 1.04, "noise_multiplier": 2.0},
 }
-VARIANTS = {"legacy_proxy": False, "nuisance_aware": True}
+VARIANTS = {"legacy_proxy": False, "nuisance_aware": True, "risk_calibration": True}
 
 
 def candidate_banks(seed: int, steps: int, count: int = 24) -> list[list[Experiment]]:
@@ -88,6 +88,7 @@ def configuration(seed: int, steps: int, count: int, variant: str) -> ArgusConfi
         values["enable_nuisance_aware_design"] = VARIANTS[variant]
     elif VARIANTS[variant]:
         raise RuntimeError("Nuisance-aware implementation is not installed")
+    values["enable_risk_calibration_design"] = variant == "risk_calibration"
     return ArgusConfig(**values)
 
 
@@ -118,7 +119,8 @@ def run_case(seed: int, context: str, variant: str, steps: int, count: int = 24)
                       "error_mm": engine.localization_error() * 1000,
                       "entropy": float(status["normalized_entropy"]),
                       "information_score": float(plan.selected.expected_information_gain),
-                      "nuisance_design": (plan.structured_explanation or {}).get("nuisance_design")})
+                      "nuisance_design": (plan.structured_explanation or {}).get("nuisance_design"),
+                      "risk_design": plan.structured_explanation if variant == "risk_calibration" else None})
     status = engine.status()
     error = engine.localization_error() * 1000
     false_confidence = status["decision_confidence"] >= 0.70 and error > 30
@@ -126,6 +128,8 @@ def run_case(seed: int, context: str, variant: str, steps: int, count: int = 24)
             "localization_error_mm": error, "normalized_entropy": float(status["normalized_entropy"]),
             "decision_confidence": float(status["decision_confidence"]),
             "credible_region_area": float(status["credible_region_90"]["area_fraction"]),
+            "radius90_mm": status["posterior_containment"]["radius90_mm"],
+            "covered90": bool(error <= status["posterior_containment"]["radius90_mm"]),
             "measurements": len(trace), "calibrations": sum(t["action_type"] == "calibration" for t in trace),
             "rejected_measurements": sum(not t["measurement_accepted"] for t in trace),
             "success_20mm": bool(error <= 20), "failure_30mm": bool(error > 30),
@@ -197,7 +201,7 @@ def validate_pairing(rows: list[dict]) -> None:
 
 
 def run_validation(seeds=VALIDATION_SEEDS, steps: int = 8, count: int = 24,
-                   contexts=tuple(CONTEXTS), variants=tuple(VARIANTS),
+                   contexts=tuple(CONTEXTS), variants=("legacy_proxy", "nuisance_aware"),
                    progress: Callable[[dict], None] | None = None) -> dict:
     seeds, contexts, variants = tuple(seeds), tuple(contexts), tuple(variants)
     if not seeds or len(set(seeds)) != len(seeds):
@@ -220,6 +224,13 @@ def run_validation(seeds=VALIDATION_SEEDS, steps: int = 8, count: int = 24,
                     progress(row)
     validate_pairing(rows)
     summary, paired = summarize(rows, contexts, variants)
+    risk_paired = {}
+    if "risk_calibration" in variants and "legacy_proxy" in variants:
+        comparison_rows = [{**r, "variant": "nuisance_aware" if r["variant"] == "risk_calibration" else r["variant"]}
+                           for r in rows if r["variant"] in {"legacy_proxy", "risk_calibration"}]
+        _, risk_paired = summarize(comparison_rows, contexts, ("legacy_proxy", "nuisance_aware"))
+        for item in risk_paired.values():
+            item["error_advantage_sign"] = "positive means risk-calibration has lower error"
     return {"metadata": {"protocol_version": "argus-paired-candidates-v1", "evidence_source": "synthetic_only",
                          "seeds": list(seeds), "steps": steps, "candidate_count": count, "contexts": CONTEXTS,
                          "configurations": configs, "preset": "medium", "panel": Panel().to_dict(),
@@ -227,11 +238,11 @@ def run_validation(seeds=VALIDATION_SEEDS, steps: int = 8, count: int = 24,
                          "stopping_policy": "fixed budget; no early confidence stop",
                          "candidate_policy": "8 fixed perimeter experiments + independent random safe bank each step; shared across variants",
                          "noise_policy": "SeedSequence([case_seed, zero_based_step, 202]); equal-length signals share innovations",
-                         "calibration_policy": "unchanged production dual control and deterministic calibration options",
+                         "calibration_policy": "heuristic controller or optional two-step physical-loss controller; shared feasible direct-path options",
                          "bootstrap": "10000 paired-seed resamples, percentile interval, seed 90071",
                          "limitations": ["No field defect localization measurements", "Small synthetic scenario family",
                                          "Fixed budget does not establish measurement compression", "Gaussian approximation is not field calibrated",
                                          "Intervals condition on complete pairs; execution failures are reported separately"]},
-            "summary": summary, "paired_comparisons": paired,
+            "summary": summary, "paired_comparisons": paired, "risk_vs_legacy_paired": risk_paired,
             "failures": [{k: r[k] for k in ("seed", "context", "variant", "completed", "localization_error_mm", "execution_error") if k in r}
                          for r in rows if not r["completed"] or r.get("failure_30mm")], "runs": rows}

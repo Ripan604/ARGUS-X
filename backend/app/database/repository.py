@@ -14,6 +14,23 @@ import numpy as np
 from backend.app.database.migrations import apply_migrations
 
 
+def _decode_signal(raw: bytes) -> np.ndarray:
+    # Keep this primitive DB decoder independent of replay's eager public API.
+    maximum = 384_000 * np.dtype(np.float32).itemsize
+    try:
+        decoder = zlib.decompressobj()
+        decoded = decoder.decompress(raw, maximum + 1)
+        if (len(decoded) > maximum or decoder.unconsumed_tail or not decoder.eof
+                or decoder.unused_data or len(decoded) % 4 or len(decoded) < 8 * 4):
+            raise ValueError("Stored acquisition is invalid or exceeds the sample limit")
+        signal = np.frombuffer(decoded, dtype=np.float32)
+        if not np.isfinite(signal).all():
+            raise ValueError("Stored acquisition contains non-finite samples")
+        return signal
+    except zlib.error as exc:
+        raise ValueError("Stored acquisition compression is invalid") from exc
+
+
 class SessionRepository:
     def __init__(self, database_path: str | Path) -> None:
         self.database_path = str(database_path)
@@ -154,7 +171,7 @@ class SessionRepository:
             for key in ("parameters_json", "features_json", "posterior_before_json", "posterior_after_json", "likelihood_json", "planner_json", "diagnostics_json"):
                 item[key.removesuffix("_json")] = json.loads(item.pop(key))
             if include_signal:
-                item["signal"] = np.frombuffer(zlib.decompress(item.pop("raw_signal")), dtype=np.float32)
+                item["signal"] = _decode_signal(item.pop("raw_signal"))
             result.append(item)
         return result
 

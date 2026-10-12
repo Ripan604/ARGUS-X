@@ -1,0 +1,32 @@
+\subsection{7 October Current-Source Engineering Validation}
+The fixed release protocol used seeds 64000--64007, six observations, twelve
+shared diagnostic opportunities, three policies, and nominal and mismatched/noisy
+conditions. All 48 runs completed; the pre/post source hashes agree and match the
+reviewed backend files. This is a small synthetic engineering check, not a powered
+physical trial. Table~\ref{tab:october-release} retains every outcome.
+\begin{table}[t]
+\caption{October Release Synthetic Check (Eight Seeds per Condition/Policy)}
+\label{tab:october-release}
+\centering\scriptsize
+\begin{tabular}{@{}llrr@{}}\toprule
+Condition & Policy & Mean error (mm) & Success $\leq20$ mm \\
+\midrule
+Nominal & Legacy proxy & 16.04 & 0.750 \\
+Nominal & Nuisance-aware & 14.30 & 0.750 \\
+Nominal & Risk calibration & 13.35 & 0.750 \\
+Mismatch & Legacy proxy & 189.95 & 0.000 \\
+Mismatch & Nuisance-aware & 144.36 & 0.125 \\
+Mismatch & Risk calibration & 143.71 & 0.125 \\
+\bottomrule\end{tabular}
+\end{table}
+Nuisance-aware error advantages over legacy were 1.74 mm with paired bootstrap
+95\% interval $[-6.78,9.50]$ mm nominally and 45.59 mm with interval
+$[-22.85,107.10]$ mm under mismatch. Risk-controller advantages were 2.69 mm
+with interval $[-0.78,7.59]$ mm and 46.24 mm with interval $[-10.48,112.27]$ mm,
+respectively. Every interval crosses zero. All policies succeeded within 20 mm
+in 6/8 nominal cases. Under mismatch, legacy succeeded in 0/8 and both optional
+policies in 1/8. Mismatch failures remain substantial; the software guards do not
+establish physical robustness. Timing on the shared workstation is descriptive.
+The artifact is \path{research_results/release_validation_2026_10_07.json}; the
+fixed protocol is \path{docs/VALIDATION_PROTOCOL_2026_10_07.md}. No seed filtering,
+post-result tuning, physical relabeling or superiority claim is made.

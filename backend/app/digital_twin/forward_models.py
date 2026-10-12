@@ -63,7 +63,8 @@ class AnalyticalForwardModel(ForwardModel):
             for name, parameter in nuisance.parameters.items()
             if name in {"wave_velocity", "attenuation", "timing_offset", "source_coupling", "receiver_coupling", "gain", "noise_scale", "source_pose_error", "receiver_pose_error"}
         }
-        key = deterministic_key(self.capability.model_id, latent_state, experiment.to_dict(), relevant_nuisance)
+        key = deterministic_key(self.capability.model_id, latent_state, experiment.to_dict(), relevant_nuisance,
+                                nuisance.velocity_timing_correlation, self.simulator.material.to_dict(), self.simulator.panel.to_dict())
         return self.cache.get_or_compute(key, lambda: self._predict_uncached(experiment, x, y, nuisance))
 
     def _predict_uncached(self, experiment: Experiment, x: float, y: float, nuisance: NuisancePosterior) -> ForwardPrediction:
@@ -78,11 +79,12 @@ class AnalyticalForwardModel(ForwardModel):
         gain = 0.65 * coupling * nuisance.parameter("gain").mean * np.exp(-attenuation.mean * path) / (1 + 5 * path)
         phase = 2 * np.pi * experiment.center_frequency_hz * delay
         mean = np.asarray([delay, np.log(max(gain, 1e-8)), np.sin(phase), np.cos(phase)], dtype=np.float64)
-        delay_std = np.sqrt(timing.std**2 + (path * velocity.std / max(velocity.mean**2, 1.0)) ** 2 + 1.5e-8)
+        delay_std = np.sqrt(float(nuisance.arrival_variance(path)) + 1.5e-8)
         log_gain_std = np.sqrt(
             attenuation.std**2 * path**2
             + (nuisance.parameter("source_coupling").std / max(nuisance.parameter("source_coupling").mean, 0.05)) ** 2
             + (nuisance.parameter("receiver_coupling").std / max(nuisance.parameter("receiver_coupling").mean, 0.05)) ** 2
+            + (nuisance.parameter("gain").std / max(nuisance.parameter("gain").mean, 0.1)) ** 2
             + 0.05
         )
         phase_std = min(np.pi, 2 * np.pi * experiment.center_frequency_hz * delay_std)

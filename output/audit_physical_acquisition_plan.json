@@ -1,0 +1,399 @@
+{
+  "schema_version": 1,
+  "evidence_source": "planned_not_acquired",
+  "metadata": {
+    "specimen_id": "REPLACE",
+    "acquisition_session_id": "REPLACE",
+    "split": "test",
+    "panel": {
+      "width_m": 0.6,
+      "height_m": 0.4,
+      "material": "composite"
+    },
+    "units": "normalized_pcm",
+    "recording_chain": "REPLACE",
+    "synchronization_method": "REPLACE",
+    "coupling_protocol": "REPLACE",
+    "physical_target": "REPLACE: impact proxy or independently verified persistent defect",
+    "reference_truth_method": "REPLACE",
+    "reference_truth_uncertainty_mm": null,
+    "temperature_c": null,
+    "sample_rate": 16000
+  },
+  "truth": {},
+  "actions": [
+    {
+      "experiment": {
+        "source_x": 0.08,
+        "source_y": 0.08,
+        "receiver_x": 0.92,
+        "receiver_y": 0.5,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_01.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.5,
+        "source_y": 0.08,
+        "receiver_x": 0.92,
+        "receiver_y": 0.92,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_02.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.92,
+        "source_y": 0.08,
+        "receiver_x": 0.5,
+        "receiver_y": 0.92,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_03.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.92,
+        "source_y": 0.5,
+        "receiver_x": 0.08,
+        "receiver_y": 0.92,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_04.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.92,
+        "source_y": 0.92,
+        "receiver_x": 0.08,
+        "receiver_y": 0.5,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_05.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.5,
+        "source_y": 0.92,
+        "receiver_x": 0.08,
+        "receiver_y": 0.08,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_06.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.08,
+        "source_y": 0.92,
+        "receiver_x": 0.5,
+        "receiver_y": 0.08,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_07.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.08,
+        "source_y": 0.5,
+        "receiver_x": 0.92,
+        "receiver_y": 0.08,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_08.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.7626519935048552,
+        "source_y": 0.21191630719143598,
+        "receiver_x": 0.6376205774483207,
+        "receiver_y": 0.17543611797300984,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "impulse",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_09.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.6833781210101595,
+        "source_y": 0.44155983438274704,
+        "receiver_x": 0.26312430339220033,
+        "receiver_y": 0.36272952913006135,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "tone_burst",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_10.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.4920433012870578,
+        "source_y": 0.37987629865464656,
+        "receiver_x": 0.8564510265034053,
+        "receiver_y": 0.8168408811080837,
+        "frequency_start_hz": 3400.0,
+        "frequency_end_hz": 6200.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_11.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.21385305273579808,
+        "source_y": 0.1574368850870769,
+        "receiver_x": 0.5916112361210967,
+        "receiver_y": 0.0948050844038166,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_12.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.8222393653251345,
+        "source_y": 0.2072653556155942,
+        "receiver_x": 0.726111881738898,
+        "receiver_y": 0.4519991344020084,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_13.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.7036805664374849,
+        "source_y": 0.09442961392019068,
+        "receiver_x": 0.4001738510754882,
+        "receiver_y": 0.9581699034879131,
+        "frequency_start_hz": 1200.0,
+        "frequency_end_hz": 3000.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "impulse",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_14.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.24455531054010188,
+        "source_y": 0.24787314678267452,
+        "receiver_x": 0.46871565149004496,
+        "receiver_y": 0.8339820208467101,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "impulse",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_15.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.12124175267076875,
+        "source_y": 0.39683667186690086,
+        "receiver_x": 0.7136613331431094,
+        "receiver_y": 0.5371619357709753,
+        "frequency_start_hz": 2200.0,
+        "frequency_end_hz": 4400.0,
+        "amplitude": 0.48,
+        "duration_s": 0.12,
+        "waveform": "impulse",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "diagnostic_16.wav",
+      "action_type": "diagnostic"
+    },
+    {
+      "experiment": {
+        "source_x": 0.05,
+        "source_y": 0.08,
+        "receiver_x": 0.35,
+        "receiver_y": 0.08,
+        "frequency_start_hz": 1200,
+        "frequency_end_hz": 3000,
+        "amplitude": 0.28,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "reference_01.wav",
+      "action_type": "calibration",
+      "calibration_type": "direct_path"
+    },
+    {
+      "experiment": {
+        "source_x": 0.05,
+        "source_y": 0.5,
+        "receiver_x": 0.65,
+        "receiver_y": 0.5,
+        "frequency_start_hz": 1200,
+        "frequency_end_hz": 3000,
+        "amplitude": 0.28,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "reference_02.wav",
+      "action_type": "calibration",
+      "calibration_type": "direct_path"
+    },
+    {
+      "experiment": {
+        "source_x": 0.05,
+        "source_y": 0.92,
+        "receiver_x": 0.95,
+        "receiver_y": 0.92,
+        "frequency_start_hz": 1200,
+        "frequency_end_hz": 3000,
+        "amplitude": 0.28,
+        "duration_s": 0.12,
+        "waveform": "chirp",
+        "phase_code": null,
+        "code_length": 0,
+        "sample_rate_hz": null,
+        "spectral_notches_hz": []
+      },
+      "wav": "reference_03.wav",
+      "action_type": "calibration",
+      "calibration_type": "direct_path"
+    }
+  ],
+  "instructions": [
+    "Use one manifest per independent remount/session and specimen.",
+    "Acquire every listed action. Never synthesize missing WAV files.",
+    "A direct-path reference must exclude defect scatter through a justified acquisition protocol.",
+    "Use a common clock/trigger or document and measure timing offset.",
+    "Assign entire specimens to train, calibration or test before model fitting.",
+    "Store sealed reference labels separately from the operator during blind trials.",
+    "Replace evidence_source with physical only after actual acquisition; preserve raw files."
+  ]
+}

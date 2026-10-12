@@ -1,0 +1,49 @@
+{
+  "evidence_source": "software_regressions_and_synthetic_scalar_arrivals",
+  "backend_passed": 306,
+  "backend_skipped": 1,
+  "source_stable": true,
+  "scalar_arrival_study": {
+    "summary": {
+      "repeated_short_reference": {
+        "attempted": 64,
+        "completed": 64,
+        "failures": 0,
+        "mean_target_arrival_rmse_us": 454.432430894448,
+        "mean_velocity_absolute_error_m_s": 20.059945939680723,
+        "mean_timing_absolute_error_us": 121.45302107172327,
+        "mean_modeled_target_variance_s2": 2.2395886793260598e-07
+      },
+      "cyclic_first_feasible": {
+        "attempted": 64,
+        "completed": 64,
+        "failures": 0,
+        "mean_target_arrival_rmse_us": 279.64521478177255,
+        "mean_velocity_absolute_error_m_s": 14.09570991800951,
+        "mean_timing_absolute_error_us": 136.19733787164617,
+        "mean_modeled_target_variance_s2": 1.0255860338225385e-07
+      },
+      "task_conditioned": {
+        "attempted": 64,
+        "completed": 64,
+        "failures": 0,
+        "mean_target_arrival_rmse_us": 200.57111187176375,
+        "mean_velocity_absolute_error_m_s": 11.799745872462491,
+        "mean_timing_absolute_error_us": 144.88653130780705,
+        "mean_modeled_target_variance_s2": 5.740751750369947e-08
+      }
+    },
+    "paired": {
+      "comparison": "task_conditioned_vs_cyclic_first_feasible",
+      "complete_pairs": 64,
+      "mean_advantage_us": 79.07410291000886,
+      "bootstrap_95ci_us": [
+        50.26514483352057,
+        110.3452618557824
+      ]
+    },
+    "acquisition_noise": "fixed by sealed true velocity and declared pose/timing noise; common innovations across policies"
+  },
+  "physical_validated": false,
+  "patent_filed": false
+}

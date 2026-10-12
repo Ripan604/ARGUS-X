@@ -16,23 +16,37 @@ def normalize_probability_grid(probability: np.ndarray) -> np.ndarray:
     values = np.asarray(probability, dtype=np.float64)
     if values.ndim != 2 or values.size == 0 or not np.all(np.isfinite(values)):
         raise ValueError("Probability grid must be a finite, non-empty 2D array")
-    values = np.maximum(values, 0.0)
-    total = float(np.sum(values))
-    if total <= EPSILON:
+    if np.any(values < 0):
+        raise ValueError("Probability grid cannot contain negative support")
+    scale = float(np.max(values))
+    if scale == 0:
         return np.full_like(values, 1.0 / values.size)
-    return values / total
+    # Scaling before summation avoids overflow and preserves tiny positive
+    # masses. Probability normalization must not depend on arbitrary units.
+    scaled = values / scale
+    return scaled / float(np.sum(scaled))
 
 
 def entropy(probability: np.ndarray, *, normalized: bool = False) -> float:
     values = normalize_probability_grid(probability).ravel()
-    result = float(-np.sum(values * np.log2(values + EPSILON)))
+    support = values > 0
+    result = float(-np.sum(values[support] * np.log2(values[support])))
     return result / np.log2(values.size) if normalized and values.size > 1 else result
 
 
 def posterior_update(prior: np.ndarray, likelihood: np.ndarray) -> np.ndarray:
     if np.shape(prior) != np.shape(likelihood):
         raise ValueError("Prior and likelihood grids must have the same shape")
-    return normalize_probability_grid(np.asarray(prior) * np.maximum(np.asarray(likelihood), EPSILON))
+    normalized_prior = normalize_probability_grid(prior)
+    values = np.asarray(likelihood, dtype=np.float64)
+    if not np.all(np.isfinite(values)) or np.any(values < 0):
+        raise ValueError("Likelihood must contain finite nonnegative support")
+    support = (normalized_prior > 0) & (values > 0)
+    if not np.any(support):
+        raise ValueError("Observation has no likelihood support under the prior")
+    log_weights = np.full(values.shape, -np.inf)
+    log_weights[support] = np.log(normalized_prior[support]) + np.log(values[support])
+    return normalize_probability_grid(np.exp(log_weights - np.max(log_weights)))
 
 
 def spatial_mode_cells(
@@ -90,10 +104,15 @@ def measurement_likelihood(
     temperature: float = 4.8,
 ) -> tuple[np.ndarray, dict[str, float]]:
     measured = np.asarray(samples, dtype=np.float64)
+    if measured.ndim != 1 or measured.size < 8 or not np.all(np.isfinite(measured)):
+        raise ValueError("Measurement must contain at least eight finite mono samples")
+    if not isinstance(grid_size, (int, np.integer)) or isinstance(grid_size, bool) or grid_size < 4:
+        raise ValueError("Likelihood grid_size must be an integer of at least four")
+    if not np.isfinite(temperature) or temperature <= 0:
+        raise ValueError("Likelihood temperature must be finite and positive")
     baseline = simulator.simulate_baseline(experiment)
     if len(measured) != len(baseline):
-        common = min(len(measured), len(baseline))
-        measured, baseline = measured[:common], baseline[:common]
+        raise ValueError("Measurement length must match the declared experiment window")
     residual = measured - baseline
     excitation = simulator.excitation(experiment)[: len(residual)]
     correlation = np.abs(correlate(residual, excitation, mode="full", method="fft"))
@@ -116,7 +135,9 @@ def measurement_likelihood(
     noise_floor = float(np.median(np.abs(residual - np.median(residual))) * 1.4826 + EPSILON)
     snr = residual_rms / noise_floor
     effective_temperature = temperature * float(np.clip((snr - 0.75) / 1.8, 0.30, 1.0))
-    likelihood = np.exp(effective_temperature * scaled)
+    # Subtracting the maximum preserves relative support without overflow at
+    # large finite temperatures.
+    likelihood = np.exp(effective_temperature * (scaled - np.max(scaled)))
     likelihood = normalize_probability_grid(likelihood) * likelihood.size
     diagnostics = {
         "residual_rms": residual_rms,
@@ -135,11 +156,13 @@ class BeliefState:
     history: list[np.ndarray] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        if self.grid_size < 4:
+        if isinstance(self.grid_size, bool) or not isinstance(self.grid_size, (int, np.integer)) or self.grid_size < 4:
             raise ValueError("grid_size must be at least 4")
         if self.posterior is None:
             self.posterior = np.full((self.grid_size, self.grid_size), 1.0 / self.grid_size**2)
         else:
+            if np.shape(self.posterior) != (self.grid_size, self.grid_size):
+                raise ValueError("Posterior shape must match grid_size")
             self.posterior = normalize_probability_grid(self.posterior)
         if not self.history:
             self.history.append(self.posterior.copy())
@@ -155,7 +178,9 @@ class BeliefState:
         likelihood, diagnostics = measurement_likelihood(
             samples, experiment, simulator, self.grid_size, temperature=temperature
         )
-        weight = float(np.clip(evidence_weight, 0.0, 1.0))
+        if not np.isfinite(evidence_weight) or not 0 <= evidence_weight <= 1:
+            raise ValueError("Evidence weight must be finite and in [0, 1]")
+        weight = float(evidence_weight)
         tempered_likelihood = np.power(np.maximum(likelihood, EPSILON), weight)
         self.posterior = posterior_update(self.posterior, tempered_likelihood)
         self.history.append(self.posterior.copy())

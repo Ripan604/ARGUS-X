@@ -54,7 +54,8 @@ def run_calibration_study(mode: str = "quick", seed: int = 200, progress=None, c
             "seed": trial_seed,
             "posterior_rank_fraction": rank,
             "coverage": {str(int(mass * 100)): covered for mass, covered in coverage.items()},
-            "reported_confidence": float(status["decision_confidence"]),
+            "reported_confidence": next(item["probability"] for item in status["posterior_containment"]["probabilities"] if item["radius_mm"] == 20.0),
+            "legacy_confidence_index": float(status["decision_confidence"]),
             "success_20mm": bool(error_mm <= 20),
             "localization_error_mm": error_mm,
             "experiments": len(engine.experiments),
@@ -81,7 +82,8 @@ def run_calibration_study(mode: str = "quick", seed: int = 200, progress=None, c
         for level in ("50", "80", "90", "95")
     }
     return {
-        "metadata": {"mode": mode, "requested_trials": trials, "completed_trials": len(rows), "seed": seed, "evidence_source": "simulated"},
+        "metadata": {"mode": mode, "requested_trials": trials, "completed_trials": len(rows), "seed": seed, "evidence_source": "simulated",
+                     "reliability_event": "truth_within_20mm_of_MAP", "reported_probability": "posterior_mass_within_20mm", "field_calibrated": False},
         "coverage": coverage_table,
         "expected_calibration_error": float(ece),
         "posterior_rank_histogram": {"edges": histogram_edges.tolist(), "counts": histogram.tolist()},

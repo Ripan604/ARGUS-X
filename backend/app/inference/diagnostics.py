@@ -34,11 +34,21 @@ def estimate_measurement_quality(
     acceleration_rms: float | None = None,
     visual_position_error: float | None = None,
 ) -> QualityEstimate:
-    values = np.asarray(samples, dtype=np.float64).reshape(-1)
+    raw = np.asarray(samples, dtype=np.float64)
+    invalid_context = any(
+        value is not None and (not isinstance(value, (int, float, np.number)) or not np.isfinite(value) or value < 0)
+        for value in (acceleration_rms, visual_position_error)
+    )
+    if raw.ndim != 1 or invalid_context:
+        reasons = ("invalid_signal_shape",) if raw.ndim != 1 else ("invalid_placement_metadata",)
+        return QualityEstimate(0, 0, 0, 0, 0, 0, 0, False, reasons)
+    values = raw
     finite_fraction = float(np.mean(np.isfinite(values))) if values.size else 0.0
     # Preserve the finite-fraction diagnostic while preventing +/-inf from
     # overflowing the RMS and FFT calculations below.
     values = np.nan_to_num(values, nan=0.0, posinf=0.0, neginf=0.0)
+    if values.size and np.max(np.abs(values)) > np.finfo(np.float32).max / 4:
+        return QualityEstimate(0, 0, 0, 0, 0, 0, 0, False, ("amplitude_outside_numeric_range",))
     peak = float(np.max(np.abs(values))) if values.size else 0.0
     rms = float(np.sqrt(np.mean(values**2))) if values.size else 0.0
     if peak > 0:
@@ -53,7 +63,9 @@ def estimate_measurement_quality(
     signal_quality = float(np.clip(0.55 * dynamic_quality + 0.35 * clipping_quality + 0.10 * finite_fraction, 0, 1))
     consistency, spectral_stability = 0.70, 0.70
     if reference is not None:
-        prior = np.asarray(reference, dtype=np.float64).reshape(-1)
+        prior = np.asarray(reference, dtype=np.float64)
+        if prior.ndim != 1 or not np.all(np.isfinite(prior)):
+            prior = np.asarray([], dtype=np.float64)
         common = min(len(prior), len(values))
         if common >= 16 and np.std(prior[:common]) > 1e-12 and np.std(values[:common]) > 1e-12:
             consistency = float(np.clip((np.corrcoef(prior[:common], values[:common])[0, 1] + 1) / 2, 0, 1))
@@ -64,6 +76,8 @@ def estimate_measurement_quality(
     placement = float(np.clip(np.sqrt(motion_quality * visual_quality), 0, 1))
     coupling = float(np.clip(0.45 * consistency + 0.30 * spectral_stability + 0.25 * np.clip(direct_energy / 0.06, 0, 1), 0, 1))
     reasons: list[str] = []
+    if values.size < 8:
+        reasons.append("insufficient_samples")
     if finite_fraction < 1:
         reasons.append("non_finite_samples")
     if clipping > 0.12:
@@ -72,5 +86,7 @@ def estimate_measurement_quality(
         reasons.append("sensor_dropout_or_silence")
     if placement < 0.25:
         reasons.append("placement_motion")
-    accepted = finite_fraction >= 0.98 and clipping <= 0.20 and rms >= 1e-6
+    # Every failure reason represents failed evidence support. Previously a
+    # clipped/near-silent waveform could be accepted despite its fault reason.
+    accepted = not reasons
     return QualityEstimate(coupling, placement, signal_quality, consistency, spectral_stability, direct_energy, clipping, accepted, tuple(reasons))

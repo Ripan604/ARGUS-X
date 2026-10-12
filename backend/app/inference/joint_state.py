@@ -17,6 +17,7 @@ class JointInferenceState:
     last_quality: QualityEstimate | None = None
     last_calibration: dict | None = None
     revision: int = 0
+    verification_state: dict = field(default_factory=dict)
 
     @classmethod
     def nominal(cls, structural: StructuralPosterior, material: Material) -> "JointInferenceState":
@@ -40,6 +41,7 @@ class JointInferenceState:
             "last_quality": self.last_quality.to_dict() if self.last_quality else None,
             "last_calibration": self.last_calibration,
             "revision": self.revision,
+            "verification_state": self.verification_state,
         }
 
     @classmethod
@@ -55,5 +57,5 @@ class JointInferenceState:
             last_quality=QualityEstimate(**quality_payload) if quality_payload else None,
             last_calibration=payload.get("last_calibration"),
             revision=int(payload.get("revision", 0)),
+            verification_state=payload.get("verification_state", {}),
         )
-

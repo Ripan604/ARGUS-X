@@ -1,0 +1,26 @@
+[
+  {
+    "file": "morpho_original.json",
+    "source_url": "https://zenodo.org/api/records/14627730",
+    "bytes": 9602,
+    "sha256": "3fdf71ed781bff44e602c08dbfb66e0ec132b9e0bd0c913251032dd1b0480ab7"
+  },
+  {
+    "file": "wind_blade.json",
+    "source_url": "https://zenodo.org/api/records/13692213",
+    "bytes": 6776,
+    "sha256": "2707af5756389d7322667d93c7216d0b3722bdd48372ba1cf444540cfe6564a2"
+  },
+  {
+    "file": "impact_events.json",
+    "source_url": "https://zenodo.org/api/records/7199346",
+    "bytes": 6686,
+    "sha256": "9f2d75980194bbc29dd57fa8a93888f8486fcd2a5cfcbd28d425e2146faade60"
+  },
+  {
+    "file": "smartdata_longterm.json",
+    "source_url": "https://api.figshare.com/v2/articles/28112504",
+    "bytes": 24317,
+    "sha256": "7eb0871f6faa600bc0c37ae7b0f9bb9956965724b50fd789acf5d881ad2ad984"
+  }
+]

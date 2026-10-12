@@ -11,7 +11,7 @@ from backend.app.models.domain import Experiment, Material
 
 def test_health_and_session_lifecycle(tmp_path):
     app = create_app(tmp_path / "argus-test.db")
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://localhost")
     assert client.get("/health").json()["status"] == "ok"
     created = client.post("/sessions", json={"preset": "easy", "seed": 41, "max_experiments": 5})
     assert created.status_code == 201
@@ -42,10 +42,10 @@ def test_health_and_session_lifecycle(tmp_path):
 
 def test_database_persistence_across_app_instances(tmp_path):
     database = tmp_path / "persistent.db"
-    first = TestClient(create_app(database))
+    first = TestClient(create_app(database), base_url="http://localhost")
     session = first.post("/sessions", json={"seed": 9}).json()
     first.post(f"/sessions/{session['id']}/experiments/run", json={})
-    second = TestClient(create_app(database))
+    second = TestClient(create_app(database), base_url="http://localhost")
     restored = second.get(f"/sessions/{session['id']}")
     assert restored.status_code == 200
     assert restored.json()["status"]["experiment_count"] == 1
@@ -53,11 +53,11 @@ def test_database_persistence_across_app_instances(tmp_path):
 
 def test_budget_exhausted_session_restores_without_planning_extra_action(tmp_path):
     database = tmp_path / "completed-session.db"
-    first = TestClient(create_app(database))
+    first = TestClient(create_app(database), base_url="http://localhost")
     session = first.post("/sessions", json={"seed": 11, "max_experiments": 1}).json()
     assert first.post(f"/sessions/{session['id']}/experiments/run", json={}).status_code == 200
 
-    restored = TestClient(create_app(database)).get(f"/sessions/{session['id']}")
+    restored = TestClient(create_app(database), base_url="http://localhost").get(f"/sessions/{session['id']}")
 
     assert restored.status_code == 200
     assert restored.json()["status"]["stop_reason"] == "STOP_BUDGET"
@@ -66,20 +66,21 @@ def test_budget_exhausted_session_restores_without_planning_extra_action(tmp_pat
 def test_action_history_survives_process_restart(tmp_path):
     database = tmp_path / "action-history.db"
     first_app = create_app(database)
-    first = TestClient(first_app)
+    first = TestClient(first_app, base_url="http://localhost")
     session = first.post("/sessions", json={"seed": 10}).json()
     first.post(f"/sessions/{session['id']}/experiments/run", json={})
     runtime = first_app.state.manager.get(session["id"])
     runtime.engine.action_history = ["verification"]
+    runtime.engine.joint_state.verification_state = {"accepted": True, "experiment_index": 1, "reason": "test_persisted_verification"}
     first_app.state.repository.update_session(session["id"], first_app.state.manager._serialize(runtime))
 
-    restored = TestClient(create_app(database)).get(f"/sessions/{session['id']}").json()
+    restored = TestClient(create_app(database), base_url="http://localhost").get(f"/sessions/{session['id']}").json()
 
     assert restored["status"]["stop_criteria"]["verification"] is True
 
 
 def test_simulated_integration_loop(tmp_path):
-    client = TestClient(create_app(tmp_path / "integration.db"))
+    client = TestClient(create_app(tmp_path / "integration.db"), base_url="http://localhost")
     state = client.post("/sessions", json={"preset": "medium", "seed": 12, "max_experiments": 6}).json()
     for _ in range(4):
         response = client.post(f"/sessions/{state['id']}/experiments/run", json={})
@@ -93,7 +94,7 @@ def test_simulated_integration_loop(tmp_path):
 
 def test_external_acquisition_preserves_declared_experiment_duration(tmp_path):
     app = create_app(tmp_path / "duration.db")
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://localhost")
     state = client.post("/sessions", json={"mode": "physical", "seed": 13}).json()
     experiment = Experiment(0.1, 0.1, 0.9, 0.9, 1_200, 3_000, 0.3, 0.20, "chirp")
     samples = np.sin(np.linspace(0, 80, 3_200)).astype(np.float32) * 0.08
@@ -106,7 +107,7 @@ def test_external_acquisition_preserves_declared_experiment_duration(tmp_path):
 
 def test_simulation_calibration_reports_inferred_values_not_hidden_material_truth(tmp_path):
     app = create_app(tmp_path / "calibration-truth.db")
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://localhost")
     state = client.post("/sessions", json={"seed": 17}).json()
     runtime = app.state.manager.get(state["id"])
     runtime.engine.acquisition_simulator.material = Material(wave_velocity=260.0, noise_std=0.04)
@@ -125,7 +126,7 @@ def test_simulation_calibration_reports_inferred_values_not_hidden_material_trut
 
 def test_automatic_calibration_can_recover_an_ood_stopped_session(tmp_path):
     app = create_app(tmp_path / "ood-recovery.db")
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://localhost")
     session = client.post("/sessions", json={"seed": 15}).json()
     runtime = app.state.manager.get(session["id"])
     runtime.engine.joint_state.ood_state.update({"status": "ABSTAIN", "score": 0.95})
@@ -140,7 +141,7 @@ def test_automatic_calibration_can_recover_an_ood_stopped_session(tmp_path):
 
 
 def test_physical_session_cannot_simulate_or_reveal_truth(tmp_path):
-    client = TestClient(create_app(tmp_path / "physical.db"))
+    client = TestClient(create_app(tmp_path / "physical.db"), base_url="http://localhost")
     session = client.post("/sessions", json={"mode": "physical", "seed": 8}).json()
     assert session["ground_truth"] is None
     assert client.post(f"/sessions/{session['id']}/experiments/run", json={}).status_code == 409
@@ -155,7 +156,7 @@ def test_physical_session_cannot_simulate_or_reveal_truth(tmp_path):
 
 
 def test_physical_session_accepts_valid_wav_and_updates_belief(tmp_path):
-    client = TestClient(create_app(tmp_path / "wav.db"))
+    client = TestClient(create_app(tmp_path / "wav.db"), base_url="http://localhost")
     session = client.post("/sessions", json={"mode": "physical", "seed": 18}).json()
     time = np.arange(1_920) / 16_000
     samples = (0.18 * np.sin(2 * np.pi * 2_400 * time) * np.iinfo(np.int16).max).astype(np.int16)

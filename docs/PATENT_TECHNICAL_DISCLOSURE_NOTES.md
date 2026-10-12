@@ -1,5 +1,9 @@
 # Patent technical disclosure notes
 
+**Historical architecture notes.** The current implemented scope, equations and
+claim exclusions are in [CURRENT_INVENTION_DISCLOSURE.md](CURRENT_INVENTION_DISCLOSURE.md).
+The nuclei below are candidates for investigation, not established novel inventions.
+
 This is an engineering disclosure aid, not legal advice and not a patentability, inventorship, freedom-to-operate, validity, grant, licensing, or valuation opinion. A qualified patent professional must compare claims against worldwide patent and non-patent prior art before public disclosure.
 
 ## Technical nucleus A: joint defect–metrology posterior
@@ -44,4 +48,3 @@ Each physical action is linked to raw/processed/posterior hashes, calibration/OO
 ## Evidence needed before claim drafting
 
 Preserve dated human conception records; identify human contributors to each mechanism; run a professional search; capture paired ablations and failure cases; preserve result bundles and source revisions; and avoid asserting broad ownership over established Bayesian experimental design, active sensing, NDE sensor placement, calibration, OOD, or hash chaining. The potentially distinctive subject for counsel is the specific closed-loop combination and physical feedback, not the component buzzwords in isolation.
-

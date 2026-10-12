@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "evidence_source": "measured_external_reanalysis",
+  "review_date": "2026-10-08",
+  "hardware_validated": false,
+  "sources_verified_at_export": true,
+  "scope": "Recorded external measurements; four distinct tasks. Reanalysis and offline replay are not a prospective ARGUS apparatus trial.",
+  "studies": [
+    {
+      "artifact": {
+        "path": "research_results/measured_gfrp_validation_2026_10_08.json",
+        "sha256": "d6a4a536243bb928fc6e073775a6c00f771914b0a1bf27f4391e0e3d41da9edc"
+      },
+      "source_verification": {
+        "files_checked": 2580,
+        "current_matches": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "814d7667270702ddb9f1a5fcc11c897a63475058fa0f0170801b9fd392178bf2"
+      },
+      "id": "gfrp",
+      "title": "GFRP acoustic tap screening",
+      "task": "tap_screening",
+      "native_sample_rate_hz": 51200,
+      "counts": [
+        {
+          "label": "unaugmented taps",
+          "value": 2568
+        },
+        {
+          "label": "physical plates",
+          "value": 8
+        }
+      ],
+      "source_url": "https://tudatalib.ulb.tu-darmstadt.de/items/33756af4-eb6d-4156-8708-a41cbed33e7b",
+      "doi": null,
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidence_scope": "Pointwise publisher-labelled audio-tap defect screening; not persistent-defect localization or ARGUS apparatus validation",
+      "validation": "Four GroupKFold folds; complete physical plates held out; no hyperparameter/threshold tuning",
+      "headline": {
+        "label": "Logistic regression balanced accuracy",
+        "value": 0.838076923076923,
+        "unit": "fraction"
+      },
+      "interval": {
+        "label": "95% whole-plate cluster bootstrap; eight plates, fixed out-of-fold predictions",
+        "bounds": [
+          0.7521358978914949,
+          0.9153867553547522
+        ],
+        "unit": "fraction"
+      },
+      "tables": [
+        {
+          "caption": "Publisher-labelled screening. Balanced accuracy averages sensitivity and specificity.",
+          "columns": [
+            {
+              "key": "balanced_accuracy",
+              "label": "Balanced accuracy",
+              "unit": "fraction"
+            },
+            {
+              "key": "roc_auc",
+              "label": "AUROC",
+              "unit": "fraction"
+            },
+            {
+              "key": "f1",
+              "label": "Defect F1",
+              "unit": "fraction"
+            }
+          ],
+          "rows": [
+            {
+              "method": "Majority baseline",
+              "values": {
+                "balanced_accuracy": 0.5,
+                "roc_auc": 0.5,
+                "f1": 0.0
+              }
+            },
+            {
+              "method": "Logistic regression",
+              "values": {
+                "balanced_accuracy": 0.838076923076923,
+                "roc_auc": 0.9222374847374848,
+                "f1": 0.6486486486486487
+              }
+            },
+            {
+              "method": "Random forest",
+              "values": {
+                "balanced_accuracy": 0.768052503052503,
+                "roc_auc": 0.9126902726902727,
+                "f1": 0.6259541984732825
+              }
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "This is screening of labelled tap locations; 83.8% balanced accuracy is not defect-localization accuracy.",
+        "Logistic regression retained 72 missed defect labels and 357 false alarms.",
+        "Eight plates and correlated repeat taps; annotations were not independently remeasured. Previously seen data, not a new blind trial."
+      ]
+    },
+    {
+      "artifact": {
+        "path": "research_results/measured_impact_validation_2026_10_08.json",
+        "sha256": "878533aff4d0df7623d76899ed745b569d81b075f86b888f130df0f35661dfe5"
+      },
+      "source_verification": {
+        "files_checked": 14,
+        "current_matches": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "251e0ac4147f5cdbaff8e3b76d5eb4721fce7397dd6654baa733d58bdaacdc45"
+      },
+      "id": "impact",
+      "title": "Transient impact-source localization",
+      "task": "transient_source_localization",
+      "native_sample_rate_hz": 2000000,
+      "counts": [
+        {
+          "label": "measured positions",
+          "value": 9
+        },
+        {
+          "label": "physical plates",
+          "value": 1
+        }
+      ],
+      "source_url": "https://zenodo.org/records/10875042",
+      "doi": "10.5281/zenodo.10875042",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidence_scope": "Three-channel measured source-position recordings; transient excitation, not persistent hidden-defect localization.",
+      "validation": "leave one complete source position out",
+      "headline": {
+        "label": "Train-only calibrated TDoA mean position error",
+        "value": 108.9915505552459,
+        "unit": "mm"
+      },
+      "interval": null,
+      "tables": [
+        {
+          "caption": "Leave-one-position-out errors; lower mean/median is better.",
+          "columns": [
+            {
+              "key": "mean_error_mm",
+              "label": "Mean error",
+              "unit": "mm"
+            },
+            {
+              "key": "median_error_mm",
+              "label": "Median error",
+              "unit": "mm"
+            },
+            {
+              "key": "success_within_100_mm",
+              "label": "Within 100 mm",
+              "unit": "fraction"
+            }
+          ],
+          "rows": [
+            {
+              "method": "Training centroid",
+              "values": {
+                "mean_error_mm": 181.0660171779821,
+                "median_error_mm": 168.75000000000006,
+                "success_within_100_mm": 0.1111111111111111
+              }
+            },
+            {
+              "method": "3-nearest neighbours",
+              "values": {
+                "mean_error_mm": 140.5628475932018,
+                "median_error_mm": 146.3352807269504,
+                "success_within_100_mm": 0.2222222222222222
+              }
+            },
+            {
+              "method": "Calibrated TDoA",
+              "values": {
+                "mean_error_mm": 108.9915505552459,
+                "median_error_mm": 80.7774721070175,
+                "success_within_100_mm": 0.5555555555555556
+              }
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "One plate, nine measured positions; no cross-specimen confidence interval.",
+        "No independent repeat axis is established. The previous simulations were excluded.",
+        "109 mm mean error remains substantial; the audio-range ARGUS hardware was not evaluated."
+      ]
+    },
+    {
+      "artifact": {
+        "path": "research_results/measured_morpho_quality_2026_10_08.json",
+        "sha256": "e034c9488f97d05ae2dbe78f5246e59c4c5659c57dec8ad47c0c1c7e9f4a22c1"
+      },
+      "source_verification": {
+        "files_checked": 11,
+        "current_matches": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "7a256fc6efc093d2b2d92c9ac662b358d345a0d8bf5bf901371b6b7f9aec2edb"
+      },
+      "id": "morpho",
+      "title": "MORPHO acquisition-quality check",
+      "task": "acquisition_quality",
+      "native_sample_rate_hz": 1000000,
+      "counts": [
+        {
+          "label": "selected operator labels",
+          "value": 1011
+        },
+        {
+          "label": "physical panels",
+          "value": 5
+        }
+      ],
+      "source_url": "https://zenodo.org/records/20120070",
+      "doi": "10.5281/zenodo.20120070",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidence_scope": "Operator-labelled GOOD/BAD ultrasonic signal quality; neither defect detection nor localization.",
+      "validation": "leave entire panel out",
+      "headline": {
+        "label": "Random forest BAD recordings caught",
+        "value": 1,
+        "unit": "count"
+      },
+      "interval": null,
+      "tables": [
+        {
+          "caption": "BAD is the positive class: 136 BAD and 875 GOOD labels.",
+          "columns": [
+            {
+              "key": "true_bad",
+              "label": "BAD caught",
+              "unit": "count"
+            },
+            {
+              "key": "missed_bad",
+              "label": "BAD missed",
+              "unit": "count"
+            },
+            {
+              "key": "bad_recall",
+              "label": "BAD recall",
+              "unit": "fraction"
+            },
+            {
+              "key": "balanced_accuracy",
+              "label": "Balanced accuracy",
+              "unit": "fraction"
+            }
+          ],
+          "rows": [
+            {
+              "method": "Majority baseline",
+              "values": {
+                "true_bad": 0,
+                "missed_bad": 136,
+                "bad_recall": 0.0,
+                "balanced_accuracy": 0.5
+              }
+            },
+            {
+              "method": "Logistic regression",
+              "values": {
+                "true_bad": 27,
+                "missed_bad": 109,
+                "bad_recall": 0.19852941176470587,
+                "balanced_accuracy": 0.5124075630252101
+              }
+            },
+            {
+              "method": "Random forest",
+              "values": {
+                "true_bad": 1,
+                "missed_bad": 135,
+                "bad_recall": 0.007352941176470588,
+                "balanced_accuracy": 0.4996764705882353
+              }
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "Random forest missed 135 of 136 BAD labels. Reject this quality model for deployment.",
+        "High overall accuracy mostly reflects GOOD-label prevalence; it does not establish usable fault detection.",
+        "Five panels, selected human labels, uneven BAD prevalence and README/HDF5 cycle-count disagreements."
+      ]
+    },
+    {
+      "artifact": {
+        "path": "research_results/measured_guided_wave_validation_2026_10_08.json",
+        "sha256": "4e3d97ca4cab63f97900363a76cbb74c65ba75624e58f014f4ccf03ae80cfbf6"
+      },
+      "source_verification": {
+        "files_checked": 31,
+        "current_matches": true,
+        "source_changed_during_run": false,
+        "manifest_sha256": "12cf530998ba313d72aa96e0799f30dc259a3563b7077845e0a670462da2b6a3"
+      },
+      "id": "ogw",
+      "title": "OGW measured-path replay",
+      "task": "recorded_path_replay",
+      "native_sample_rate_hz": 10000000,
+      "counts": [
+        {
+          "label": "full measured banks",
+          "value": 18
+        },
+        {
+          "label": "physical plates",
+          "value": 1
+        },
+        {
+          "label": "reference locations",
+          "value": 4
+        },
+        {
+          "label": "recorded paths per bank",
+          "value": 66
+        }
+      ],
+      "source_url": "https://doi.org/10.6084/m9.figshare.c.4488089.v1",
+      "doi": "10.6084/m9.figshare.c.4488089.v1",
+      "license": "CC0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "evidence_scope": "Native 40 kHz ultrasonic offline path reveals for four reversible surface-disc locations; not a live adaptive acquisition trial.",
+      "validation": "Leave an entire reference position out; first healthy cycle for baseline, second for test. 32 of 66 recorded paths revealed per trajectory.",
+      "headline": {
+        "label": "Condition-matched adaptive mean location error",
+        "value": 160.76198990023173,
+        "unit": "mm"
+      },
+      "interval": null,
+      "tables": [
+        {
+          "caption": "Condition-matched baseline \u00b7 32 path reveals; lower location error is better.",
+          "columns": [
+            {
+              "key": "mean_location_error_mm",
+              "label": "Mean error",
+              "unit": "mm"
+            },
+            {
+              "key": "mean_healthy_false_positive_condition_model_rate",
+              "label": "Healthy false alarms",
+              "unit": "fraction"
+            },
+            {
+              "key": "mean_damage_decision_rate",
+              "label": "Damage decisions",
+              "unit": "fraction"
+            }
+          ],
+          "rows": [
+            {
+              "method": "Cyclic",
+              "values": {
+                "mean_location_error_mm": 178.7200311203695,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.4166666666666667
+              }
+            },
+            {
+              "method": "Geometry spread",
+              "values": {
+                "mean_location_error_mm": 263.64699223664303,
+                "mean_healthy_false_positive_condition_model_rate": 1.0,
+                "mean_damage_decision_rate": 0.9166666666666666
+              }
+            },
+            {
+              "method": "Training static",
+              "values": {
+                "mean_location_error_mm": 213.03564011592277,
+                "mean_healthy_false_positive_condition_model_rate": 1.0,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            },
+            {
+              "method": "Adaptive disagreement",
+              "values": {
+                "mean_location_error_mm": 160.76198990023173,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.5
+              }
+            },
+            {
+              "method": "Random (16 orders)",
+              "values": {
+                "mean_location_error_mm": 190.70111013004032,
+                "mean_healthy_false_positive_condition_model_rate": 0.8125,
+                "mean_damage_decision_rate": 0.6302083333333334
+              }
+            }
+          ]
+        },
+        {
+          "caption": "Fixed 20\u00b0C baseline \u00b7 32 path reveals; lower location error is better.",
+          "columns": [
+            {
+              "key": "mean_location_error_mm",
+              "label": "Mean error",
+              "unit": "mm"
+            },
+            {
+              "key": "mean_healthy_false_positive_condition_model_rate",
+              "label": "Healthy false alarms",
+              "unit": "fraction"
+            },
+            {
+              "key": "mean_damage_decision_rate",
+              "label": "Damage decisions",
+              "unit": "fraction"
+            }
+          ],
+          "rows": [
+            {
+              "method": "Cyclic",
+              "values": {
+                "mean_location_error_mm": 218.72431674307248,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            },
+            {
+              "method": "Geometry spread",
+              "values": {
+                "mean_location_error_mm": 276.01033835346806,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            },
+            {
+              "method": "Training static",
+              "values": {
+                "mean_location_error_mm": 229.04252889381493,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            },
+            {
+              "method": "Adaptive disagreement",
+              "values": {
+                "mean_location_error_mm": 200.03814592332958,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            },
+            {
+              "method": "Random (16 orders)",
+              "values": {
+                "mean_location_error_mm": 248.44934477577667,
+                "mean_healthy_false_positive_condition_model_rate": 0.6666666666666666,
+                "mean_damage_decision_rate": 0.6666666666666666
+              }
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "Condition-matched adaptive healthy false alarms: 66.7%. This is unsuitable for deployment.",
+        "Healthy rates repeat only three unique healthy banks across four fitted models; trajectories are not independent specimens.",
+        "One plate, four reversible aluminium-disc references. Ultrasound and approximate spatial weights do not validate the 16 kHz ARGUS probe.",
+        "Temperature matching is not unseen-temperature generalization. Whole-archive MD5 is unverified; selected member CRC/SHA were checked."
+      ]
+    }
+  ]
+}

@@ -37,14 +37,9 @@ class ResearchJobManager:
     @staticmethod
     def _integer(request: dict, name: str, default: int, minimum: int, maximum: int) -> int:
         raw = request.get(name, default)
-        if isinstance(raw, bool):
+        if isinstance(raw, bool) or not isinstance(raw, int):
             raise ValueError(f"{name} must be an integer")
-        try:
-            value = int(raw)
-        except (TypeError, ValueError) as exc:
-            raise ValueError(f"{name} must be an integer") from exc
-        if isinstance(raw, float) and not raw.is_integer():
-            raise ValueError(f"{name} must be an integer")
+        value = raw
         if not minimum <= value <= maximum:
             raise ValueError(f"{name} must be between {minimum} and {maximum}")
         return value
@@ -108,7 +103,10 @@ class ResearchJobManager:
         if not isinstance(resume, bool):
             raise ValueError("resume must be a boolean")
         generated_root = (ROOT / "datasets" / "generated").resolve()
-        raw_destination = Path(str(request.get("destination", "datasets/generated/counterfactual_bank")))
+        raw_path = request.get("destination", "datasets/generated/counterfactual_bank")
+        if not isinstance(raw_path, str) or not 1 <= len(raw_path) <= 512:
+            raise ValueError("destination must be a bounded path string")
+        raw_destination = Path(raw_path)
         destination = (raw_destination if raw_destination.is_absolute() else ROOT / raw_destination).resolve()
         if not destination.is_relative_to(generated_root) or destination == generated_root:
             raise ValueError("destination must be a subdirectory of datasets/generated")

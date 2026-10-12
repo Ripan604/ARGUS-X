@@ -1,0 +1,22 @@
+[
+  {
+    "path": "backend/app/evaluation/trajectory_reference_gate.py",
+    "sha256": "c6d4718d26c255a3a7a5fe12dd1cb54b5b1545ecf59fffe8f039c5faa12d32dc"
+  },
+  {
+    "path": "backend/app/control/reference_conditioned.py",
+    "sha256": "8a4eaada8f67e9261eb09b2106b5932db26807d61901e5b93db41cf64ac095f9"
+  },
+  {
+    "path": "scripts/validate_reference_conditioned_replay.py",
+    "sha256": "f11af4c09fd4757889847e53b67ecb81586e5ffa259739685f87f6997c63453c"
+  },
+  {
+    "path": "docs/REFERENCE_CONDITIONED_CONFIRMATION_PROTOCOL.md",
+    "sha256": "9dc9cfb14b5898b5f73387597f9e0de07de8a5338500b81cdd312be5e6d8a9a5"
+  },
+  {
+    "path": "research_results/reference_conditioned_development_2026_10_08.json",
+    "sha256": "ef205813759666af88aa2dddb5dadc6275849ec0fb811a9f3bad03395fed01a2"
+  }
+]

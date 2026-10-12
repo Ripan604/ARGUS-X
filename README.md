@@ -10,6 +10,153 @@ Ordinary defect AI answers “what does this recording contain?” ARGUS repeate
 
 ## What works
 
+### Spatial observatory (11–12 October 2026)
+
+The overview restores 3D as its default, prominent visualization, with drag
+orbit, camera presets, zoom, measurement paths and physical uncertainty rings.
+Switch to 2D for cell-level inspection and exclusion-zone drawing, or compare
+both views together. Candidate route cards expose the geometry and actual
+planner terms behind the next experiment. Linked cell inspection now highlights
+the same location in both views, with exact row/column profiles and CSV export;
+camera settings survive view switches. Read the
+[visualization guide and verification limits](docs/VISUALIZATION_UPGRADE_2026_10_11.md).
+
+The 3D surface now supports direct cell selection through **Inspect surface**,
+with linked 2D/profile readouts and keyboard navigation. **Orbit camera** retains
+the camera controls. The latest frontend checks passed 88 tests, type checking,
+lint and a production build; connected-browser visual review remains pending.
+
+### Wave-packet imaging development (12 October 2026)
+
+An offline experimental branch retains waveform arrival timing rather than
+compressing the whole record into one discrepancy. It calibrates an effective
+packet-delay model from healthy recordings and compares source-correlated
+residual images with RAPID using the same recorded paths. The first measured
+experiment qualified only two of six propagation models and did not improve
+localization on their eligible cases. These are previously inspected measurements
+from one specimen, not new confirmation or validation of the ARGUS apparatus.
+The separate qualified-path revision improved directional 40 C mean error from
+302.97 mm for RAPID to 63.31 mm on the same four cases, while isotropic 60 C
+remained worse than RAPID. Each branch supports only four of twelve damage
+conditions; the incomplete coverage and all negative results remain explicit.
+Read the [wave-packet protocol](docs/WAVE_PACKET_IMAGING_PROTOCOL.md) and the
+[development results](docs/WAVE_PACKET_DEVELOPMENT_RESULTS_2026_10_12.md).
+
+For read-only development status and an explicit local checkpoint, use
+`.venv\Scripts\python.exe scripts\dev_checkpoint.py`. The
+[continuation guide](docs/DEVELOPMENT_CONTINUITY.md) records how to resume after
+a session stops; it does not monitor account usage or schedule automatic resets.
+
+### Instrument workspace and evidence laboratory (9 October 2026)
+
+The instrument now has grouped workspace navigation, keyboard view search,
+responsive controls, a persistent stop toolbar and a focused inspection overview.
+Posterior review compares recorded before/after fields, probability changes,
+entropy, physical mean shift and tied-cell mass regions, with CSV export.
+The [Evidence laboratory](http://localhost:5173/research) includes interactive
+measured-task comparisons and the completed 29-bank confirmation.
+
+Request ownership prevents late responses from restoring an old session;
+stop/release acknowledgments retain engine ordering, and successful acquisition
+with an unavailable history refresh is reported as partial success. Deferred
+views, error boundaries and visibility-aware polling improve operation.
+Read [the workspace guide and validation](docs/WORKSPACE_UPGRADE_2026_10_09.md).
+
+### Measured datasets and reference-conditioned fundamentals
+
+Public measured data now support four task-specific evaluations: whole-plate
+GFRP tap screening, Bologna transient source localization, native ultrasonic
+path replay, and MORPHO signal-quality rejection. Read the
+[measured results](docs/MEASURED_RESULTS_2026_10_08.md) and visit
+[the local Research page](http://localhost:5173/research) for positive and negative findings.
+
+New experimental modules fit healthy waveform drift, use measured source pitch
+for clock alignment, qualify feasible paths, and calibrate complete adaptive
+trajectories before issuing reference/verification/review requests. Their
+[fundamental results](docs/FUNDAMENTAL_UPGRADE_RESULTS_2026_10_08.md) include
+improved healthy reference prediction, worsened conditional localization and
+withheld decisions when calibration is insufficient. The separate confirmation
+completed on 9 October after temporary public-download HTTP 403 failures:
+29 verified native banks supplied 19 healthy calibration blocks and ten test
+banks. At 16 paths, adaptive conditional location errors were 161.20 mm for raw
+references versus 206.49/215.39 mm for transported variants. All adaptive
+variants raised no supported alerts on eight damage conditions, so zero false
+alarms on two unique healthy banks does not establish a useful detector.
+Limited early random-order alerts are retained separately. Cooling-block
+correlation and one specimen prevent a field-coverage claim; these mechanisms
+remain outside production physical acquisition. No signals were fabricated.
+
+### Clock-referenced acquisition v2 and extended evidence
+
+The classic ESP32 reference firmware now captures ADC34 during DAC25 excitation,
+with pretrigger samples, GPIO26 onset marker, actual timestamps, recorded DAC
+codes and a bounded experiment-bound frame. The host requires a chip-specific
+operator timing/transfer record and checks the entire frame before ingestion.
+Unaligned physical recordings are saved with zero inference weight; their sensor
+names or metadata flags cannot bypass the time-origin gate.
+
+Read [current project and evidence review](docs/PROBE_V2_RELEASE_REVIEW.md),
+[apparatus and wire contract](docs/PROBE_V2_DESIGN.md), and
+[claim-specific prior-art assessment](docs/PATENT_STRENGTHENING_ASSESSMENT.md).
+The extended comparison includes cyclic, random, scaled A-optimal, scaled
+D-optimal and task-conditioned reference selection. It evaluates synthetic
+arrival prediction, separately from physical defect localization.
+
+### Final technical method extension
+
+The optional `enable_task_conditioned_calibration` setting selects direct-reference
+geometry using the complete spatial posterior and correlated propagation covariance.
+It minimizes expected downstream arrival variance plus declared reference cost.
+Activate it with `python scripts/demo_simulation.py --task-calibration --preset easy --seed 17 --experiments 8`,
+or the session API. The default stays off; the two-step physical-loss policy is
+a separate method and takes precedence when enabled.
+
+Read the [earlier method disclosure](docs/ARGUS_FINAL_TECHNICAL_DISCLOSURE.md) and
+[earlier bounded evidence](docs/FINAL_PATENT_EVIDENCE.md) for the pre-v2 revision.
+Legacy post-excitation firmware remains refused. Current v2 acquisition requires
+the external operator evidence described above; wire version alone is insufficient.
+An aligned external WAV can carry a bounded operator declaration through the API.
+
+### Security and scientific release hardening (7 October 2026)
+
+Localhost is now the default. Explicit `python run_argus.py --lan` enables
+authenticated sharing with exact origins/hosts and a per-run access key. The
+launcher prefers the project virtual environment; this workspace uses patched
+PyTorch 2.6.0+cpu and Next.js 16.3.8. Phone microphone/camera capture requires a
+trusted HTTPS context; a plain HTTP LAN page supports manual guidance only.
+
+Security controls now run before device acquisition and before structural or
+calibration updates. Original source bandwidth/window checks reject aliased and
+incomplete recordings; sensor names cannot disable physical-reference gating.
+Model persistence is pickle-free, artifact allocations are bounded, and source
+identity includes the actual dirty/untracked working tree. Historical pickle
+checkpoints are refused, and unchanged attribute priors are explicitly labelled.
+
+Read [security and operation](docs/SECURITY.md), the
+[dated release report](docs/RELEASE_READINESS_REPORT.md),
+[publication evidence](docs/PUBLICATION_READINESS.md), and
+[technical IP review package](docs/PATENT_REVIEW_PACKAGE.md). These are local
+review materials, not field validation, a novelty conclusion, or a patent filing.
+
+### Audit remediation (20 September 2026)
+
+The controller now preserves velocity/timing correlation, uses different calibration
+path lengths, checks OOD before structural fusion, and requires a fresh accepted
+verification measurement before a confident stop. An optional **Calibration-aware
+risk planning** mode branches over up to two future observations and compares
+diagnosis and calibration in squared position-error units. It remains experimental;
+improved mathematical accounting does not establish physical accuracy or novelty.
+
+Evidence verification checks stored measurement content and can compare against an
+independently retained checkpoint. Physical response-bank plans and metadata audits
+are available through `scripts/physical_campaign.py`. Read the complete
+[changes and unresolved restrictions](docs/AUDIT_REMEDIATION.md) and
+[current technical disclosure](docs/CURRENT_INVENTION_DISCLOSURE.md).
+
+The historical benchmark figures below describe their saved source versions, not
+the changed controller. New paired results are in
+`research_results/audit_risk_validation.json`. Do not mix versions in a superiority claim.
+
 ### Research and spatial-interface update
 
 ARGUS now includes an opt-in **nuisance-aware arrival-time design** method,
@@ -41,9 +188,9 @@ respected. 3D relief depicts posterior probability, not actual defect depth.
 - Scientific React/Vite instrument with candidate audit, signal analysis, belief evolution, benchmark view, reveal, and camera homography
 - Optional domain-randomized PyTorch forward-response surrogate with early stopping and CPU/GPU support
 - ESP32 firmware and safe wiring guidance
-- Patent-counsel-ready engineering disclosure and preliminary adjacent-art notes
+- Engineering disclosure requiring human inventorship, disclosure-date and professional prior-art review
 - ARGUS NEO joint structural/metrology uncertainty with diagnostic, calibration, verification, and exploration actions
-- Counterfactual hypothesis distributions, Bayes-risk objectives, waveform/geometry co-design, horizon planning, constraints, and adaptive model fidelity
+- Counterfactual signatures, finite waveform/geometry candidate selection, constraints and analytical/physics-signature selection; optional two-step squared-location-loss planning
 - Online discrepancy correction, robust/conformal OOD detection, explicit abstention, and confidence caps
 - SQLite research jobs for nine-policy benchmarks, seven ablations, calibration studies, response banks, demos, and CPU surrogate active learning
 - Tamper-evident experiment ledger, verification, integrity-manifested research bundle export/import, model registry, and failure/fault tooling
@@ -56,12 +203,19 @@ ARGUS officially targets Python 3.11+ and Node 22+. It was also verified in this
 After installing the backend and frontend dependencies once, the one-command launcher starts both services and stops both cleanly on `Ctrl+C`:
 
 ```powershell
-python scripts\doctor.py
-.\run_argus.ps1
+.venv\Scripts\python.exe scripts\doctor.py
+python run_argus.py
 ```
 
 Then open `http://localhost:5173`. The API and OpenAPI documentation are at `http://localhost:8000` and `http://localhost:8000/docs`.
-The launcher also prints `http://<LAN-IP>:5173/probe` for a phone and the Laptop-B API address.
+The API port is configurable with `ARGUS_API_PORT` or the local frontend
+`NEXT_PUBLIC_ARGUS_API_PORT` setting used by the launcher. In this workspace ARGUS
+uses port **8001** because another application owns 8000. The frontend checks the
+service identity before reporting the engine online.
+Use `python run_argus.py --lan` for explicit authenticated sharing. In that mode
+the launcher prints `http://<LAN-IP>:5173/probe`, the Laptop-B API address and an
+operator access key. Phone microphone/camera capture requires trusted HTTPS;
+plain HTTP supports the manual interface.
 
 ### 1. Backend
 
@@ -154,7 +308,7 @@ python scripts\generate_dataset.py --samples 2500
 python scripts\train_model.py --epochs 80 --patience 10
 ```
 
-The dataset script varies geometry, material, noise, defect properties, and experiment parameters. The trained MLP predicts signal features for candidate physical states/experiments. A 3,000-sample CPU training run in this workspace early-stopped at epoch 27 with standardized Smooth L1 validation loss 0.2108, test loss 0.2245, standardized MAE 0.5014, and mean per-feature R² 0.409. Per-feature metrics—including strong SNR/RMS prediction and weak dominant-frequency/envelope timing prediction—are preserved transparently in `models/forward_surrogate.json`. Physics inference remains the safe default when no checkpoint exists.
+The dataset script varies geometry, material, noise, defect properties, and experiment parameters. The current `models/forward_surrogate.json` records 15,000 synthetic samples, validation loss 0.18470, test loss 0.19815, standardized MAE 0.45690 and mean feature R² 0.47567. These are response-feature metrics, not defect-localization accuracy. The older 3,000-sample result is historical. The live NEO planner currently uses analytical/physics-signature levels; its learned and imported higher-fidelity options are not yet integrated as validated live models.
 
 ## Public experimental training data
 

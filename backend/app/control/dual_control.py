@@ -43,7 +43,7 @@ class AdaptiveDualControlManager:
         *,
         diagnostic_value: float,
         experiment_count: int,
-        policy: str = "decision_theoretic",
+        policy: str = "heuristic",
     ) -> DualControlDecision:
         summary = state.uncertainty_summary()
         structural = float(summary["structural"]["combined"])
@@ -70,11 +70,11 @@ class AdaptiveDualControlManager:
         elif policy == "threshold" and metrology >= self.config.metrology_calibration_threshold:
             action_type = "calibration"
             reason = f"Calibration selected because metrology uncertainty {metrology:.0%} exceeds the configured threshold."
-        elif policy == "decision_theoretic" and margin > self.config.dual_control_value_margin:
+        elif policy in {"heuristic", "decision_theoretic"} and margin > self.config.dual_control_value_margin:
             action_type = "calibration"
             reason = (
                 f"Calibration selected because {dominant.replace('_', ' ')} contributes {share:.0%} of metrology uncertainty "
-                f"and its expected value exceeds diagnostic value by {margin:.3f}."
+                f"and its heuristic score exceeds diagnostic score by {margin:.3f}."
             )
         elif experiment_count > 0 and structural < 0.42 and state.structural.ambiguity() < 0.50:
             action_type = "verification"
@@ -120,4 +120,6 @@ class AdaptiveDualControlManager:
             y = (0.08, 0.50, 0.92)[offset]
             return Experiment(0.05, y, 0.95, y, 900, 6_500, 0.28, 0.16, "chirp")
         y = (0.08, 0.50, 0.92)[offset]
-        return Experiment(0.05, y, 0.95, y, 1_200, 3_000, 0.28, 0.12, "chirp")
+        # Distinct path lengths are necessary to separate wave speed from clock offset.
+        receiver_x = (0.35, 0.65, 0.95)[offset]
+        return Experiment(0.05, y, receiver_x, y, 1_200, 3_000, 0.28, 0.12, "chirp")

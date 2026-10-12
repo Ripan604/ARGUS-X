@@ -17,7 +17,10 @@ class HorizonScore:
 
 
 class RecedingHorizonPlanner:
-    """Small beam rollout approximation; intentionally not a full POMDP."""
+    """Geometric route-score proxy, without observation or belief rollouts.
+
+    Actual two-observation branching is implemented by FiniteHorizonRiskPlanner.
+    """
 
     def rerank(self, candidates: list[CandidateScore], horizon: int, beam_width: int) -> tuple[list[CandidateScore], dict[int, HorizonScore]]:
         horizon = int(np.clip(horizon, 1, 3))

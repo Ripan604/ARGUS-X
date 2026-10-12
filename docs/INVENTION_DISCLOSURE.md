@@ -1,6 +1,6 @@
-# Confidential invention disclosure draft — ARGUS
+# Historical invention disclosure draft — ARGUS
 
-**Status:** counsel-ready engineering input, not a filed patent application. Complete human inventorship and dates before sending to counsel.
+**Status:** incomplete engineering input, not a filed patent application. Confidentiality must not be assumed for public-repository content. Complete human inventorship and dates from real records. See [current supported disclosure](CURRENT_INVENTION_DISCLOSURE.md) and [open restrictions](AUDIT_REMEDIATION.md).
 
 ## Administrative record
 

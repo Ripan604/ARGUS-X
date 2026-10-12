@@ -1,0 +1,335 @@
+{
+  "seed": 23,
+  "samples": 50000,
+  "input_size": 24,
+  "output_size": 15,
+  "feature_names": [
+    "rms",
+    "peak_amplitude",
+    "crest_factor",
+    "zero_crossing_rate",
+    "spectral_centroid_hz",
+    "spectral_bandwidth_hz",
+    "spectral_rolloff_hz",
+    "dominant_frequency_hz",
+    "spectral_entropy",
+    "band_energy_low",
+    "band_energy_mid",
+    "band_energy_high",
+    "envelope_peak_time_s",
+    "decay_time_s",
+    "snr_db"
+  ],
+  "defect_types": [
+    "cavity",
+    "loose_region",
+    "delamination",
+    "dense_inclusion"
+  ],
+  "description": "Domain-randomized physics simulator data for the learned forward-response surrogate.",
+  "validation_loss": 0.18632249531745912,
+  "test_loss": 0.1779110617160797,
+  "training": {
+    "epochs_completed": 48,
+    "best_epoch": 26,
+    "batch_size": 256,
+    "patience": 22,
+    "learning_rate": 0.0018,
+    "lr_patience": 6,
+    "threads": 4,
+    "selection": "validation Smooth L1 with min_delta=0.0001; test excluded",
+    "history": [
+      {
+        "epoch": 1,
+        "validation_loss": 0.20636239868005116,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 2,
+        "validation_loss": 0.19747346632480622,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 3,
+        "validation_loss": 0.19249418841203053,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 4,
+        "validation_loss": 0.19069165183703105,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 5,
+        "validation_loss": 0.1898086993932724,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 6,
+        "validation_loss": 0.18849434527556103,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 7,
+        "validation_loss": 0.18822532412211102,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 8,
+        "validation_loss": 0.18765987282594046,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 9,
+        "validation_loss": 0.1874501372973124,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 10,
+        "validation_loss": 0.18698318552176157,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 11,
+        "validation_loss": 0.18698672835826874,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 12,
+        "validation_loss": 0.18735437460740406,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 13,
+        "validation_loss": 0.18704803081353505,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 14,
+        "validation_loss": 0.18685754834810892,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 15,
+        "validation_loss": 0.1868681360880534,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 16,
+        "validation_loss": 0.1867857791821162,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 17,
+        "validation_loss": 0.18749482533931733,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 18,
+        "validation_loss": 0.18646316025257112,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 19,
+        "validation_loss": 0.1867557874361674,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 20,
+        "validation_loss": 0.18665368798573811,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 21,
+        "validation_loss": 0.187022350025177,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 22,
+        "validation_loss": 0.1868644342660904,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 23,
+        "validation_loss": 0.18668898746172588,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 24,
+        "validation_loss": 0.18668258209228517,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 25,
+        "validation_loss": 0.18669461001555124,
+        "learning_rate": 0.0018
+      },
+      {
+        "epoch": 26,
+        "validation_loss": 0.18632249531745912,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 27,
+        "validation_loss": 0.18622765577634176,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 28,
+        "validation_loss": 0.18647550200621288,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 29,
+        "validation_loss": 0.18671638301213583,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 30,
+        "validation_loss": 0.1864952923297882,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 31,
+        "validation_loss": 0.18656749892234803,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 32,
+        "validation_loss": 0.18653448148568472,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 33,
+        "validation_loss": 0.18683877681096395,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 34,
+        "validation_loss": 0.18705310798486074,
+        "learning_rate": 0.0009
+      },
+      {
+        "epoch": 35,
+        "validation_loss": 0.18652975939909616,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 36,
+        "validation_loss": 0.18694958856900534,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 37,
+        "validation_loss": 0.18661339659690857,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 38,
+        "validation_loss": 0.18734056499004365,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 39,
+        "validation_loss": 0.1869680144627889,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 40,
+        "validation_loss": 0.1874496728658676,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 41,
+        "validation_loss": 0.18713389244874318,
+        "learning_rate": 0.00045
+      },
+      {
+        "epoch": 42,
+        "validation_loss": 0.18699472209612528,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 43,
+        "validation_loss": 0.1870741637547811,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 44,
+        "validation_loss": 0.18697269331614177,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 45,
+        "validation_loss": 0.1870826230128606,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 46,
+        "validation_loss": 0.1871307024240494,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 47,
+        "validation_loss": 0.18729027127424877,
+        "learning_rate": 0.000225
+      },
+      {
+        "epoch": 48,
+        "validation_loss": 0.18726977082888285,
+        "learning_rate": 0.000225
+      }
+    ]
+  },
+  "dataset_sha256": "1a27db98be78fd586339a32f59de3bf5378781f8861d553313466ee216fcc322",
+  "dataset_seed": 73123,
+  "trainer_sha256": "b5c4c718abaf545e709ae3296bd30d96e721ec1f536eaf85427144d8d38d9684",
+  "torch_version": "2.5.1+cpu",
+  "device": "cpu",
+  "split": {
+    "mode": "random",
+    "sample_counts": {
+      "train": 35000,
+      "validation": 7500,
+      "test": 7500
+    }
+  },
+  "held_out_metrics": {
+    "standardized_mae": 0.42928051948547363,
+    "mean_feature_r2": 0.49287813901901245,
+    "per_feature_mae": {
+      "rms": 0.0028046597726643085,
+      "peak_amplitude": 0.017804954200983047,
+      "crest_factor": 1.1646186113357544,
+      "zero_crossing_rate": 0.008306298404932022,
+      "spectral_centroid_hz": 86.31038665771484,
+      "spectral_bandwidth_hz": 49.268070220947266,
+      "spectral_rolloff_hz": 115.56803894042969,
+      "dominant_frequency_hz": 1128.8326416015625,
+      "spectral_entropy": 0.004991265945136547,
+      "band_energy_low": 0.01853407733142376,
+      "band_energy_mid": 0.02804354578256607,
+      "band_energy_high": 0.02871791645884514,
+      "envelope_peak_time_s": 0.0013942830264568329,
+      "decay_time_s": 0.001118008280172944,
+      "snr_db": 0.8351141810417175
+    },
+    "per_feature_r2": {
+      "rms": 0.9443246126174927,
+      "peak_amplitude": 0.9348062872886658,
+      "crest_factor": 0.7855618596076965,
+      "zero_crossing_rate": 0.41577351093292236,
+      "spectral_centroid_hz": 0.4013926386833191,
+      "spectral_bandwidth_hz": 0.3291945457458496,
+      "spectral_rolloff_hz": 0.22114348411560059,
+      "dominant_frequency_hz": 0.09936559200286865,
+      "spectral_entropy": 0.27130651473999023,
+      "band_energy_low": 0.3680263161659241,
+      "band_energy_mid": 0.49239712953567505,
+      "band_energy_high": 0.48590409755706787,
+      "envelope_peak_time_s": 0.07696491479873657,
+      "decay_time_s": 0.6332710385322571,
+      "snr_db": 0.933739423751831
+    }
+  }
+}
